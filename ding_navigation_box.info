@@ -1,0 +1,4 @@
+name = Ding navigation box
+description = Provides a smart navigation box as a block or a ctools plugin.
+core = 7.x
+files[] = ding_navigation_box.module

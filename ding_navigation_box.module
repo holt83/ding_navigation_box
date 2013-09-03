@@ -1,0 +1,48 @@
+<?php
+
+/**
+ * @file
+ * 
+ * This module provides a smart naviagtion box as a block or ctools plugin.
+ */
+
+/**
+ * Implements hook_block_info().
+ */
+function ding_navigation_box_block_info() {
+  $blocks = array();
+  $blocks['ding_navigation_box'] = array(
+    'info' => t('Ding navigation box'),  
+  );
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ * 
+ * Ignoring $delta since we only have 1 block.
+ */
+function ding_navigation_box_block_view($delta) {
+  $block = array();
+  $block['subject'] = t('Ding navigation box');
+  $block['content'] = array(
+    '#theme' => 'ding-navigation-box',
+      
+  );
+  return $block;
+}
+
+/**
+ * Implements hook_theme().
+ * 
+ * Declares the theme hooks that renders the Ding navigation box.
+ */
+function ding_navigation_box_theme() {
+  return array(
+    'ding-navigation-box' => array(
+      'render element' => 'element',
+      'template' => 'ding-navigation-box',
+      'paht' => 'templates/'  
+    ),
+  );
+}
