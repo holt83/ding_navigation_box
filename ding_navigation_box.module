@@ -6,6 +6,9 @@
  * This module provides a smart naviagtion box as a block or ctools plugin.
  */
 
+// Constants
+define('DING_NAV_BOX_PATH', drupal_get_path('module', 'ding_navigation_box'));
+
 /**
  * Implements hook_block_info().
  */
@@ -25,9 +28,14 @@ function ding_navigation_box_block_info() {
 function ding_navigation_box_block_view($delta) {
   $block = array();
   $block['subject'] = t('Ding navigation box');
+  // Fetch the entries for the navigation box.
+  $entries = _ding_navigation_box_get_entries();
   $block['content'] = array(
-    '#theme' => 'ding-navigation-box',
-      
+    '#theme' => 'ding_navigation_box',
+    'navigation_items' => array(
+      '#theme' => 'item_list__ding_navigation_box',
+      '#items' => $entries['navigation_items'],  
+    ),  
   );
   return $block;
 }
@@ -39,10 +47,79 @@ function ding_navigation_box_block_view($delta) {
  */
 function ding_navigation_box_theme() {
   return array(
-    'ding-navigation-box' => array(
+    'ding_navigation_box' => array(
       'render element' => 'element',
       'template' => 'ding-navigation-box',
-      'paht' => 'templates/'  
+      'path' => DING_NAV_BOX_PATH . '/templates',
     ),
+    'ding_navigation_box_item' => array(
+      'variables' => array(
+        'item' => NULL,
+      ),
+      'template' => 'ding-navigation-box-item',
+      'path' => DING_NAV_BOX_PATH . '/templates',  
+    ),  
   );
+}
+
+/**
+ * Module template preprocess funtion for the navigation box.
+ */
+function template_preprocess_ding_navigation_box(&$variables) {
+  $element = $variables['element'];
+  // If there's no items present we dont have any entries either and we 
+  // communicate this to the template by setting the corresponding variables
+  // false.
+  if (empty($element['navigation_items'])) {
+    $variables['navigation_items'] = $variables['content_areas'] = FALSE;
+  }
+  // Else we setup the variables for the navigation box template.
+  else {
+    // Since the item_list theme hook doesn't accept a render array as item, we 
+    // render the array here, so that the item_list theme funtion recieves the
+    // parameter it expects.
+    $variables['navigation_items'] = $element['navigation_items'];
+    foreach(array_keys($variables['navigation_items']['#items']) as $key) {
+      $rendered_item = drupal_render($variables['navigation_items']['#items'][$key]);
+      $variables['navigation_items']['#items'][$key] = $rendered_item;
+    }
+    $variables['content_areas'] = array();
+  }
+}
+
+/**
+ * Module template preprocess funtion for the navigation box.
+ */
+function template_preprocess_ding_navigation_box_item(&$variables) {
+  $item = $variables['item'];
+  $variables['text'] = $item['text'];
+}
+
+/**
+ * Return an array with the entries for the navigation box setup as 
+ * render-arrays.
+ * 
+ * @return 
+ * array(navigation_items => content_areas)
+ */
+function _ding_navigation_box_get_entries() {
+  $entries = array();
+  $entries['navigation_items'] = array(
+    '#theme' => 'ding_navigation_box_item',
+    '#item' => array(
+       'text' => 'Test 1', 
+     ),
+    '#theme' => 'ding_navigation_box_item',
+    '#item' => array(
+       'text' => 'Test 2', 
+     ),
+    '#theme' => 'ding_navigation_box_item',
+    '#item' => array(
+       'text' => 'Test 3', 
+     ),         
+  );
+  $entries['content_areas'] = array(
+      
+  );
+  return $entries;
 }
