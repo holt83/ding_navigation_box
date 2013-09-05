@@ -10,8 +10,8 @@
  * corresponding navigation item is activated). 
  * 
  * Available variables:
- * - $navigation_items: The navigation items
- * - $content_areas: The content areas
+ * - $navigation_items: The navigation items.
+ * - $content_areas: The content areas.
  * - $classes: String of classes that can be used to style contextually with 
  *             CSS. It can be manipulated throught $classes_array variable in
  *             preprocess functions.
@@ -22,12 +22,14 @@
 
 ?>
 
-<div id="ding-navigation-box" class="<?php print $classes ?>" <?php print $attributes ?>>
-  <?php if($navigation_items): ?> <!-- Only render if there is entries -->
-    <div id="ding-navigation-box-items">
+<div class="<?php print $classes ?>" <?php print $attributes ?>>
+  <?php if($navigation_items): ?> 
+    <div class="ding-navigation-box-items">
       <?php print render($navigation_items); ?>
     </div>
-    <div id="ding-navigation-box-areas">
+  <?php endif; ?>
+  <?php if($content_areas): ?>
+    <div class="ding-navigation-box-areas">
       <?php print render($content_areas); ?>
     </div>
   <?php endif; ?>

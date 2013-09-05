@@ -28,14 +28,11 @@ function ding_navigation_box_block_info() {
 function ding_navigation_box_block_view($delta) {
   $block = array();
   $block['subject'] = t('Ding navigation box');
-  // Fetch the entries for the navigation box.
   $entries = _ding_navigation_box_get_entries();
   $block['content'] = array(
     '#theme' => 'ding_navigation_box',
-    'navigation_items' => array(
-      '#theme' => 'item_list__ding_navigation_box',
-      '#items' => $entries['navigation_items'],  
-    ),  
+      'navigation_items' => $entries['navigation_items'],
+      'content_areas' => $entries['content_areas'],
   );
   return $block;
 }
@@ -54,10 +51,17 @@ function ding_navigation_box_theme() {
     ),
     'ding_navigation_box_item' => array(
       'variables' => array(
-        'item' => NULL,
+        'text' => 'Default text',  
       ),
       'template' => 'ding-navigation-box-item',
       'path' => DING_NAV_BOX_PATH . '/templates',  
+    ),
+    'ding_navigation_box_content_area' => array(
+      'variables' => array(
+        'content' => '',  
+      ),
+      'template' => 'ding-navigation-box-content-area',
+      'path' => DING_NAV_BOX_PATH . '/templates',   
     ),  
   );
 }
@@ -67,33 +71,34 @@ function ding_navigation_box_theme() {
  */
 function template_preprocess_ding_navigation_box(&$variables) {
   $element = $variables['element'];
-  // If there's no items present we dont have any entries either and we 
-  // communicate this to the template by setting the corresponding variables
-  // false.
+  // If there's no items or content areas present dont render entries at all. 
   if (empty($element['navigation_items'])) {
     $variables['navigation_items'] = $variables['content_areas'] = FALSE;
   }
-  // Else we setup the variables for the navigation box template.
+  // Else we setup the variables for the navigation box template and add the 
+  // necessary javascript and css files.
   else {
-    // Since the item_list theme hook doesn't accept a render array as item, we 
-    // render the array here, so that the item_list theme funtion recieves the
-    // parameter it expects.
     $variables['navigation_items'] = $element['navigation_items'];
-    foreach(array_keys($variables['navigation_items']['#items']) as $key) {
-      $rendered_item = drupal_render($variables['navigation_items']['#items'][$key]);
-      $variables['navigation_items']['#items'][$key] = $rendered_item;
-    }
-    $variables['content_areas'] = array();
+    $variables['content_areas'] = $element['content_areas'];
+    _ding_navigation_box_add_css();
+    _ding_navigation_box_add_javascript();
   }
 }
 
 /**
- * Module template preprocess funtion for the navigation box.
+ * Wrapper function for adding javascript.
  */
-function template_preprocess_ding_navigation_box_item(&$variables) {
-  $item = $variables['item'];
-  $variables['text'] = $item['text'];
+function _ding_navigation_box_add_javascript() {
+  
 }
+
+/**
+ * Wrapper function for adding css
+ */
+function _ding_navigation_box_add_css() {
+  
+}
+
 
 /**
  * Return an array with the entries for the navigation box setup as 
@@ -104,22 +109,35 @@ function template_preprocess_ding_navigation_box_item(&$variables) {
  */
 function _ding_navigation_box_get_entries() {
   $entries = array();
-  $entries['navigation_items'] = array(
+  $entries['navigation_items'][] = array(
     '#theme' => 'ding_navigation_box_item',
-    '#item' => array(
-       'text' => 'Test 1', 
-     ),
-    '#theme' => 'ding_navigation_box_item',
-    '#item' => array(
-       'text' => 'Test 2', 
-     ),
-    '#theme' => 'ding_navigation_box_item',
-    '#item' => array(
-       'text' => 'Test 3', 
-     ),         
+    '#text' => 'Test 1',
   );
-  $entries['content_areas'] = array(
-      
+  $entries['navigation_items'][] = array(
+    '#theme' => 'ding_navigation_box_item',
+    '#text' => 'Test 2',
+  );
+  $entries['navigation_items'][] = array(
+    '#theme' => 'ding_navigation_box_item',
+    '#text' => 'Test 3',
+  );
+  $entries['content_areas'][] = array(
+    '#theme' => 'ding_navigation_box_content_area',
+    '#content' => array(
+      '#markup' => '<p>This is test area 1</p>',  
+    ),  
+  );
+  $entries['content_areas'][] = array(
+    '#theme' => 'ding_navigation_box_content_area',
+    '#content' => array(
+      '#markup' => '<p>This is test area 2</p>',  
+    ),  
+  );
+  $entries['content_areas'][] = array(
+    '#theme' => 'ding_navigation_box_content_area',
+    '#content' => array(
+      '#markup' => '<p>This is test area 3</p>',  
+    ),  
   );
   return $entries;
 }

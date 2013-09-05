@@ -1,0 +1,12 @@
+.ding-navigation-box { 
+  overflow: auto;
+  border: thin solid black;
+  display: inline-block;
+}
+
+.ding-navigation-box-items {
+  float: left;
+}
+
+
+
