@@ -29,7 +29,7 @@
     </div>
   <?php endif; ?>
   <?php if($content_areas): ?>
-    <div class="ding-navigation-box-areas">
+    <div class="ding-navigation-box-content-areas">
       <?php print render($content_areas); ?>
     </div>
   <?php endif; ?>

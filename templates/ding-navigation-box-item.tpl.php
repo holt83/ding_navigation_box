@@ -4,7 +4,9 @@
  * Template file that defines HTML for an item in the Ding navigation box.
  * 
  * Available variables:
- * - $text: The text for the navigation item.  
+ * - $entry_title: The title for the entry this navigation item is part of.
+ * - $entry_position: A number specifying the position of the entry in the
+ *                    navigation box.
  * - $classes: String of classes that can be used to style contextually with 
  *             CSS. It can be manipulated throught $classes_array variable in
  *             preprocess functions.
@@ -16,5 +18,5 @@
 ?>
 
 <div class="<?php print $classes;?>" <?php print $attributes ?>>
-  <h4><?php print render($text); ?></h4>
+  <h4><?php print render($entry_title); ?></h4>
 </div>

@@ -28,6 +28,9 @@ function ding_navigation_box_block_info() {
 function ding_navigation_box_block_view($delta) {
   $block = array();
   $block['subject'] = t('Ding navigation box');
+  // The navigation box consist of entries wich each consist of a navigation 
+  // item and a content area. Below we fetch the entries, split them up in items
+  // and areas and pass these as render arrays to the navigation box template.
   $entries = _ding_navigation_box_get_entries();
   $block['content'] = array(
     '#theme' => 'ding_navigation_box',
@@ -51,14 +54,16 @@ function ding_navigation_box_theme() {
     ),
     'ding_navigation_box_item' => array(
       'variables' => array(
-        'text' => 'Default text',  
+        'entry_title' => 'Default text',
+        'entry_position' => -1,  
       ),
       'template' => 'ding-navigation-box-item',
       'path' => DING_NAV_BOX_PATH . '/templates',  
     ),
     'ding_navigation_box_content_area' => array(
       'variables' => array(
-        'content' => '',  
+        'entry_content' => '',
+        'entry_position' => -1,  
       ),
       'template' => 'ding-navigation-box-content-area',
       'path' => DING_NAV_BOX_PATH . '/templates',   
@@ -96,7 +101,11 @@ function _ding_navigation_box_add_javascript() {
  * Wrapper function for adding css
  */
 function _ding_navigation_box_add_css() {
-  
+  $css_options = array(
+    'type' => 'file',
+    'group' => CSS_DEFAULT,
+  );
+  drupal_add_css(DING_NAV_BOX_PATH . '/css/ding-navigation-box.css', $css_options);
 }
 
 
@@ -111,33 +120,63 @@ function _ding_navigation_box_get_entries() {
   $entries = array();
   $entries['navigation_items'][] = array(
     '#theme' => 'ding_navigation_box_item',
-    '#text' => 'Test 1',
+    '#entry_title' => 'Test 1',
+    '#entry_position' => 1,  
   );
   $entries['navigation_items'][] = array(
     '#theme' => 'ding_navigation_box_item',
-    '#text' => 'Test 2',
+    '#entry_title' => 'Test 2',
+    '#entry_position' => 2,
   );
   $entries['navigation_items'][] = array(
     '#theme' => 'ding_navigation_box_item',
-    '#text' => 'Test 3',
+    '#entry_title' => 'Test 3',
+    '#entry_position' => 3,  
   );
+  $entries['navigation_items'][] = array(
+    '#theme' => 'ding_navigation_box_item',
+    '#entry_title' => 'Test 4',
+    '#entry_position' => 4,  
+  );
+  $entries['navigation_items'][] = array(
+    '#theme' => 'ding_navigation_box_item',
+    '#entry_title' => 'Test 5',
+    '#entry_position' => 5,  
+  );  
   $entries['content_areas'][] = array(
     '#theme' => 'ding_navigation_box_content_area',
-    '#content' => array(
+    '#entry_content' => array(
       '#markup' => '<p>This is test area 1</p>',  
-    ),  
+    ),
+    '#entry_position' => 1,  
   );
   $entries['content_areas'][] = array(
     '#theme' => 'ding_navigation_box_content_area',
-    '#content' => array(
+    '#entry_content' => array(
       '#markup' => '<p>This is test area 2</p>',  
-    ),  
+    ),
+    '#entry_position' => 2,  
   );
   $entries['content_areas'][] = array(
     '#theme' => 'ding_navigation_box_content_area',
-    '#content' => array(
+    '#entry_content' => array(
       '#markup' => '<p>This is test area 3</p>',  
-    ),  
+    ),
+    '#entry_position' => 3,  
   );
+  $entries['content_areas'][] = array(
+    '#theme' => 'ding_navigation_box_content_area',
+    '#entry_content' => array(
+      '#markup' => '<p>This is test area 4</p>',  
+    ),
+    '#entry_position' => 4,  
+  );
+  $entries['content_areas'][] = array(
+    '#theme' => 'ding_navigation_box_content_area',
+    '#entry_content' => array(
+      '#markup' => '<p>This is test area 5</p>',  
+    ),
+    '#entry_position' => 5,  
+  );  
   return $entries;
 }

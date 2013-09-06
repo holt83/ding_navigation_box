@@ -6,7 +6,9 @@
  * Template file that defines HTML for a content area in the navigation box.
  *
  * Available variables:
- * - $content: The content to go in this area.  
+ * - $entry_content: The content of the entry to go in this area.
+ * - $entry_position: A number specifying the position of the entry in the
+ *                    navigation box.  
  * - $classes: String of classes that can be used to style contextually with 
  *             CSS. It can be manipulated throught $classes_array variable in
  *             preprocess functions.
@@ -19,5 +21,5 @@
 ?>
 
 <div class="<?php print $classes; ?>" <?php print $attributes ?>> 
-  <?php print render($content); ?> 
+  <?php print render($entry_content); ?> 
 </div>
