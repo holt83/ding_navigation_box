@@ -6,6 +6,7 @@
  * Template file that defines HTML for a content area in the navigation box.
  *
  * Available variables:
+ * - $entry_title: The title of the entry this content area belongs to.
  * - $entry_content: The content of the entry to go in this area.
  * - $entry_position: A number specifying the position of the entry in the
  *                    navigation box.  
@@ -20,6 +21,7 @@
 
 ?>
 
-<div class="<?php print $classes; ?>" <?php print $attributes ?>> 
+<div class="<?php print $classes; ?>" <?php print $attributes ?>>
+  <h3><?php print $entry_title; ?></h3>
   <?php print render($entry_content); ?> 
 </div>

@@ -54,7 +54,7 @@ function ding_navigation_box_theme() {
     ),
     'ding_navigation_box_item' => array(
       'variables' => array(
-        'entry_title' => 'Default text',
+        'entry_title' => 'Default title',
         'entry_position' => -1,  
       ),
       'template' => 'ding-navigation-box-item',
@@ -62,6 +62,7 @@ function ding_navigation_box_theme() {
     ),
     'ding_navigation_box_content_area' => array(
       'variables' => array(
+        'entry_title' => 'Default title',  
         'entry_content' => '',
         'entry_position' => -1,  
       ),
@@ -77,7 +78,7 @@ function ding_navigation_box_theme() {
 function template_preprocess_ding_navigation_box(&$variables) {
   $element = $variables['element'];
   // If there's no items or content areas present dont render entries at all. 
-  if (empty($element['navigation_items'])) {
+  if (empty($element['navigation_items']) || empty($element['content_areas'])) {
     $variables['navigation_items'] = $variables['content_areas'] = FALSE;
   }
   // Else we setup the variables for the navigation box template and add the 
@@ -94,7 +95,11 @@ function template_preprocess_ding_navigation_box(&$variables) {
  * Wrapper function for adding javascript.
  */
 function _ding_navigation_box_add_javascript() {
-  
+  $js_options = array(
+    'type' => 'file',
+    'group' => JS_DEFAULT,  
+  );
+  drupal_add_js(DING_NAV_BOX_PATH . '/js/ding-navigation-box.js', $js_options);
 }
 
 /**
@@ -106,6 +111,7 @@ function _ding_navigation_box_add_css() {
     'group' => CSS_DEFAULT,
   );
   drupal_add_css(DING_NAV_BOX_PATH . '/css/ding-navigation-box.css', $css_options);
+  drupal_add_css(DING_NAV_BOX_PATH . '/css/ding-navigation-box-borders.css', $css_options);
 }
 
 
@@ -145,6 +151,7 @@ function _ding_navigation_box_get_entries() {
   );  
   $entries['content_areas'][] = array(
     '#theme' => 'ding_navigation_box_content_area',
+    '#entry_title' => 'Test 1',  
     '#entry_content' => array(
       '#markup' => '<p>This is test area 1</p>',  
     ),
@@ -152,6 +159,7 @@ function _ding_navigation_box_get_entries() {
   );
   $entries['content_areas'][] = array(
     '#theme' => 'ding_navigation_box_content_area',
+    '#entry_title' => 'Test 2', 
     '#entry_content' => array(
       '#markup' => '<p>This is test area 2</p>',  
     ),
@@ -159,6 +167,7 @@ function _ding_navigation_box_get_entries() {
   );
   $entries['content_areas'][] = array(
     '#theme' => 'ding_navigation_box_content_area',
+    '#entry_title' => 'Test 3',  
     '#entry_content' => array(
       '#markup' => '<p>This is test area 3</p>',  
     ),
@@ -166,6 +175,7 @@ function _ding_navigation_box_get_entries() {
   );
   $entries['content_areas'][] = array(
     '#theme' => 'ding_navigation_box_content_area',
+    '#entry_title' => 'Test 4',  
     '#entry_content' => array(
       '#markup' => '<p>This is test area 4</p>',  
     ),
@@ -173,6 +183,7 @@ function _ding_navigation_box_get_entries() {
   );
   $entries['content_areas'][] = array(
     '#theme' => 'ding_navigation_box_content_area',
+    '#entry_title' => 'Test 5',  
     '#entry_content' => array(
       '#markup' => '<p>This is test area 5</p>',  
     ),

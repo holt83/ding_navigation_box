@@ -10,21 +10,23 @@
 
 .ding-navigation-box-items {
   float: left;
-  border: 1px solid black;
-  border-bottom: none;
 }
 
 .ding-navigation-box-item {
-  border-bottom: 1px solid black;
   padding: 1em;
 }
 
-.ding-navigation-box-content-area {
+.ding-navigation-box-content-areas {
   float: left;
-  border: 1px solid black;
-  padding: 1em;
-  margin-left: -1px;
+  width: 27em;
+  z-index: 1000;
 }
+
+.ding-navigation-box-content-area {
+  padding: 1em;
+  width: 25em;
+}
+
 
 
 
