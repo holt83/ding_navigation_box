@@ -32,11 +32,27 @@ function ding_navigation_box_block_view($delta) {
   // item and a content area. Below we fetch the entries, split them up in items
   // and areas and pass these as render arrays to the navigation box template.
   $entries = _ding_navigation_box_get_entries();
-  $block['content'] = array(
+  $block['content']['ding_navigation_box'] = array(
     '#theme' => 'ding_navigation_box',
       'navigation_items' => $entries['navigation_items'],
       'content_areas' => $entries['content_areas'],
   );
+  // Attach javascript
+  $js_options = array(
+    'type' => 'file',
+    'group' => JS_DEFAULT,  
+  );
+  $js_path = DING_NAV_BOX_PATH . '/js/ding-navigation-box.js';
+  $block['content']['#attached']['js'][$js_path] = $js_options;
+  // Attach css
+  $css_options = array(
+    'type' => 'file',
+    'group' => CSS_DEFAULT,  
+  );
+  $css_path = DING_NAV_BOX_PATH . '/css/ding-navigation-box.css';
+  $block['content']['#attached']['css'][$css_path] = $css_options;
+  $css_path = DING_NAV_BOX_PATH . '/css/ding-navigation-box-borders.css';
+  $block['content']['#attached']['css'][$css_path] = $css_options;
   return $block;
 }
 
@@ -81,39 +97,12 @@ function template_preprocess_ding_navigation_box(&$variables) {
   if (empty($element['navigation_items']) || empty($element['content_areas'])) {
     $variables['navigation_items'] = $variables['content_areas'] = FALSE;
   }
-  // Else we setup the variables for the navigation box template and add the 
-  // necessary javascript and css files.
+  // Else we setup the variables for the navigation box template.
   else {
     $variables['navigation_items'] = $element['navigation_items'];
     $variables['content_areas'] = $element['content_areas'];
-    _ding_navigation_box_add_css();
-    _ding_navigation_box_add_javascript();
   }
 }
-
-/**
- * Wrapper function for adding javascript.
- */
-function _ding_navigation_box_add_javascript() {
-  $js_options = array(
-    'type' => 'file',
-    'group' => JS_DEFAULT,  
-  );
-  drupal_add_js(DING_NAV_BOX_PATH . '/js/ding-navigation-box.js', $js_options);
-}
-
-/**
- * Wrapper function for adding css
- */
-function _ding_navigation_box_add_css() {
-  $css_options = array(
-    'type' => 'file',
-    'group' => CSS_DEFAULT,
-  );
-  drupal_add_css(DING_NAV_BOX_PATH . '/css/ding-navigation-box.css', $css_options);
-  drupal_add_css(DING_NAV_BOX_PATH . '/css/ding-navigation-box-borders.css', $css_options);
-}
-
 
 /**
  * Return an array with the entries for the navigation box setup as 
