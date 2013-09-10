@@ -8,10 +8,15 @@
   var contentBorderLeft;
   var borderShadow;
   
+  //Declare settings variables
+  var duration;
+  
   Drupal.behaviors.dingNavigationBox = {   
     
     attach: function(context, settings) {
       
+      // First we apply settings passed from Drupal.
+      applySettings(settings);
       // Store the width of the content area container.
       contentWidth = $(prefix + "content-areas").width();
       // Store the left border of the content area container.
@@ -27,7 +32,7 @@
       
       // Since the navigation box should start out as inactive, we run the 
       // deactivation function once when this attach function is first called.
-      $(".ding-navigation-box").once("ding-navigation-box-attach", function() {
+      $(".ding-navigation-box", context).once("ding-navigation-box-attach", function() {
         deactivateNavigationBox();
         // Also run the deactivation function every the mouse leaves the 
         // navigation box.
@@ -38,11 +43,11 @@
       // the mouseenter event.
       $(prefix + "item").each(function(index) {
         // Ensure each handler only gets attached once.
-        $(this, context).once("ding-navigation-item-attach", function() {
+        $(this, context).once("ding-navigation-box-item-attach", function() {
           $(this).mouseenter(function(){
             // If the navigation box was not active we activate it before we 
             // show the associated content.
-            if (!active) {activateNavigationBox();}
+            if (!active) {activateNavigationBox(duration);}
             // Hide any active content areas.
             $(prefix + "content-area").hide();
             // Show the content area associated with this item.
@@ -54,14 +59,32 @@
     }
   };
   
-  function activateNavigationBox() {
+  // Checks if the different settings from Drupal is set, and if so applies them
+  // to their associated javascript variables. If not set it applies default
+  // values
+  function applySettings(settings) {
+    // If our module's namespace is not on the settings array we apply defaults
+    // for all the settings and return.
+    if (typeof settings.dingNavigationBox === 'undefined') {
+      duration = 500;
+      return;
+    }
+    if (typeof settings.dingNavigationBox.duration !== 'undefined') {
+      duration = settings.dingNavigationBox.duration;
+    }
+    else {
+      duration = 500;
+    }
+  }
+  
+  function activateNavigationBox(duration) {
     active = true;
     $(prefix + "content-areas")
       .css("border-left", contentBorderLeft)
       .css("box-shadow", borderShadow)
       .animate({
         width: contentWidth
-      }, 500);    
+      }, duration);    
   }
   
   function deactivateNavigationBox() {

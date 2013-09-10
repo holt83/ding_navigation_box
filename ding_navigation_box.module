@@ -38,21 +38,11 @@ function ding_navigation_box_block_view($delta) {
       'content_areas' => $entries['content_areas'],
   );
   // Attach javascript
-  $js_options = array(
-    'type' => 'file',
-    'group' => JS_DEFAULT,  
-  );
-  $js_path = DING_NAV_BOX_PATH . '/js/ding-navigation-box.js';
-  $block['content']['#attached']['js'][$js_path] = $js_options;
+  $block['content']['#attached']['js'][] = _ding_navigation_box_get_javascript();
+  // Attach javascript settings
+  $block['content']['#attached']['js'][] = _ding_navigation_box_get_javascript_settings();
   // Attach css
-  $css_options = array(
-    'type' => 'file',
-    'group' => CSS_DEFAULT,  
-  );
-  $css_path = DING_NAV_BOX_PATH . '/css/ding-navigation-box.css';
-  $block['content']['#attached']['css'][$css_path] = $css_options;
-  $css_path = DING_NAV_BOX_PATH . '/css/ding-navigation-box-borders.css';
-  $block['content']['#attached']['css'][$css_path] = $css_options;
+  $block['content']['#attached']['css'] = _ding_navigation_box_get_css();
   return $block;
 }
 
@@ -102,6 +92,53 @@ function template_preprocess_ding_navigation_box(&$variables) {
     $variables['navigation_items'] = $element['navigation_items'];
     $variables['content_areas'] = $element['content_areas'];
   }
+}
+
+/**
+ * Returns an array with settings for the navigation box to be passed to 
+ * javascript. This array can be used on the attached property on render arrays.
+ */
+function _ding_navigation_box_get_javascript_settings() {
+  return array(
+    'type' => 'setting',
+    'group' => JS_DEFAULT,
+    'data' => array(
+      'dingNavigationBox' => array(
+        'duration' => 500,  
+      ),  
+    )  
+  );
+}
+
+/**
+ * Returns an array with all the css for the navigation box that can be used
+ * on the attach property in a render array. 
+ */
+function _ding_navigation_box_get_css() {
+  $css = array();
+  $css_base = array(
+    'type' => 'file',
+    'group' => CSS_DEFAULT,  
+  );
+  $css[] = array(
+    'data' => DING_NAV_BOX_PATH . '/css/ding-navigation-box.css',  
+  ) + $css_base;
+  $css[] = array(
+    'data' => DING_NAV_BOX_PATH . '/css/ding-navigation-box-borders.css',  
+  ) + $css_base;
+  return $css;
+}
+
+/**
+ * Returns an array with the javascript for the navigation box. This array can
+ * be used on the attached property in a render array.
+ */
+function _ding_navigation_box_get_javascript() {
+  return array(
+    'type' => 'file',
+    'group' => JS_DEFAULT,
+    'data' => DING_NAV_BOX_PATH . '/js/ding-navigation-box.js',  
+  );
 }
 
 /**
