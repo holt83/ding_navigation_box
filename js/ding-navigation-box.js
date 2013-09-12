@@ -28,7 +28,7 @@
       // Since the height of the items varies with number of items and the 
       // individual height of items, we calculate the actual height of the 
       // items here and set that as the min-height for the content.
-      setContentMinHeight();    
+      setContentMinHeight();
       
       // Since the navigation box should start out as inactive, we run the 
       // deactivation function once when this attach function is first called.
@@ -65,7 +65,6 @@
   function applySettings(settings) {
     // If our module's namespace is not on the settings array we do nothing.
     if (typeof settings.dingNavigationBox === 'undefined') {
-      duration = 500;
       return;
     }
     if (typeof settings.dingNavigationBox.duration !== 'undefined') {
