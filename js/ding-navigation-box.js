@@ -9,7 +9,7 @@
   var borderShadow;
   
   //Declare settings variables
-  var duration;
+  var duration = 500;
   
   Drupal.behaviors.dingNavigationBox = {   
     
@@ -63,17 +63,12 @@
   // to their associated javascript variables. If not set it applies default
   // values
   function applySettings(settings) {
-    // If our module's namespace is not on the settings array we apply defaults
-    // for all the settings and return.
+    // If our module's namespace is not on the settings array we do nothing.
     if (typeof settings.dingNavigationBox === 'undefined') {
-      duration = 500;
       return;
     }
     if (typeof settings.dingNavigationBox.duration !== 'undefined') {
       duration = settings.dingNavigationBox.duration;
-    }
-    else {
-      duration = 500;
     }
   }
   
