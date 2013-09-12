@@ -65,6 +65,7 @@
   function applySettings(settings) {
     // If our module's namespace is not on the settings array we do nothing.
     if (typeof settings.dingNavigationBox === 'undefined') {
+      duration = 500;
       return;
     }
     if (typeof settings.dingNavigationBox.duration !== 'undefined') {
