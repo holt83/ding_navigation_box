@@ -55,8 +55,8 @@
           });
         });
       });
-      
     }
+
   };
   
   // Checks if the different settings from Drupal is set, and if so applies them
