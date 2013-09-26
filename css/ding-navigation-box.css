@@ -8,18 +8,13 @@
   padding: 0;
 }
 
-.ding-navigation-box-items {
+.ding-navigation-box-items,
+.ding-navigation-box-content-areas { 
   float: left;
 }
 
 .ding-navigation-box-item {
   padding: 1em;
-}
-
-.ding-navigation-box-content-areas {
-  float: left;
-  width: 27em;
-  z-index: 1000;
 }
 
 .ding-navigation-box-content-area {

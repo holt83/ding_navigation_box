@@ -34,8 +34,8 @@ function ding_navigation_box_block_view($delta) {
   $entries = _ding_navigation_box_get_entries();
   $block['content']['ding_navigation_box'] = array(
     '#theme' => 'ding_navigation_box',
-      'navigation_items' => $entries['navigation_items'],
-      'content_areas' => $entries['content_areas'],
+    'navigation_items' => $entries['navigation_items'],
+    'content_areas' => $entries['content_areas'],
   );
   // Attach javascript
   $block['content']['#attached']['js'][] = _ding_navigation_box_get_javascript();
@@ -61,7 +61,7 @@ function ding_navigation_box_theme() {
     'ding_navigation_box_item' => array(
       'variables' => array(
         'entry_title' => 'Default title',
-        'entry_position' => -1,  
+        'entry_position' => 0,  
       ),
       'template' => 'ding-navigation-box-item',
       'path' => DING_NAV_BOX_PATH . '/templates',  
@@ -70,7 +70,7 @@ function ding_navigation_box_theme() {
       'variables' => array(
         'entry_title' => 'Default title',  
         'entry_content' => '',
-        'entry_position' => -1,  
+        'entry_position' => 0,  
       ),
       'template' => 'ding-navigation-box-content-area',
       'path' => DING_NAV_BOX_PATH . '/templates',   
