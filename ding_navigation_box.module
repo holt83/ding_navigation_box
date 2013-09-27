@@ -38,11 +38,13 @@ function ding_navigation_box_block_view($delta) {
     'content_areas' => $entries['content_areas'],
   );
   // Attach javascript
-  $block['content']['#attached']['js'][] = _ding_navigation_box_get_javascript();
-  // Attach javascript settings
-  $block['content']['#attached']['js'][] = _ding_navigation_box_get_javascript_settings();
+  foreach (_ding_navigation_box_get_javascript() as $js) {
+    $block['content']['#attached']['js'][] = $js;
+  }
   // Attach css
-  $block['content']['#attached']['css'] = _ding_navigation_box_get_css();
+  foreach (_ding_navigation_box_get_css() as $css) {
+    $block['content']['#attached']['css'][] = $css; 
+  }
   return $block;
 }
 
@@ -95,22 +97,6 @@ function template_preprocess_ding_navigation_box(&$variables) {
 }
 
 /**
- * Returns an array with settings for the navigation box to be passed to 
- * javascript. This array can be used on the attached property on render arrays.
- */
-function _ding_navigation_box_get_javascript_settings() {
-  return array(
-    'type' => 'setting',
-    'group' => JS_DEFAULT,
-    'data' => array(
-      'dingNavigationBox' => array(
-        'duration' => 500,  
-      ),  
-    )  
-  );
-}
-
-/**
  * Returns an array with all the css for the navigation box that can be used
  * on the attach property in a render array. 
  */
@@ -134,11 +120,23 @@ function _ding_navigation_box_get_css() {
  * be used on the attached property in a render array.
  */
 function _ding_navigation_box_get_javascript() {
-  return array(
-    'type' => 'file',
+  $js = array();
+  $js_base = array(
     'group' => JS_DEFAULT,
-    'data' => DING_NAV_BOX_PATH . '/js/ding-navigation-box.js',  
   );
+  $js[] = array(
+    'type' => 'file',
+    'data' => DING_NAV_BOX_PATH . '/js/ding-navigation-box.js',
+  ) + $js_base;
+  $js[] = array(
+    'type' => 'setting',
+    'data' => array(
+      'dingNavigationBox' => array(
+        'duration' => 500,  
+      ),
+    ),    
+  ) + $js_base;
+  return $js;
 }
 
 /**
