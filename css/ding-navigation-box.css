@@ -1,6 +1,7 @@
 .ding-navigation-box { 
   overflow: auto;
   display: inline-block;
+  position: relative;
 }
 
 .ding-navigation-box * {
@@ -13,13 +14,24 @@
   float: left;
 }
 
+.ding-navigation-box-items,
+.ding-navigation-box-content-areas,
+.ding-navigation-box-content-area {
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;	
+}
+
 .ding-navigation-box-item {
-  padding: 1em;
+  padding: 15px;
+}
+
+.ding-navigation-box-items {
+	width: 150px;
 }
 
 .ding-navigation-box-content-area {
-  padding: 1em;
-  width: 25em;
+  padding: 10px;
+  width: 400px;
 }
 
 

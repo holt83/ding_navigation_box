@@ -1,16 +1,20 @@
 .ding-navigation-box-items {
-  border-top: 2px solid black;
-  border-left: 2px solid black;
+  border: 2px solid black;
+  border-right: none;
 }
 
 .ding-navigation-box-item {
   border-bottom: 2px solid black;
 }
 
+.ding-navigation-box-item:last-child {
+	border-bottom: none;
+}
+	
 .ding-navigation-box-content-areas {
   border: 2px solid black;
-  box-shadow: 0.5em 0.5em 0.5em grey;
-  margin-right: 0.5em;
-  margin-bottom: 0.5em;
+  box-shadow: 5px 5px 5px grey;
+  margin-right: 5px;
+  margin-bottom: 5px;
 }
 

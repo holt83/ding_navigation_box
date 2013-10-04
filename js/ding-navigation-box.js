@@ -94,8 +94,11 @@
   
   function setContentMinHeight() {
     var itemsHeight = $(prefix + "items").height();
+    // Since the height() method return content-height, we need to add the
+    // height of the top and bottom border to get the right height of the
+    // content areas because of the border-box box-sizing css property.
     var borderHeight = $(prefix + "content-areas").css("border-bottom-width");
-    var minHeight = itemsHeight - parseInt(borderHeight);
+    var minHeight = itemsHeight + 2 * parseInt(borderHeight);
     $(prefix + "content-areas").css("min-height", minHeight);
   }
   
