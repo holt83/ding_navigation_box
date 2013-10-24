@@ -132,7 +132,7 @@ function _ding_navigation_box_get_javascript() {
     'type' => 'setting',
     'data' => array(
       'dingNavigationBox' => array(
-        'duration' => 500,  
+        'defaultEntryIndex' => 2,  
       ),
     ),    
   ) + $js_base;

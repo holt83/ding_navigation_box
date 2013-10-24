@@ -1,3 +1,7 @@
+.ding-navigation-box {
+  border: 2px solid black;	
+}
+
 .ding-navigation-box-items {
   border: 2px solid black;
   border-right: none;
@@ -13,8 +17,5 @@
 	
 .ding-navigation-box-content-areas {
   border: 2px solid black;
-  box-shadow: 5px 5px 5px grey;
-  margin-right: 5px;
-  margin-bottom: 5px;
 }
 
