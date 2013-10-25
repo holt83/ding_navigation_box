@@ -19,4 +19,5 @@
 
 <div class="<?php print $classes;?>" <?php print $attributes ?>>
   <h4><?php print render($entry_title); ?></h4>
+  <div class="ding-navigation-box-item-arrow"></div>
 </div>

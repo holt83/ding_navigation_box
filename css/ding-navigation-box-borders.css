@@ -1,21 +1,15 @@
 .ding-navigation-box {
-  border: 2px solid black;	
+  border: 2px solid black;
+  -webkit-border-radius: 10px/10px;
+  -moz-border-radius: 10px/10px;
+  border-radius: 10px/10px;
 }
 
 .ding-navigation-box-items {
-  border: 2px solid black;
-  border-right: none;
+  border-right: 2px solid black;
 }
 
 .ding-navigation-box-item {
-  border-bottom: 2px solid black;
+  border-top: 2px solid grey;
+  border-bottom: 2px solid grey;
 }
-
-.ding-navigation-box-item:last-child {
-	border-bottom: none;
-}
-	
-.ding-navigation-box-content-areas {
-  border: 2px solid black;
-}
-

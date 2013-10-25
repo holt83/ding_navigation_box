@@ -25,7 +25,9 @@
 <div class="<?php print $classes ?>" <?php print $attributes ?>>
   <?php if($navigation_items && $content_areas): ?> 
     <div class="ding-navigation-box-items">
-      <?php print render($navigation_items); ?>
+      <div class="ding-navigation-box-items-center-wrapper">
+        <?php print render($navigation_items); ?>
+      </div>
     </div>
     <div class="ding-navigation-box-content-areas">
       <?php print render($content_areas); ?>

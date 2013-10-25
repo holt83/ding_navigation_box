@@ -132,7 +132,8 @@ function _ding_navigation_box_get_javascript() {
     'type' => 'setting',
     'data' => array(
       'dingNavigationBox' => array(
-        'defaultEntryIndex' => 2,  
+        'defaultEntryIndex' => 2,
+        'activationEvent' => 'click',  
       ),
     ),    
   ) + $js_base;
@@ -209,7 +210,72 @@ function _ding_navigation_box_get_entries() {
     '#theme' => 'ding_navigation_box_content_area',
     '#entry_title' => 'Test 5',  
     '#entry_content' => array(
-      '#markup' => '<p>This is test area 5</p>',  
+      'test_markup_1' => array(
+        '#markup' => '<p>This is test area 5</p>',        
+      ),
+      'test_markup_2' => array(
+        '#markup' => '<p>This is test area 5</p>',        
+      ),
+      'test_markup_3' => array(
+        '#markup' => '<p>This is test area 5</p>',        
+      ),   
+      'test_markup_4' => array(
+        '#markup' => '<p>This is test area 5</p>',        
+      ),   
+      'test_markup_5' => array(
+        '#markup' => '<p>This is test area 5</p>',        
+      ),   
+      'test_markup_6' => array(
+        '#markup' => '<p>This is test area 5</p>',        
+      ),   
+      'test_markup_7' => array(
+        '#markup' => '<p>This is test area 5</p>',        
+      ),   
+      'test_markup_11' => array(
+        '#markup' => '<p>This is test area 5</p>',        
+      ),   
+      'test_markup_8' => array(
+        '#markup' => '<p>This is test area 5</p>',        
+      ),   
+      'test_markup_9' => array(
+        '#markup' => '<p>This is test area 5</p>',        
+      ),   
+      'test_markup_10' => array(
+        '#markup' => '<p>This is test area 5</p>',        
+      ),
+      'test_markup_12' => array(
+        '#markup' => '<p>This is test area 5</p>',        
+      ),      
+      'test_markup_14' => array(
+        '#markup' => '<p>This is test area 5</p>',        
+      ),
+      'test_markup_15' => array(
+        '#markup' => '<p>This is test area 5</p>',        
+      ),       
+      'test_markup_16' => array(
+        '#markup' => '<p>This is test area 5</p>',        
+      ),       
+      'test_markup_17' => array(
+        '#markup' => '<p>This is test area 5</p>',        
+      ),       
+      'test_markup_18' => array(
+        '#markup' => '<p>This is test area 5</p>',        
+      ),       
+      'test_markup_19' => array(
+        '#markup' => '<p>This is test area 5</p>',        
+      ),       
+      'test_markup_20' => array(
+        '#markup' => '<p>This is test area 5</p>',        
+      ),       
+      'test_markup_21' => array(
+        '#markup' => '<p>This is test area 5</p>',        
+      ),       
+      'test_markup_22' => array(
+        '#markup' => '<p>This is test area 5</p>',        
+      ),       
+      'test_markup_23' => array(
+        '#markup' => '<p>This is test area 5</p>',        
+      ),                                                                                                                                              
     ),
     '#entry_position' => 5,  
   );  
