@@ -63,7 +63,8 @@ function ding_navigation_box_theme() {
     'ding_navigation_box_item' => array(
       'variables' => array(
         'entry_title' => 'Default title',
-        'entry_position' => 0,  
+        'entry_position' => 0,
+        'entry' => NULL,  
       ),
       'template' => 'ding-navigation-box-item',
       'path' => DING_NAV_BOX_PATH . '/templates',  
@@ -72,7 +73,8 @@ function ding_navigation_box_theme() {
       'variables' => array(
         'entry_title' => 'Default title',  
         'entry_content' => '',
-        'entry_position' => 0,  
+        'entry_position' => 0,
+        'entry' => NULL,  
       ),
       'template' => 'ding-navigation-box-content-area',
       'path' => DING_NAV_BOX_PATH . '/templates',   
@@ -132,8 +134,8 @@ function _ding_navigation_box_get_javascript() {
     'type' => 'setting',
     'data' => array(
       'dingNavigationBox' => array(
-        'defaultEntryIndex' => 2,
-        'activationEvent' => 'click',  
+        'defaultEntryIndex' => 1,
+        'activationEvent' => 'mouseenter',  
       ),
     ),    
   ) + $js_base;
@@ -143,141 +145,50 @@ function _ding_navigation_box_get_javascript() {
 /**
  * Return an array with the entries for the navigation box setup as 
  * render-arrays.
- * 
- * @return 
- * array(navigation_items => content_areas)
  */
 function _ding_navigation_box_get_entries() {
-  $entries = array();
-  $entries['navigation_items'][] = array(
-    '#theme' => 'ding_navigation_box_item',
-    '#entry_title' => 'Test 1',
-    '#entry_position' => 1,  
-  );
-  $entries['navigation_items'][] = array(
-    '#theme' => 'ding_navigation_box_item',
-    '#entry_title' => 'Test 2',
-    '#entry_position' => 2,
-  );
-  $entries['navigation_items'][] = array(
-    '#theme' => 'ding_navigation_box_item',
-    '#entry_title' => 'Test 3',
-    '#entry_position' => 3,  
-  );
-  $entries['navigation_items'][] = array(
-    '#theme' => 'ding_navigation_box_item',
-    '#entry_title' => 'Test 4',
-    '#entry_position' => 4,  
-  );
-  $entries['navigation_items'][] = array(
-    '#theme' => 'ding_navigation_box_item',
-    '#entry_title' => 'Test 5',
-    '#entry_position' => 5,  
-  );  
-  $entries['content_areas'][] = array(
-    '#theme' => 'ding_navigation_box_content_area',
-    '#entry_title' => 'Test 1',  
-    '#entry_content' => array(
-      '#markup' => '<p>This is test area 1</p>',  
-    ),
-    '#entry_position' => 1,  
-  );
-  $entries['content_areas'][] = array(
-    '#theme' => 'ding_navigation_box_content_area',
-    '#entry_title' => 'Test 2', 
-    '#entry_content' => array(
-      '#markup' => '<p>This is test area 2</p>',  
-    ),
-    '#entry_position' => 2,  
-  );
-  $entries['content_areas'][] = array(
-    '#theme' => 'ding_navigation_box_content_area',
-    '#entry_title' => 'Test 3',  
-    '#entry_content' => array(
-      '#markup' => '<p>This is test area 3</p>',  
-    ),
-    '#entry_position' => 3,  
-  );
-  $entries['content_areas'][] = array(
-    '#theme' => 'ding_navigation_box_content_area',
-    '#entry_title' => 'Test 4',  
-    '#entry_content' => array(
-      '#markup' => '<p>This is test area 4</p>',  
-    ),
-    '#entry_position' => 4,  
-  );
-  $entries['content_areas'][] = array(
-    '#theme' => 'ding_navigation_box_content_area',
-    '#entry_title' => 'Test 5',  
-    '#entry_content' => array(
-      'test_markup_1' => array(
-        '#markup' => '<p>This is test area 5</p>',        
-      ),
-      'test_markup_2' => array(
-        '#markup' => '<p>This is test area 5</p>',        
-      ),
-      'test_markup_3' => array(
-        '#markup' => '<p>This is test area 5</p>',        
-      ),   
-      'test_markup_4' => array(
-        '#markup' => '<p>This is test area 5</p>',        
-      ),   
-      'test_markup_5' => array(
-        '#markup' => '<p>This is test area 5</p>',        
-      ),   
-      'test_markup_6' => array(
-        '#markup' => '<p>This is test area 5</p>',        
-      ),   
-      'test_markup_7' => array(
-        '#markup' => '<p>This is test area 5</p>',        
-      ),   
-      'test_markup_11' => array(
-        '#markup' => '<p>This is test area 5</p>',        
-      ),   
-      'test_markup_8' => array(
-        '#markup' => '<p>This is test area 5</p>',        
-      ),   
-      'test_markup_9' => array(
-        '#markup' => '<p>This is test area 5</p>',        
-      ),   
-      'test_markup_10' => array(
-        '#markup' => '<p>This is test area 5</p>',        
-      ),
-      'test_markup_12' => array(
-        '#markup' => '<p>This is test area 5</p>',        
-      ),      
-      'test_markup_14' => array(
-        '#markup' => '<p>This is test area 5</p>',        
-      ),
-      'test_markup_15' => array(
-        '#markup' => '<p>This is test area 5</p>',        
-      ),       
-      'test_markup_16' => array(
-        '#markup' => '<p>This is test area 5</p>',        
-      ),       
-      'test_markup_17' => array(
-        '#markup' => '<p>This is test area 5</p>',        
-      ),       
-      'test_markup_18' => array(
-        '#markup' => '<p>This is test area 5</p>',        
-      ),       
-      'test_markup_19' => array(
-        '#markup' => '<p>This is test area 5</p>',        
-      ),       
-      'test_markup_20' => array(
-        '#markup' => '<p>This is test area 5</p>',        
-      ),       
-      'test_markup_21' => array(
-        '#markup' => '<p>This is test area 5</p>',        
-      ),       
-      'test_markup_22' => array(
-        '#markup' => '<p>This is test area 5</p>',        
-      ),       
-      'test_markup_23' => array(
-        '#markup' => '<p>This is test area 5</p>',        
-      ),                                                                                                                                              
-    ),
-    '#entry_position' => 5,  
-  );  
-  return $entries;
+  // Fetch nodes of type 'ding_navigation_entry' with an EntityFieldQuery.
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'node')
+        ->entityCondition('bundle', 'ding_navigation_entry');
+  $result = $query->execute();
+  // Initialize our result and return array.
+  $entries_result = array();
+  $entries_return = array();
+  // Check to see if the query returned any entries. If so we setup the return
+  // array with the entry-items and entry-areas prepared as render arrays.
+  if (isset($result['node'])) {
+    $entry_nids = array_keys($result['node']);
+    $entries_result = node_load_multiple($entry_nids);
+    // Prepare the field data for display
+    field_attach_prepare_view('node', $entries_result, 'full');
+    // Allow modules to act - invoke hook_entity_prepare_view().
+    entity_prepare_view('node', $entries_result);
+    $i = 0;
+    foreach ($entries_result as $entry) {
+      $i++;
+      // Build field content - Setup a renderarray for each field on the entry.
+      $entry->content = field_attach_view('node', $entry, 'full');
+      $entries_return['navigation_items'][] = array(
+        '#theme' => 'ding_navigation_box_item',
+        '#entry' => $entry,
+        '#entry_position' => $i,
+        '#entry_title' => $entry->title,
+      );
+      $entries_return['content_areas'][] = array(
+        '#theme' => 'ding_navigation_box_content_area',
+        '#entry' => $entry,
+        '#entry_position' => $i,
+        '#entry_title' => $entry->title, 
+      );
+    }
+  }
+  return $entries_return;
 }
+
+
+
+
+
+
+

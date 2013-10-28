@@ -3,9 +3,6 @@
   // Store our module-name to use as prefix in selectors.
   var prefix = ".ding-navigation-box-";
   
-  // Declare a variable to store the border seperator between item and content.
-  var border;
-  
   //Declare settings variables with defaults.
   var defaultEntryIndex = 1;
   var activationEvent = "mouseenter";
