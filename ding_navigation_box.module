@@ -28,14 +28,12 @@ function ding_navigation_box_block_info() {
 function ding_navigation_box_block_view($delta) {
   $block = array();
   $block['subject'] = t('Ding navigation box');
-  // The navigation box consist of entries wich each consist of a navigation 
-  // item and a content area. Below we fetch the entries, split them up in items
-  // and areas and pass these as render arrays to the navigation box template.
-  $entries = _ding_navigation_box_get_entries();
+  // Fetch ding-navigation-item node entities from the database.
+  $items = _ding_navigation_box_get_items();
   $block['content']['ding_navigation_box'] = array(
     '#theme' => 'ding_navigation_box',
-    'navigation_items' => $entries['navigation_items'],
-    'content_areas' => $entries['content_areas'],
+    'activation_areas' => $items['activation_areas'],
+    'content_areas' => $items['content_areas'],
   );
   // Attach javascript
   foreach (_ding_navigation_box_get_javascript() as $js) {
@@ -60,23 +58,20 @@ function ding_navigation_box_theme() {
       'template' => 'ding-navigation-box',
       'path' => DING_NAV_BOX_PATH . '/templates',
     ),
-    'ding_navigation_box_item' => array(
+    'ding_nav_box_activation_area' => array(
       'variables' => array(
-        'entry_title' => 'Default title',
-        'entry_position' => 0,
-        'entry' => NULL,  
+        'item' => NULL,      
+        'item_position' => 0,
       ),
-      'template' => 'ding-navigation-box-item',
+      'template' => 'ding-nav-box-activation_area',
       'path' => DING_NAV_BOX_PATH . '/templates',  
     ),
-    'ding_navigation_box_content_area' => array(
+    'ding_nav_box_content_area' => array(
       'variables' => array(
-        'entry_title' => 'Default title',  
-        'entry_content' => '',
-        'entry_position' => 0,
-        'entry' => NULL,  
+        'item' => NULL,      
+        'item_position' => 0,
       ),
-      'template' => 'ding-navigation-box-content-area',
+      'template' => 'ding-nav-box-content-area',
       'path' => DING_NAV_BOX_PATH . '/templates',   
     ),  
   );
@@ -88,12 +83,12 @@ function ding_navigation_box_theme() {
 function template_preprocess_ding_navigation_box(&$variables) {
   $element = $variables['element'];
   // If there's no items or content areas present dont render entries at all. 
-  if (empty($element['navigation_items']) || empty($element['content_areas'])) {
-    $variables['navigation_items'] = $variables['content_areas'] = FALSE;
+  if (empty($element['activation_areas']) || empty($element['content_areas'])) {
+    $variables['activation_areas'] = $variables['content_areas'] = FALSE;
   }
   // Else we setup the variables for the navigation box template.
   else {
-    $variables['navigation_items'] = $element['navigation_items'];
+    $variables['activation_areas'] = $element['activation_areas'];
     $variables['content_areas'] = $element['content_areas'];
   }
 }
@@ -146,46 +141,42 @@ function _ding_navigation_box_get_javascript() {
  * Return an array with the entries for the navigation box setup as 
  * render-arrays.
  */
-function _ding_navigation_box_get_entries() {
-  // Fetch nodes of type 'ding_navigation_entry' with an EntityFieldQuery.
+function _ding_navigation_box_get_items() {
   $query = new EntityFieldQuery();
   $query->entityCondition('entity_type', 'node')
-        ->entityCondition('bundle', 'ding_navigation_entry');
+        ->entityCondition('bundle', 'ding_navigation_item');
   $result = $query->execute();
-  // Initialize our result and return array.
-  $entries_result = array();
-  $entries_return['navigation_items'] = array();
-  $entries_return['content_areas'] = array();
-  // Check to see if the query returned any entries. If so setup the return
-  // array with the entry-items and entry-content-areas prepared as render arrays.
+  $items_result = array();
+  $items_return['activation_areas'] = array();
+  $items_return['content_areas'] = array();
+  // Check to see if the query returned any navigation items. If so setup the 
+  // return array with the activation areas and content-areas of each item 
+  // prepared as render arrays.
   if (isset($result['node'])) {
-    $entry_nids = array_keys($result['node']);
-    // Load nodes that match the returned nids.
-    $entries_result = node_load_multiple($entry_nids);
+    $item_nids = array_keys($result['node']);
+    $items_result = node_load_multiple($item_nids);
     // Prepare the field data for display
-    field_attach_prepare_view('node', $entries_result, 'full');
+    field_attach_prepare_view('node', $items_result, 'full');
     // Allow modules to act - invoke hook_entity_prepare_view().
-    entity_prepare_view('node', $entries_result);
+    entity_prepare_view('node', $items_result);
     $i = 0;
-    foreach ($entries_result as $entry) {
+    foreach ($items_result as $item) {
       $i++;
-      // Build field content - Setup a renderarray for each field on the entry.
-      $entry->content = field_attach_view('node', $entry, 'full');
-      $entries_return['navigation_items'][] = array(
-        '#theme' => 'ding_navigation_box_item',
-        '#entry' => $entry,
-        '#entry_position' => $i,
-        '#entry_title' => $entry->title,
+      // Build field content - Setup a renderarray for each field on the item.
+      $item->content = field_attach_view('node', $item, 'full');
+      $items_return['activation_areas'][] = array(
+        '#theme' => 'ding_nav_box_activation_area',
+        '#item' => $item,
+        '#item_position' => $i,
       );
-      $entries_return['content_areas'][] = array(
-        '#theme' => 'ding_navigation_box_content_area',
-        '#entry' => $entry,
-        '#entry_position' => $i,
-        '#entry_title' => $entry->title, 
+      $items_return['content_areas'][] = array(
+        '#theme' => 'ding_nav_box_content_area',
+        '#item' => $item,
+        '#item_position' => $i,
       );
     }
   }
-  return $entries_return;
+  return $items_return;
 }
 
 

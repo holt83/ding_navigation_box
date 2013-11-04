@@ -1,11 +1,12 @@
 <?php
 
 /**
- * Template file that defines HTML for an item in the Ding navigation box.
+ * Template file that defines HTML for an activation area of a ding navigation 
+ * item.
  * 
  * Available variables:
- * - $entry_title: The title for the entry this navigation item is part of.
- * - $entry_position: A number specifying the position of the entry in the
+ * - $item: The navigation item this activation area belongs to.
+ * - $item_position: A number specifying the position of the item in the
  *                    navigation box.
  * - $classes: String of classes that can be used to style contextually with 
  *             CSS. It can be manipulated throught $classes_array variable in
@@ -18,6 +19,6 @@
 ?>
 
 <div class="<?php print $classes;?>" <?php print $attributes ?>>
-  <h4><?php print render($entry_title); ?></h4>
-  <div class="ding-navigation-box-item-arrow"></div>
+  <h4><?php print $item_position; ?></h4>
+  <div class="ding-nav-box-arrow"></div>
 </div>
