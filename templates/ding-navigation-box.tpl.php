@@ -22,15 +22,15 @@
 
 ?>
 
-<div class="<?php print $classes ?>" <?php print $attributes ?>>
-  <?php if($navigation_items && $content_areas): ?> 
-    <div class="ding-navigation-box-items">
-      <div class="ding-navigation-box-items-center-wrapper">
-        <?php print render($navigation_items); ?>
+<?php if($navigation_items && $content_areas): ?> 
+  <div class="<?php print $classes ?>" <?php print $attributes ?>>
+      <div class="ding-navigation-box-items">
+        <div class="ding-navigation-box-items-center-wrapper">
+          <?php print render($navigation_items); ?>
+        </div>
       </div>
-    </div>
-    <div class="ding-navigation-box-content-areas">
-      <?php print render($content_areas); ?>
-    </div>
-  <?php endif; ?>
-</div>
+      <div class="ding-navigation-box-content-areas">
+        <?php print render($content_areas); ?>
+      </div>
+  </div>
+<?php endif; ?>
