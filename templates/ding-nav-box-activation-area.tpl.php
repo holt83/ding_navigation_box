@@ -19,6 +19,6 @@
 ?>
 
 <div class="<?php print $classes;?>" <?php print $attributes ?>>
-  <h4><?php print $item_position; ?></h4>
+  <h4><?php print $item_position . ' Test text'; ?></h4>
   <div class="ding-nav-box-arrow"></div>
 </div>

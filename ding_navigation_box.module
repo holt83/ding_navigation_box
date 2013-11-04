@@ -9,6 +9,8 @@
 // Constants
 define('DING_NAV_BOX_PATH', drupal_get_path('module', 'ding_navigation_box'));
 
+include_once 'ding_navigation_box.features.inc';
+
 /**
  * Implements hook_block_info().
  */
@@ -63,7 +65,7 @@ function ding_navigation_box_theme() {
         'item' => NULL,      
         'item_position' => 0,
       ),
-      'template' => 'ding-nav-box-activation_area',
+      'template' => 'ding-nav-box-activation-area',
       'path' => DING_NAV_BOX_PATH . '/templates',  
     ),
     'ding_nav_box_content_area' => array(

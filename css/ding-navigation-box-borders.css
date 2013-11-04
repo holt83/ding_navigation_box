@@ -5,11 +5,11 @@
   border-radius: 10px/10px;
 }
 
-.ding-navigation-box-items {
+.ding-nav-box-activation-areas {
   border-right: 2px solid black;
 }
 
-.ding-navigation-box-item {
+.ding-nav-box-activation-area {
   border-top: 2px solid grey;
   border-bottom: 2px solid grey;
 }

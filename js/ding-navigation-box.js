@@ -1,7 +1,7 @@
 (function($) {
   
-  // Store our module-name to use as prefix in selectors.
-  var prefix = ".ding-navigation-box-";
+  // Store prefix to use in selectors.
+  var prefix = ".ding-nav-box-";
   
   //Declare settings variables with defaults.
   var defaultEntryIndex = 1;
@@ -19,10 +19,10 @@
       
       // Iterate over each navigation item and attach an event hanlder for 
       // the activation event.
-      $(prefix + "item").each(function(index) {
+      $(prefix + "activation-area").each(function(index) {
         // Ensure each handler only gets attached once.
-        $(this, context).once("ding-navigation-box-item-attach", function() {
-          $(prefix + "items-center-wrapper > div:nth-of-type(" + (index + 1) + ")").live(activationEvent, function() {
+        $(this, context).once("ding-nav-box-activation-area-attach", function() {
+          $(prefix + "activation-areas-center-wrapper > div:nth-of-type(" + (index + 1) + ")").live(activationEvent, function() {
         	activateContentArea(index + 1);
           });
         });
