@@ -154,11 +154,13 @@ function _ding_navigation_box_get_entries() {
   $result = $query->execute();
   // Initialize our result and return array.
   $entries_result = array();
-  $entries_return = array();
-  // Check to see if the query returned any entries. If so we setup the return
-  // array with the entry-items and entry-areas prepared as render arrays.
+  $entries_return['navigation_items'] = array();
+  $entries_return['content_areas'] = array();
+  // Check to see if the query returned any entries. If so setup the return
+  // array with the entry-items and entry-content-areas prepared as render arrays.
   if (isset($result['node'])) {
     $entry_nids = array_keys($result['node']);
+    // Load nodes that match the returned nids.
     $entries_result = node_load_multiple($entry_nids);
     // Prepare the field data for display
     field_attach_prepare_view('node', $entries_result, 'full');
