@@ -9,6 +9,7 @@
 // Constants
 define('DING_NAV_BOX_PATH', drupal_get_path('module', 'ding_navigation_box'));
 
+// Include feature to setup the ding-navigation-item node entity.
 include_once 'ding_navigation_box.features.inc';
 
 /**
@@ -107,9 +108,6 @@ function _ding_navigation_box_get_css() {
   );
   $css[] = array(
     'data' => DING_NAV_BOX_PATH . '/css/ding-navigation-box.css',  
-  ) + $css_base;
-  $css[] = array(
-    'data' => DING_NAV_BOX_PATH . '/css/ding-navigation-box-borders.css',  
   ) + $css_base;
   return $css;
 }

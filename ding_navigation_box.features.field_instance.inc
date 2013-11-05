@@ -7,7 +7,7 @@
 /**
  * Implements hook_field_default_field_instances().
  */
-function ding_navigation_item_field_default_field_instances() {
+function ding_navigation_box_field_default_field_instances() {
   $field_instances = array();
 
   // Exported field_instance: 'node-ding_navigation_item-field_ding_nav_box_content'

@@ -1,6 +1,7 @@
 name = Ding navigation box
 description = Provides a smart navigation box as a block or a ctools plugin.
 core = 7.x
+package = Ding!
 
 files[] = ding_navigation_box.module
 
@@ -19,4 +20,3 @@ features[field_instance][] = node-ding_navigation_item-field_ding_nav_box_footer
 features[field_instance][] = node-ding_navigation_item-field_ding_nav_box_header_text
 features[field_instance][] = node-ding_navigation_item-field_ding_nav_box_side_images
 features[node][] = ding_navigation_item
-project path = sites/default/modules

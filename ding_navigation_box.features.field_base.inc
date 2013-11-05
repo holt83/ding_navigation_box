@@ -7,7 +7,7 @@
 /**
  * Implements hook_field_default_field_bases().
  */
-function ding_navigation_item_field_default_field_bases() {
+function ding_navigation_box_field_default_field_bases() {
   $field_bases = array();
 
   // Exported field_base: 'field_ding_nav_box_content'

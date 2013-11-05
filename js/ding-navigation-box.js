@@ -10,13 +10,10 @@
   Drupal.behaviors.dingNavigationBox = {   
     
     attach: function(context, settings) {
-      
       // Apply settings passed from Drupal.
       applySettings(settings);
-      
       // Activate the default content area.
       activateContentArea(defaultEntryIndex);
-      
       // Iterate over each navigation item and attach an event hanlder for 
       // the activation event.
       $(prefix + "activation-area").each(function(index) {
