@@ -32,9 +32,8 @@
 }
 
 .ding-nav-box-activation-area {
-  padding-left: 15px;
-  padding-top: 15px;
-  padding-bottom: 15px;
+	position: relative;
+	height: 50px;
   margin-top: 20px;
   margin-bottom: 20px;
   border-top: 2px solid grey;
@@ -47,22 +46,16 @@
 }
 
 .ding-nav-box-activation-area > h4 {
-	display: inline-block;
-	margin-right: 20px;
+	margin: 10px;
 }
 
 .ding-nav-box-arrow {
-	float: right;
-	position: relative;	
-}
-
-.ding-nav-box-arrow > div {
-	z-index: 1000;
-  position: absolute;
-  margin-right: 5px;
-  border-top: 10px solid white;
+	position: absolute;
+	top: 5px;
+	right: -20px;
+  border-top: 20px solid white;
   border-left: 20px solid black;
-  border-bottom: 10px solid white;	
+  border-bottom: 20px solid white;  
 }
 
 
