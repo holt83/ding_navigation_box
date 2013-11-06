@@ -94,6 +94,7 @@ function template_preprocess_ding_navigation_box(&$variables) {
     $variables['activation_areas'] = $element['activation_areas'];
     $variables['content_areas'] = $element['content_areas'];
   }
+  
 }
 
 /**
