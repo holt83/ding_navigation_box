@@ -94,7 +94,6 @@ function template_preprocess_ding_navigation_box(&$variables) {
     $variables['activation_areas'] = $element['activation_areas'];
     $variables['content_areas'] = $element['content_areas'];
   }
-  
 }
 
 /**
@@ -130,8 +129,7 @@ function _ding_navigation_box_get_javascript() {
     'type' => 'setting',
     'data' => array(
       'dingNavigationBox' => array(
-        'defaultEntryIndex' => 1,
-        'activationEvent' => 'mouseenter',  
+        'defaultItemNumber' => 1,
       ),
     ),    
   ) + $js_base;

@@ -1,60 +1,57 @@
 (function($) {
+	
+  //Default settings
+  var defaultItemNumber = 1;
   
-  // Store prefix to use in selectors.
-  var prefix = ".ding-nav-box-";
-  
-  //Declare settings variables with defaults.
-  var defaultEntryIndex = 1;
-  var activationEvent = "mouseenter";
-  
-  Drupal.behaviors.dingNavigationBox = {   
-    
+  Drupal.behaviors.dingNavigationBox = {     
     attach: function(context, settings) {
       // Apply settings passed from Drupal.
       applySettings(settings);
-      // Activate the default content area.
-      activateContentArea(defaultEntryIndex);
-      // Iterate over each navigation item and attach an event hanlder for 
-      // the activation event.
-      $(prefix + "activation-area").each(function(index) {
-        // Ensure each handler only gets attached once.
-        $(this, context).once("ding-nav-box-activation-area-attach", function() {
-          $(prefix + "activation-areas-center-wrapper > div:nth-of-type(" + (index + 1) + ")").live(activationEvent, function() {
-        	activateContentArea(index + 1);
-          });
-        });
+      // Activate the default navigation item.
+      activateContentArea(defaultItemNumber);
+      // Iterate over each activation area.
+      $(".ding-nav-box-activation-area", context).each(function(index) {
+    	$(this).click(function() {
+          activateContentArea(index + 1);
+    	});
+    	$(this).hover(function() {
+    	  $(this).css("background-color", "black");	
+    	},function() {
+    	  $(this).css("background-color", "transparent");	
+    	});
       });
     }
-
   };
   
-  // Checks if the different settings from Drupal is set, and if so applies them
-  // to their associated javascript variables. If not set it applies default
-  // values
   function applySettings(settings) {
     // If our module's namespace is not on the settings object we do nothing.
     if (typeof settings.dingNavigationBox === 'undefined') {
       return;
     }
-    if (typeof settings.dingNavigationBox.defaultEntryIndex !== 'undefined') {
-      defaultEntryIndex = settings.dingNavigationBox.defaultEntryIndex;
+    if (typeof settings.dingNavigationBox.defaultItemNumber !== 'undefined') {
+      defaultItemNumber = settings.dingNavigationBox.defaultItemNumber;
     }
-    if (typeof settings.dingNavigationBox.activationEvent !== 'undefined') {
-      activationEvent = settings.dingNavigationBox.activationEvent;
-    }    
   }
   
   // Activates the content area with the specified index.
-  function activateContentArea(entryIndex) {
-    // Hide any active content areas.
-    $(prefix + "content-area").hide();
-    // Show the content area associated with this item.
-    if ($(prefix  + "content-areas > div:nth-of-type(" + entryIndex + ")").length > 0) {
-      $(prefix  + "content-areas > div:nth-of-type(" + entryIndex + ")").show();	  
+  function activateContentArea(itemNumber) {
+    // Deactivate active navigation item.
+    $(".ding-nav-box-content-area").hide();
+    $(".ding-nav-box-activation-arrow").hide();
+    $(".ding-nav-box-activation-area").css("background-color", "transparent");
+    
+    var contentArea = $(".ding-nav-box-content-areas > div:nth-of-type(" + itemNumber + ")");
+    if (contentArea.length > 0) {
+      // Show the content area.	
+      $(contentArea).show();
+      var activationArea = ".ding-nav-box-activation-areas-center-wrapper > div:nth-of-type(" + itemNumber + ")";
+      $(activationArea).css("background-color", "black");
+      // Show the activation arrow.
+      $(activationArea + " > .ding-nav-box-activation-arrow").show();
     }
-    // If the specified index is out of bounds just show the first entry.
+    // If the specified itemNumber is out of bounds show first item.
     else {
-      $(prefix  + "content-areas > div:nth-of-type(1)").show(); 	
+      $(".ding-nav-box-content-areas > div:nth-of-type(1)").show(); 	
     }
   }
 

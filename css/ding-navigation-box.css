@@ -8,6 +8,7 @@
   height: 380px;
   overflow: hidden;
   border: 2px solid grey;
+  border-left: none;
 }
 
 .ding-navigation-box * {
@@ -29,7 +30,6 @@
   display: table;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
-  border-right: 2px solid black;
 }
 
 .ding-nav-box-activation-areas-center-wrapper {
@@ -39,27 +39,27 @@
 
 .ding-nav-box-activation-area {
 	position: relative;
-	height: 40px;
   margin-top: 20px;
   margin-bottom: 20px;
-  border-top: 2px solid black;
-  border-bottom: 2px solid black;
+  border-top: 2px solid white;
+  border-bottom: 2px solid white;
 }
 
 .ding-nav-box-activation-area > p {
-	line-height: 40px;
-	margin: 0 10px 0 10px;
+	line-height: 44px;
+	margin-left: 10px;
+	margin-right: 10px;
 	color: white;
 }
 
-.ding-nav-box-activation-area:after {
-	content: "";
+.ding-nav-box-activation-arrow {
 	position: absolute;
-  top: 0px;
+  top: 50%;
   right: -20px;
-  border-top: 20px solid transparent;
+  margin-top: -22px;
+  border-top: 22px solid transparent;
   border-left: 20px solid black;
-  border-bottom: 20px solid transparent;  
+  border-bottom: 22px solid transparent;  
 }
 
 

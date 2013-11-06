@@ -20,4 +20,5 @@
 
 <div class="<?php print $classes;?>" <?php print $attributes ?>>
   <p><?php print $item_position . ' Test text'; ?></p>
+  <div class="ding-nav-box-activation-arrow"></div>
 </div>
