@@ -1,60 +1,47 @@
 (function($) {
 	
-  //Default settings
-  var defaultItemNumber = 1;
+  var activeItemNumber = 0;	
   
   Drupal.behaviors.dingNavigationBox = {     
     attach: function(context, settings) {
-      // Apply settings passed from Drupal.
-      applySettings(settings);
+      $(".ding-nav-box-content-area").hide();
+      $(".ding-nav-box-activation-arrow").hide();
       // Activate the default navigation item.
-      activateContentArea(defaultItemNumber);
+      activateNavigationItem(settings.dingNavigationBox.defaultItemNumber);
       // Iterate over each activation area.
       $(".ding-nav-box-activation-area", context).each(function(index) {
+    	var itemNumber = index + 1;  
     	$(this).click(function() {
-          activateContentArea(index + 1);
+    	  toggleNavigationItem(activeItemNumber, false);	
+    	  toggleNavigationItem(itemNumber, true);
     	});
     	$(this).hover(function() {
-    	  $(this).css("background-color", "black");	
+    	  $(this).css("background-color", "black");	    		  
     	},function() {
-    	  $(this).css("background-color", "transparent");	
+    	  if (itemNumber != activeItemNumber) {
+    		$(this).css("background-color", "transparent");	    		  
+    	  }	
     	});
       });
     }
   };
   
-  function applySettings(settings) {
-    // If our module's namespace is not on the settings object we do nothing.
-    if (typeof settings.dingNavigationBox === 'undefined') {
-      return;
-    }
-    if (typeof settings.dingNavigationBox.defaultItemNumber !== 'undefined') {
-      defaultItemNumber = settings.dingNavigationBox.defaultItemNumber;
-    }
+  function toggleNavigationItem(itemNumber, activate) {
+	var contentArea = $(".ding-nav-box-content-areas > div:nth-of-type(" + itemNumber + ")");
+	var activationAreaSelector = ".ding-nav-box-activation-areas-center-wrapper > div:nth-of-type(" + itemNumber + ")";
+	if (activate) {
+	  contentArea.show();
+	  $(activationAreaSelector).css("background-color", "black");
+	  $(activationAreaSelector + " > .ding-nav-box-activation-arrow").show();
+	  activeItemNumber = itemNumber;
+	}
+	else {
+	  contentArea.hide();
+	  $(activationAreaSelector).css("background-color", "transparent");
+	  $(activationAreaSelector + " > .ding-nav-box-activation-arrow").hide();
+	  activeItemNumber = 0;
+	}
   }
-  
-  // Activates the content area with the specified index.
-  function activateContentArea(itemNumber) {
-    // Deactivate active navigation item.
-    $(".ding-nav-box-content-area").hide();
-    $(".ding-nav-box-activation-arrow").hide();
-    $(".ding-nav-box-activation-area").css("background-color", "transparent");
-    
-    var contentArea = $(".ding-nav-box-content-areas > div:nth-of-type(" + itemNumber + ")");
-    if (contentArea.length > 0) {
-      // Show the content area.	
-      $(contentArea).show();
-      var activationArea = ".ding-nav-box-activation-areas-center-wrapper > div:nth-of-type(" + itemNumber + ")";
-      $(activationArea).css("background-color", "black");
-      // Show the activation arrow.
-      $(activationArea + " > .ding-nav-box-activation-arrow").show();
-    }
-    // If the specified itemNumber is out of bounds show first item.
-    else {
-      $(".ding-nav-box-content-areas > div:nth-of-type(1)").show(); 	
-    }
-  }
-
   
 })(jQuery);
 
