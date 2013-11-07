@@ -62,8 +62,13 @@
   border-bottom: 22px solid transparent;  
 }
 
+.ding-nav-box-activation-area-active {
+	background-color: black;
+}
 
-
+.ding-nav-box-activation-area-hover {
+	background-color: blue;
+}
 
 
 
