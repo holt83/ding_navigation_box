@@ -67,10 +67,13 @@
 }
 
 .ding-nav-box-activation-area-hover {
-	background-color: blue;
+	border-color: black;
+	background-color: powderblue;
 }
 
-
+.ding-nav-box-activation-area-hover > p {
+	color: black;
+}
 
 
 
