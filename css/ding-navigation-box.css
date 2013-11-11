@@ -1,11 +1,14 @@
+/* ==========================================================================
+   Ding navigation box - General styling
+   ========================================================================== */
+   
 .ding-navigation-box { 
   display: inline-block;
   position: relative;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  width: 680px;
-  height: 380px;
+  width: 650px;
   overflow: hidden;
   border: 2px solid grey;
   border-left: none;
@@ -26,6 +29,10 @@
 	margin-left: 20px; 
 }
 
+/* ==========================================================================
+   Ding navigation box - Activation area styling
+   ========================================================================== */
+
 .ding-nav-box-activation-areas {
   display: table;
   height: 100%;
@@ -39,27 +46,36 @@
 
 .ding-nav-box-activation-area {
 	position: relative;
-  margin-top: 20px;
-  margin-bottom: 20px;
-  border-top: 2px solid white;
   border-bottom: 2px solid white;
 }
 
+.ding-nav-box-activation-area:last-of-type {
+	border-bottom: none;
+}
+
 .ding-nav-box-activation-area > p {
-	line-height: 44px;
+	line-height: 50px;
 	margin-left: 10px;
 	margin-right: 10px;
 	color: white;
+}
+
+.ding-nav-box-activation-area > p.ding-nav-box-activation-text-normal {
+  display: inline;
+}
+
+.ding-nav-box-activation-area > p.ding-nav-box-activation-text-short {
+	display: none;
 }
 
 .ding-nav-box-activation-arrow {
 	position: absolute;
   top: 50%;
   right: -20px;
-  margin-top: -22px;
-  border-top: 22px solid transparent;
+  margin-top: -25px;
+  border-top: 25px solid transparent;
   border-left: 20px solid black;
-  border-bottom: 22px solid transparent;  
+  border-bottom: 25px solid transparent;  
 }
 
 .ding-nav-box-activation-area-active {
@@ -67,7 +83,6 @@
 }
 
 .ding-nav-box-activation-area-hover {
-	border-color: black;
 	background-color: powderblue;
 }
 
@@ -75,5 +90,55 @@
 	color: black;
 }
 
+/* ==========================================================================
+   Ding navigation box - Responsive styling (breakpoint: 680px)
+   ========================================================================== */
+
+@media screen and (max-width: 680px) {
+  
+  .ding-navigation-box {
+    width: 360px;
+    border-left: 2px solid grey;
+  }
+  
+	.ding-nav-box-activation-areas,
+	.ding-nav-box-content-areas { 
+	  float: none;
+	}
+	
+	.ding-nav-box-activation-areas {
+    display: block;
+    width: auto;
+	}
+	
+	.ding-nav-box-activation-area {
+	  float: left;
+	  border-right: 2px solid white;
+	  border-bottom: none;
+	}
+	
+	.ding-nav-box-activation-area:first-of-type {
+	  border-left: 2px solid white;
+	}
+	
+	.ding-nav-box-activation-areas-center-wrapper {
+	  display: block;
+	  overflow: auto;
+  }
+	
+	.ding-nav-box-activation-area > p {
+	  line-height: normal;
+	}
+	
+	.ding-nav-box-activation-area > p.ding-nav-box-activation-text-short {
+    display: inline;
+  }
+  
+  .ding-nav-box-activation-area > p.ding-nav-box-activation-text-normal {
+    display: none;
+  }  
+	
+}
+	
 
 
