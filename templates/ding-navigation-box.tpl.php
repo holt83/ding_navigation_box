@@ -26,9 +26,9 @@
 ?>
 
 <?php if($activation_areas && $content_areas): ?> 
-  <div class="<?php print $classes ?>" <?php print $attributes ?>>
+  <div class="<?php print $classes ?> clearfix" <?php print $attributes ?>>
       <div class="ding-nav-box-activation-areas">
-        <div class="ding-nav-box-activation-areas-center-wrapper">
+        <div class="ding-nav-box-activation-areas-center-wrapper clearfix">
           <?php print render($activation_areas); ?>
         </div>
       </div>
