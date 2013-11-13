@@ -18,7 +18,7 @@
 .ding-navigation-box * {
   margin: 0;
   padding: 0;
-  font-size: 100%; /* Set font-size to browser default type size (16px). */
+  font-size: 100%; /* Set font-size to browser default (16px). */
 }
 
 .ding-nav-box-activation-areas,
