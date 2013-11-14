@@ -130,8 +130,6 @@ function _ding_navigation_box_get_javascript() {
     'data' => array(
       'dingNavigationBox' => array(
         'defaultItemNumber' => 1,
-        'activationClass' => 'ding-nav-box-activation-area-active',
-        'hoverClass' => 'ding-nav-box-activation-area-hover',
       ),
     ),    
   ) + $js_base;
