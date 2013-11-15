@@ -3,54 +3,46 @@
    ========================================================================== */
    
 .ding-navigation-box { 
-  display: inline-block;
-  position: relative;
   background-color: #f5f5f5;
   max-width: 43.75em; /* 700px/16px = 43.75em */ 
-  border: 0.0625em solid #e5e5e5;
-  border-left: none;
 }
 
 .ding-navigation-box * {
   margin: 0;
   padding: 0;
-  font-size: 100%; /* Set font-size to browser defaults. */
+  font-size: 100%; /* Set font-size to browser defaults */
 }
 
 .ding-navigation-box,
-.ding-nav-box-activation-areas,
-.ding-nav-box-content-areas {
+.ding-navigation-box .activation-areas,
+.ding-navigation-box .content-areas,
+.ding-nav-box-activation-area {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;	
 } 
 
-.ding-nav-box-activation-areas,
-.ding-nav-box-content-areas { 
+.ding-navigation-box .activation-areas,
+.ding-navigation-box .content-areas { 
   float: left;
 }
 
-.ding-nav-box-content-areas {
+.ding-navigation-box .content-areas {
 	width: 80%;
 	padding: 0.625em;
 	padding-left: 1.875em;
+	border: 0.0625em solid #e5e5e5;
+  border-left: none;
+}
+
+.ding-navigation-box .activation-areas {
+  width: 20%;
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 /* ==========================================================================
    Ding navigation box - Activation area styling
    ========================================================================== */
-
-.ding-nav-box-activation-areas {
-  display: table;
-  height: 100%;
-  width: 20%;
-}
-
-.ding-nav-box-activation-areas-center-wrapper {
-	display: table-cell;
-	vertical-align: middle;	
-	background-color: rgba(0, 0, 0, 0.5);
-}
 
 .ding-nav-box-activation-area {
 	position: relative;
@@ -62,7 +54,7 @@
 }
 
 .ding-nav-box-activation-area > p {
-	line-height: 3.125em;
+	line-height: 4.125em;
 	margin-left: 0.625em;
 	margin-right: 0.625em;
 	color: white;
@@ -82,7 +74,7 @@
   right: -1.25em;
   margin-top: -1.5625em;
   border-top: 1.5625em solid transparent;
-  border-left: 1.25em solid black;
+  border-left: 1.3125em solid black;
   border-bottom: 1.5625em solid transparent;  
 }
 
@@ -121,42 +113,32 @@
 @media screen and (max-width: 28.125em) {
   
   .ding-navigation-box {
-    width: auto;
     max-width: 25em; /* 400px/16px = 22.5em */
-    min-width: 20em;
-    border-left: 1px solid #e5e5e5;
+    min-width: 15.625em; /* 250px/16px = 15.625em */
   }
   
-	.ding-nav-box-activation-areas,
-	.ding-nav-box-content-areas { 
+	.ding-navigation-box .activation-areas,
+	.ding-navigation-box .content-areas { 
 	  float: none;
 	}
 	
-	.ding-nav-box-content-areas {
+	.ding-navigation-box .content-areas {
 	  clear: both;
 	  margin: 0;
 	  width: 100%;
     padding: 0.625em;
     padding-top: 1.875em;
+    border: 0.0625em solid #e5e5e5;
+    border-top: none;
   }
 	
-	.ding-nav-box-activation-areas {
-	  width: auto;
-    display: block;
-    float: right;
-    position: relative;
-    left: -50%;
+	.ding-navigation-box .activation-areas {
+	  width: 100%;
 	}
-	
-  .ding-nav-box-activation-areas-center-wrapper {
-    display: block;
-    position: relative;
-    left: 50%;
-  }	
 	
 	.ding-nav-box-activation-area {
 	  float: left;
-	  width: 3.75em;
+	  width: 20%;
 	  text-align: center;
 	  padding-top: 0.625em;
 	  padding-bottom: 0.625em;
@@ -164,18 +146,20 @@
 	  border-bottom: none;
 	}
 	
-	.ding-nav-box-activation-area:first-of-type {
-	  border-left: 0.125em solid white;
+	.ding-nav-box-activation-area:last-of-type {
+	  border-right: none;
 	}
   
   .ding-nav-box-activation-arrow {
     right: auto;
     top: auto;
-    bottom: -1.25em;
+    left: 50%;
+    bottom: -0.625em;
+    margin-left: -1.25em;
     border: none;
-    border-left: 1.875em solid transparent;
-    border-right: 1.875em solid transparent;
-    border-top: 1.25em solid black;
+    border-left: 1.25em solid transparent;
+    border-right: 1.25em solid transparent;
+    border-top: 0.6875em solid black;
   }
 	
 	.ding-nav-box-activation-area > p {
