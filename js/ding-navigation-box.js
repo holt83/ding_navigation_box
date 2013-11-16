@@ -4,7 +4,6 @@
   
   Drupal.behaviors.dingNavigationBox = {     
     attach: function(context, settings) {
-      alert($(".ding-navigation-box").css("font-size"));	
       $(".ding-nav-box-content-area").hide();
       $(".ding-nav-box-activation-arrow").hide();
       // Activate the default navigation item.
