@@ -4,8 +4,8 @@
   
   Drupal.behaviors.dingNavigationBox = {     
     attach: function(context, settings) {
-      $(".ding-nav-box-content-area").hide();
-      $(".ding-nav-box-activation-arrow").hide();
+      $(".ding-navigation-box .content-areas .content-area").hide();
+      $(".ding-navigation-box .activation-areas .activation-area .activation-arrow").hide();
       // Activate the default navigation item.
       toggleNavigationItem(settings.dingNavigationBox.defaultItemNumber, true);
       // Iterate over each activation area and attach event-handlers.
@@ -20,13 +20,13 @@
     	$(this).hover(function() {
     	  // Only add the hover class if the item is NOT the active item.	
     	  if (itemNumber != activeItemNumber) {
-    		$(this).addClass("ding-nav-box-activation-area-hover");	    		  
+    		$(this).addClass("hover");	    		  
     	  }
     	},function() {
-    	  $(this).removeClass("ding-nav-box-activation-area-hover");	    		  
+    	  $(this).removeClass("hover");	    		  
     	});
       });
-    }
+    }  
   };
   
   // Deactivates or activates the given navigation item.
@@ -35,15 +35,15 @@
 	var activationAreaSelector = ".ding-navigation-box .activation-areas > div:nth-of-type(" + itemNumber + ")";
 	if (activate) {
 	  contentArea.show();
-	  $(activationAreaSelector).addClass("ding-nav-box-activation-area-active");
-	  $(activationAreaSelector).removeClass("ding-nav-box-activation-area-hover");
-	  $(activationAreaSelector + " > .ding-nav-box-activation-arrow").show();
+	  $(activationAreaSelector).addClass("active");
+	  $(activationAreaSelector).removeClass("hover");
+	  $(activationAreaSelector + " .activation-arrow").show();
 	  activeItemNumber = itemNumber;
 	}
 	else {
 	  contentArea.hide();
-	  $(activationAreaSelector).removeClass("ding-nav-box-activation-area-active");
-	  $(activationAreaSelector + " > .ding-nav-box-activation-arrow").hide();
+	  $(activationAreaSelector).removeClass("active");
+	  $(activationAreaSelector + " .activation-arrow").hide();
 	  activeItemNumber = 0;
 	}
   }

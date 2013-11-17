@@ -27,11 +27,11 @@
 
 <?php if($activation_areas && $content_areas): ?> 
   <div class="<?php print $classes ?> clearfix" <?php print $attributes ?>>
-      <div class="activation-areas clearfix">
-        <?php print render($activation_areas); ?>
-      </div>
-      <div class="content-areas">
-        <?php print render($content_areas); ?>
-      </div>
+    <div class="activation-areas clearfix">
+      <?php print render($activation_areas); ?>
+    </div>
+    <div class="content-areas">
+     <?php print render($content_areas); ?>
+    </div>
   </div>
 <?php endif; ?>

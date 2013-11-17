@@ -97,6 +97,20 @@ function template_preprocess_ding_navigation_box(&$variables) {
 }
 
 /**
+ * Module template preprocess function for an activation area.
+ */
+function template_preprocess_ding_nav_box_activation_area(&$variables) {
+  $variables['classes_array'][] = 'activation-area';
+}
+
+/**
+ * Module template preprocess function for a content area.
+ */
+function template_preprocess_ding_nav_box_content_area(&$variables) {
+  $variables['classes_array'][] = 'content-area';
+}
+
+/**
  * Returns an array with all the css for the navigation box that can be used
  * on the attach property in a render array. 
  */

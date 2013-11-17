@@ -19,7 +19,7 @@
 ?>
 
 <div class="<?php print $classes;?>" <?php print $attributes ?>>
-  <p class="ding-nav-box-activation-text-normal">Test title</p>
-  <p class="ding-nav-box-activation-text-short"><?php print $item_position ?></p>
-  <div class="ding-nav-box-activation-arrow"></div>
+  <p class="activation-text-normal">Test title</p>
+  <p class="activation-text-short"><?php print $item_position ?></p>
+  <div class="activation-arrow"></div>
 </div>

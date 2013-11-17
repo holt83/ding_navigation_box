@@ -5,7 +5,8 @@
 .ding-navigation-box { 
   background-color: #f5f5f5;
   max-width: 800px;
-  font-size: 100%; 
+  font-size: 100%;
+  border-bottom: 0.0625em solid #e5e5e5;  
 }
 
 .ding-navigation-box * {
@@ -16,7 +17,8 @@
 .ding-navigation-box,
 .ding-navigation-box .activation-areas,
 .ding-navigation-box .content-areas,
-.ding-nav-box-activation-area {
+.ding-navigation-box .activation-area,
+.ding-navigation-box .content-area {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;	
@@ -33,6 +35,7 @@
 	padding-left: 1.875em;
 	border: 0.0625em solid #e5e5e5;
   border-left: none;
+  border-bottom: none;
 }
 
 .ding-navigation-box .activation-areas {
@@ -44,31 +47,31 @@
    Ding navigation box - Activation area styling
    ========================================================================== */
 
-.ding-nav-box-activation-area {
+.ding-navigation-box .activation-area {
 	position: relative;
   border-bottom: 0.125em solid white;
 }
 
-.ding-nav-box-activation-area:last-of-type {
+.ding-navigation-box .activation-area:last-of-type {
 	border-bottom: none;
 }
 
-.ding-nav-box-activation-area > p {
+.ding-navigation-box .activation-area p {
 	line-height: 4.125em;
 	margin-left: 0.625em; 
 	margin-right: 0.625em;
 	color: white;
 }
 
-.ding-nav-box-activation-area > p.ding-nav-box-activation-text-normal {
+.ding-navigation-box .activation-area .activation-text-normal {
   display: inline;
 }
 
-.ding-nav-box-activation-area > p.ding-nav-box-activation-text-short {
+.ding-navigation-box .activation-area .activation-text-short {
 	display: none;
 }
 
-.ding-nav-box-activation-arrow {
+.ding-navigation-box .activation-area .activation-arrow {
 	position: absolute;
   top: 50%;
   right: -1.25em;
@@ -78,15 +81,15 @@
   border-bottom: 1.5625em solid transparent;  
 }
 
-.ding-nav-box-activation-area-active {
+.ding-navigation-box .activation-area.active {
 	background-color: black;
 }
 
-.ding-nav-box-activation-area-hover {
+.ding-navigation-box .activation-area.hover {
 	background-color: powderblue;
 }
 
-.ding-nav-box-activation-area-hover > p {
+.ding-navigation-box .activation-area.hover p {
 	color: black;
 }
 
@@ -98,7 +101,7 @@
 @media screen and (max-width: 860px) {
   
   .ding-navigation-box .activation-areas,
-  .ding-navigation-box .content-areas { 
+  .ding-navigation-box .content-areas {
     float: none;
   }
   
@@ -116,7 +119,7 @@
     width: 100%;
   }
   
-  .ding-nav-box-activation-area {
+  .ding-navigation-box .activation-area {
     float: left;
     width: 20%;
     text-align: center;
@@ -126,11 +129,11 @@
     border-bottom: none;
   }
   
-  .ding-nav-box-activation-area:last-of-type {
+  .ding-navigation-box .activation-area:last-of-type {
     border-right: none;
   }
   
-  .ding-nav-box-activation-arrow {
+  .ding-navigation-box .activation-area .activation-arrow {
     right: auto;
     top: auto;
     left: 50%;
@@ -142,7 +145,7 @@
     border-top: 0.6875em solid black;
   }
   
-  .ding-nav-box-activation-area > p {
+  .ding-navigation-box .activation-area p {
     line-height: normal;
   }	  
   
@@ -155,11 +158,11 @@
    
 @media screen and (max-width: 750px) {
   
-	.ding-nav-box-activation-area > p.ding-nav-box-activation-text-normal {
+	.ding-navigation-box .activation-area .activation-text-normal {
 	  display: none;
 	}
 	
-	.ding-nav-box-activation-area > p.ding-nav-box-activation-text-short {
+	.ding-navigation-box .activation-area .activation-text-short {
 	  display: inline;
 	}  
   
@@ -176,22 +179,22 @@
 	  min-width: 260px;
 	}
 	
-	.ding-nav-box-activation-area {
+	.ding-navigation-box .activation-area {
 	  float: none;
 	  width: 100%;
 	  border: none;
 	  border-bottom: 0.125em solid white; 
 	}
 	
-	.ding-nav-box-activation-area:last-of-type {
+	.ding-navigation-box .activation-area:last-of-type {
 	  border-bottom: none;
 	}
 	
-  .ding-nav-box-activation-area > p.ding-nav-box-activation-text-normal {
+  .ding-navigation-box .activation-area .activation-text-normal {
     display: inline;
   }
   
-  .ding-nav-box-activation-area > p.ding-nav-box-activation-text-short {
+  .ding-navigation-box .activation-area .activation-text-short {
     display: none;
   }  	
 	
