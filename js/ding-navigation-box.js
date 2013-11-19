@@ -10,21 +10,21 @@
       toggleNavigationItem(settings.dingNavigationBox.defaultItemNumber, true);
       // Iterate over each activation area and attach event-handlers.
       $(".ding-nav-box-activation-area", context).each(function(index) {
-    	var itemNumber = index + 1;  
-    	$(this).click(function() {
-    	  // Deactivate the active navigation item.	
-    	  toggleNavigationItem(activeItemNumber, false);
-    	  // Activate this naviation item.
-    	  toggleNavigationItem(itemNumber, true);
-    	});
-    	$(this).hover(function() {
-    	  // Only add the hover class if the item is NOT the active item.	
-    	  if (itemNumber != activeItemNumber) {
-    		$(this).addClass("hover");	    		  
-    	  }
-    	},function() {
-    	  $(this).removeClass("hover");	    		  
-    	});
+      	var itemNumber = index + 1;  
+      	$(this).click(function() {
+      	  // Deactivate the active navigation item.	
+      	  toggleNavigationItem(activeItemNumber, false);
+      	  // Activate this naviation item.
+      	  toggleNavigationItem(itemNumber, true);
+      	});
+      	$(this).hover(function() {
+      	  // Only add the hover class if the item is NOT the active item.	
+      	  if (itemNumber != activeItemNumber) {
+      		$(this).addClass("hover");	    		  
+      	  }
+      	},function() {
+      	  $(this).removeClass("hover");	    		  
+      	});
       });
     }  
   };
