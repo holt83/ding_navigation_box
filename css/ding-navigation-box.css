@@ -43,6 +43,10 @@
   background-color: rgba(0, 0, 0, 0.5);
 }
 
+.ding-navigation-box .activation-areas-pull {
+  display: none;
+}
+
 /* ==========================================================================
    Ding navigation box - Activation area styling
    ========================================================================== */
@@ -142,7 +146,7 @@
     border: none;
     border-left: 1.25em solid transparent;
     border-right: 1.25em solid transparent;
-    border-top: 0.6875em solid black;
+    border-top: 0.6875em solid black; 
   }
   
   .ding-navigation-box .activation-area p {
@@ -184,7 +188,20 @@
 	  width: 100%;
 	  border: none;
 	  border-bottom: 0.125em solid white; 
-	}
+	} 
+
+  .ding-navigation-box .activation-areas {
+    display: none;
+  }
+
+  .ding-navigation-box .activation-areas-pull {
+    display: block;
+    width: 100%;
+    height: 4.125em;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-bottom: 0.125em solid white; 
+    position: relative;
+  } 
 	
 	.ding-navigation-box .activation-area:last-of-type {
 	  border-bottom: none;
@@ -196,7 +213,7 @@
   
   .ding-navigation-box .activation-area .activation-text-short {
     display: none;
-  }  	
+  }
 	
 }
 	

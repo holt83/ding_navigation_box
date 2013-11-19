@@ -18,7 +18,6 @@
       	  toggleNavigationItem(itemNumber, true);
       	});
       	$(this).hover(function() {
-      	  // Only add the hover class if the item is NOT the active item.	
       	  if (itemNumber != activeItemNumber) {
       		$(this).addClass("hover");	    		  
       	  }
@@ -26,6 +25,7 @@
       	  $(this).removeClass("hover");	    		  
       	});
       });
+      
     }  
   };
   
