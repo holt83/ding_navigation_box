@@ -98,11 +98,11 @@
 }
 
 /* ========================================================================== 
-   Ding navigation box - Breakpoint: 860px
+   Breakpoint: 860px / 16px = 53.75rem
    Switch to horizontal side by side activation areas. 
    ========================================================================== */
    
-@media screen and (max-width: 860px) {
+@media screen and (max-width: 53.75rem) {
   
   .ding-navigation-box .activation-areas,
   .ding-navigation-box .content-areas {
@@ -156,11 +156,11 @@
 }
 
 /* ========================================================================== 
-   Ding navigation box - Breakpoint: 420px
+   Breakpoint: 720px / 16px = 45rem
    Switch to short notation text in activation areas 
    ========================================================================== */
    
-@media screen and (max-width: 750px) {
+@media screen and (max-width: 45rem) {
   
 	.ding-navigation-box .activation-area .activation-text-normal {
 	  display: none;
@@ -173,11 +173,11 @@
 }
 
 /* ========================================================================== 
-   Ding navigation box - Breakpoint: 420px 
+   Breakpoint: 420px / 16px = 26.25rem
    Display activation areas on top of each other.
    ========================================================================== */
 
-@media screen and (max-width: 480px) {
+@media screen and (max-width: 26.25rem) {
 	
 	.ding-navigation-box {
 	  min-width: 260px;
@@ -200,7 +200,7 @@
     text-align: center;
     background-color: black;
     color: white;
-    border-bottom: 0.125em solid white; 
+    border-bottom: 0.25em solid white; 
     position: relative;
     padding-top: 0.625em;
     padding-bottom: 0.625em;
@@ -214,7 +214,11 @@
     display: inline-block;
     position: absolute;
     right: 0;   
-  } 
+  }
+
+  .ding-navigation-box .activation-area .activation-arrow {
+    border: none;
+  }
 	
 	.ding-navigation-box .activation-area:last-of-type {
 	  border-bottom: none;

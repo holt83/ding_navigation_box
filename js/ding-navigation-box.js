@@ -20,13 +20,21 @@
       	$(this).hover(function() {
       	  if (itemNumber != activeItemNumber) {
       		$(this).addClass("hover");	    		  
-      	  }
+      	  }  
       	},function() {
       	  $(this).removeClass("hover");	    		  
       	});
       });
       $(".ding-navigation-box .activation-areas-pull").bind("click touchstart", function(e) {
         $(".ding-navigation-box .activation-areas").slideToggle();
+      });
+      $(window).resize(function() {
+        var windowWidth = $(window).width();
+        var activationAreas = $(".ding-navigation-box .activation-areas");
+        if (windowWidth > 480 && activationAreas.is(":hidden")) {
+          // Remove the inline styling applied by the slideToggle method.
+          activationAreas.removeAttr("style");
+        } 
       });
     }  
   };
