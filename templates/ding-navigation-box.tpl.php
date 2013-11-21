@@ -27,7 +27,7 @@
 
 <?php if($activation_areas && $content_areas): ?> 
   <div class="<?php print $classes ?> clearfix" <?php print $attributes ?>>
-  	<div class="activation-areas-pull">Test</div>
+  	<div class="activation-areas-pull"></div>
     <div class="activation-areas clearfix">
       <?php print render($activation_areas); ?>
     </div>

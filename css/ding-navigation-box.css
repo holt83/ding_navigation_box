@@ -67,11 +67,11 @@
 	color: white;
 }
 
-.ding-navigation-box .activation-area .activation-text-normal {
+.ding-navigation-box .activation-area p.full {
   display: inline;
 }
 
-.ding-navigation-box .activation-area .activation-text-short {
+.ding-navigation-box .activation-area p.abbreviation {
 	display: none;
 }
 
@@ -162,11 +162,11 @@
    
 @media screen and (max-width: 45rem) {
   
-	.ding-navigation-box .activation-area .activation-text-normal {
+	.ding-navigation-box .activation-area p.full {
 	  display: none;
 	}
 	
-	.ding-navigation-box .activation-area .activation-text-short {
+	.ding-navigation-box .activation-area p.abbreviation {
 	  display: inline;
 	}  
   
@@ -224,11 +224,11 @@
 	  border-bottom: none;
 	}
 	
-  .ding-navigation-box .activation-area .activation-text-normal {
+  .ding-navigation-box .activation-area p.full {
     display: inline;
   }
   
-  .ding-navigation-box .activation-area .activation-text-short {
+  .ding-navigation-box .activation-area p.abbreviation {
     display: none;
   }
 	

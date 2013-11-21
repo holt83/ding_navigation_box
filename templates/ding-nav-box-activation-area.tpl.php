@@ -19,7 +19,7 @@
 ?>
 
 <div class="<?php print $classes;?>" <?php print $attributes ?>>
-  <p class="activation-text-normal">Test title</p>
-  <p class="activation-text-short"><?php print $item_position ?></p>
+  <p class="full">Test title</p>
+  <p class="abbreviation"><?php print $item_position ?></p>
   <div class="activation-arrow"></div>
 </div>
