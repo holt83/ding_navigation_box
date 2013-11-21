@@ -11,7 +11,7 @@
       // Iterate over each activation area and attach event-handlers.
       $(".ding-nav-box-activation-area", context).each(function(index) {
       	var itemNumber = index + 1;  
-      	$(this).click(function() {
+      	$(this).bind("click touchstart", function(e) {
       	  // Deactivate the active navigation item.	
       	  toggleNavigationItem(activeItemNumber, false);
       	  // Activate this naviation item.
@@ -25,7 +25,9 @@
       	  $(this).removeClass("hover");	    		  
       	});
       });
-      
+      $(".ding-navigation-box .activation-areas-pull").bind("click touchstart", function(e) {
+        $(".ding-navigation-box .activation-areas").slideToggle();
+      });
     }  
   };
   

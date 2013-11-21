@@ -197,10 +197,23 @@
   .ding-navigation-box .activation-areas-pull {
     display: block;
     width: 100%;
-    height: 4.125em;
-    background-color: rgba(0, 0, 0, 0.5);
+    text-align: center;
+    background-color: black;
+    color: white;
     border-bottom: 0.125em solid white; 
     position: relative;
+    padding-top: 0.625em;
+    padding-bottom: 0.625em;
+  }
+
+  .ding-navigation-box .activation-areas-pull:after {
+    content: "";
+    background: url('../images/nav-icon.png') no-repeat;
+    width: 1.875em;
+    height: 1.875em;
+    display: inline-block;
+    position: absolute;
+    right: 0;   
   } 
 	
 	.ding-navigation-box .activation-area:last-of-type {
