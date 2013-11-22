@@ -61,7 +61,6 @@ function ding_navigation_box_theme() {
     'ding_nav_box_activation_area' => array(
       'variables' => array(
         'item' => NULL,      
-        'item_position' => 0,
       ),
       'template' => 'ding-nav-box-activation-area',
       'path' => DING_NAV_BOX_PATH . '/templates',  
@@ -69,7 +68,6 @@ function ding_navigation_box_theme() {
     'ding_nav_box_content_area' => array(
       'variables' => array(
         'item' => NULL,      
-        'item_position' => 0,
       ),
       'template' => 'ding-nav-box-content-area',
       'path' => DING_NAV_BOX_PATH . '/templates',   
@@ -98,6 +96,12 @@ function template_preprocess_ding_navigation_box(&$variables) {
  */
 function template_preprocess_ding_nav_box_activation_area(&$variables) {
   $variables['classes_array'][] = 'activation-area';
+  $ding_navigation_item = $variables['item'];
+  // The default implementation of an activation area doesn't use the Field API
+  // theme hooks for the 'title' and 'abbrevation' internal fields. Below we
+  // just get the raw values and expose them to the template.
+  $variables['title'] = $ding_navigation_item['title']['#items'][0]['value'];
+  $variables['abbreviation'] = $ding_navigation_item['abbreviation']['#items'][0]['value'];
 }
 
 /**
@@ -155,54 +159,28 @@ function _ding_navigation_box_get_items() {
   $query = new EntityFieldQuery();
   $query->entityCondition('entity_type', 'ding_navigation_item');
   $result = $query->execute();
+  // Declare our return array with the navigation items split into activation
+  // areas and content areas.
+  $return = array();
+  $return['activation_areas'] = array();
+  $return['content_areas'] = array();  
   if (isset($result['ding_navigation_item'])) {
     $dniids = array_keys($result['ding_navigation_item']);
     $ding_navigation_items = ding_navigation_item_load_multiple($dniids);
-    //$ding_navigation_items = entity_view('ding_navigation_item', $ding_navigation_items);
-    $return = array();
-    $return['activation_areas'] = array();
-    $return['content_areas'] = array();
     foreach ($ding_navigation_items as $ding_navigation_item) {
+      $item_position = $ding_navigation_item->position;
       $ding_navigation_item = entity_build_content('ding_navigation_item', $ding_navigation_item);
-      file_put_contents("/home/drupalpro/debug/debug.txt", print_r($ding_navigation_item , TRUE), FILE_APPEND);
-    }  
-  }
-
-
- /* $query = new EntityFieldQuery();
-  $query->entityCondition('entity_type', 'node')
-        ->entityCondition('bundle', 'ding_navigation_item');
-  $result = $query->execute();
-  $items_result = array();
-  $items_return['activation_areas'] = array();
-  $items_return['content_areas'] = array();
-  // Check to see if the query returned any navigation items. If so setup the 
-  // return array with the activation areas and content-areas of each item 
-  // prepared as render arrays.
-  if (isset($result['node'])) {
-    $item_nids = array_keys($result['node']);
-    $items_result = node_load_multiple($item_nids);
-    // Prepare the field data for display
-    field_attach_prepare_view('node', $items_result, 'full');
-    // Allow modules to act - invoke hook_entity_prepare_view().
-    entity_prepare_view('node', $items_result);
-    $i = 0;
-    foreach ($items_result as $item) {
-      $i++;
-      // Build field content - Setup a renderarray for each field on the item.
-      $item->content = field_attach_view('node', $item, 'full');
-      $items_return['activation_areas'][] = array(
+      // Key the areas by their position number to get the correct order.
+      $return['activation_areas'][$item_position] = array(
         '#theme' => 'ding_nav_box_activation_area',
-        '#item' => $item,
-        '#item_position' => $i,
+        '#item' => $ding_navigation_item,
       );
-      $items_return['content_areas'][] = array(
+      $return['content_areas'][$item_position] = array(
         '#theme' => 'ding_nav_box_content_area',
-        '#item' => $item,
-        '#item_position' => $i,
-      );
+        '#item' => $ding_navigation_item,
+      );      
     }
-  } */
+  }
   return $return; 
 }
 
@@ -555,7 +533,7 @@ class DingNavigationItemController extends EntityAPIController {
    * Override the buildContent function to setup fields that are specific to
    * the ding navigation item.
    */
-  public function buildContent($entity, $view_mode = 'full', $langcode = NULL, $content = array()) {
+  public function buildContent($entity, $view_mode = 'full', $langcode = LANGUAGE_NONE, $content = array()) {
     // Let the parent class build it's field content first.
     $content = parent::buildContent($entity, $view_mode, $langcode, $content);
     // We show our internal fields using a theming function from the FIELD
