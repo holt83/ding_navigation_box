@@ -4,19 +4,7 @@ core = 7.x
 package = Ding!
 
 files[] = ding_navigation_box.module
+files[] = ding_navigation_box.install
 
-dependencies[] = features
-dependencies[] = image
-dependencies[] = text
+dependencies[] = entity
 
-project = ding_navigation_box
-features[features_api][] = api:2
-features[field_base][] = field_ding_nav_box_content
-features[field_base][] = field_ding_nav_box_footer_text
-features[field_base][] = field_ding_nav_box_header_text
-features[field_base][] = field_ding_nav_box_side_images
-features[field_instance][] = node-ding_navigation_item-field_ding_nav_box_content
-features[field_instance][] = node-ding_navigation_item-field_ding_nav_box_footer_text
-features[field_instance][] = node-ding_navigation_item-field_ding_nav_box_header_text
-features[field_instance][] = node-ding_navigation_item-field_ding_nav_box_side_images
-features[node][] = ding_navigation_item

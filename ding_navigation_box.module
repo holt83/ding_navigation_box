@@ -9,9 +9,6 @@
 // Constants
 define('DING_NAV_BOX_PATH', drupal_get_path('module', 'ding_navigation_box'));
 
-// Include feature to setup the ding-navigation-item node entity.
-include_once 'ding_navigation_box.features.inc';
-
 /**
  * Implements hook_block_info().
  */
@@ -196,7 +193,374 @@ function _ding_navigation_box_get_items() {
    Ding navigation item
    ========================================================================== */
 
+/**
+ * Implements hook_entity_info().
+ */
+function ding_navigation_box_entity_info() {
+  $entity_info['ding_navigation_item'] = array(
+    'label' => t('Ding navigation item'),
+    'entity class' => 'DingNavigationItem',
+    'controller class' => 'DingNavigationItemController',
+    'base table' => 'ding_navigation_item',
+    'fieldable' => TRUE,
+    'entity keys' => array(
+      'id' => 'dniid',
+    ),
+    'static cache' => TRUE,
+    // The Ding navigation item is a single bundle entity. This means that the
+    // bundles array, as defined below, could be omitted. We choose to include 
+    // it here anyway to take advantage of the FIELD API's 'Manage Fields' and 
+    // 'Manage Display' admin pages.
+    'bundles' => array(
+      'ding_navigation_item' => array(
+        'label' => t('Ding navigation item'), 
+        'admin' => array(
+          'path' => 'admin/structure/ding-navigation-box/manage',
+          'access arguments' => array('administer ding navigation box'),
+        ),
+      ),
+    ),
+    'label callback' => 'entity_class_label',
+    'uri callback' => 'entity_class_uri',
+    'creation callback' => 'ding_navigation_item_create',
+    'module' => 'ding_navigation_box',
+  );
+  return $entity_info;
+}
 
+/**
+ * Implements hook_menu(). 
+ */
+function ding_navigation_box_menu() {
+  $items['admin/structure/ding-navigation-box/manage'] = array(
+    'title' => 'Navigation Box Admin',
+    'description' => t('Manage the Ding Navigation Box and it\'s content.'),
+    'page callback' => 'ding_navigation_box_page_info',
+    'access arguments' => array('administer ding navigation box'),
+  );
+  $items['admin/structure/ding-navigation-box/manage/navigation-box'] = array(
+    'title' => 'Navigation Box',
+    'description' => t('On this page you can configure the Ding navigation box and its contents.'),
+    'page callback' => 'ding_navigation_box_page_manage',
+    'access arguments' => array('administer ding navigation box'),
+    'type' => MENU_LOCAL_TASK,
+  );
+  $items['admin/structure/ding-navigation-box/manage/%ding_navigation_item'] = array(
+    'title' => 'Edit Navigation Item',
+    'description' => t('Edit the chosen Ding navigation item'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('ding_navigation_item_form', 4),
+    'access arguments' => array('administer ding navigation box'),
+    'type' => MENU_CALLBACK,
+  );
+  return $items;
+}
 
+/**
+ * Menu callback: admin/structure/ding-navigation-box/manage
+ */
+function ding_navigation_box_page_info() {
+  return t('Welcome to the administrative pages for the Ding navigation box.');
+}
 
+/**
+ * Form builder: Form for editing a Ding navigation item.
+ */
+function ding_navigation_item_form($form, &$form_state, $ding_navigation_item) {
+  if (!isset($form_state['ding_navigation_item'])) {
+    $form_state['ding_navigation_item'] = $ding_navigation_item;
+  }
+  $ding_navigation_item = $form_state['ding_navigation_item'];
+  $form['title'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Title'),
+    '#default_value' => $ding_navigation_item->title,
+    '#description' => t('The full title of the navigation item.'),
+    '#weight' => -15,
+    '#required' => TRUE,
+    '#maxlength' => 24,
+    '#size' => 40,
+  );
+  $form['abbreviation'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Title abbreviation'),
+    '#default_value' => $ding_navigation_item->abbreviation,
+    '#description' => t('An abbreviation of the full title to display on small screens.'),
+    '#weight' => -14,
+    '#required' => TRUE,
+    '#maxlength' => 12,
+    '#size' => 20,
+  );
+  $form['buttons'] = array();
+  $form['buttons']['#weight'] = 100;
+  $form['buttons']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save'),
+    '#weight' => 5,
+    '#submit' => array('ding_navigation_item_form_submit'),
+  );
+  $form['buttons']['cancel'] = array(
+    '#type' => 'submit',
+    '#value' => t('Cancel'),
+    '#submit' => array('ding_navigation_item_form_cancel'),
+  );
+  // Let the Field API attach fields assigned to the ding navigation item entity
+  field_attach_form('ding_navigation_item', $ding_navigation_item, $form, $form_state);
+  // Continue the breadcrumb trail from the previous admin pages, to integrate
+  // the editing of ding navigation items more with the rest of Ding navigation
+  // box admin UI.
+  $breadcrumb = array();
+  $breadcrumb[] = l(t('Home'), '<front>');
+  $breadcrumb[] = l(t('Administration'), 'admin');
+  $breadcrumb[] = l(t('Structure'), 'admin/structure');
+  $breadcrumb[] = l(t('Navigation Box Admin'), 'admin/structure/ding-navigation-box/manage/navigation-box');
+  $breadcrumb[] = l(t('Edit @title', array('@title' => $ding_navigation_item->title)), 
+                    'admin/structure/ding-navigation-box/manage/' . $ding_navigation_item->dniid);
+  drupal_set_breadcrumb($breadcrumb);
+  return $form;
+}
 
+/**
+ * Submit handler for the submit button on the ding_navigation_item form.
+ */
+function ding_navigation_item_form_submit($form, &$form_state) {
+  $ding_navigation_item = $form_state['ding_navigation_item'];
+  $ding_navigation_item->title = $form_state['values']['title'];
+  $ding_navigation_item->abbreviation = $form_state['values']['abbreviation'];
+  // Save and go back.
+  ding_navigation_item_save($ding_navigation_item);
+  $form_state['redirect'] = 'admin/structure/ding-navigation-box/manage/navigation-box';
+}
+
+/**
+ * Submit handler for the cancel button on the ding_navigation_item form.
+ */
+function ding_navigation_item_form_cancel($form, &$form_state) {
+  $form_state['redirect'] = 'admin/structure/ding-navigation-box/manage/navigation-box'; 
+}
+
+/**
+ * Menu callback: admin/structure/ding-navigation-box/manage/navigation-box
+ *
+ * This is the main administrative page for the Ding navigation box.
+ */
+function ding_navigation_box_page_manage() {
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'ding_navigation_item');
+  $result = $query->execute();
+  $dniids = array_keys($result['ding_navigation_item']);
+  $ding_navigation_items = ding_navigation_item_load_multiple($dniids);
+  $items = array();
+  foreach ($ding_navigation_items as $ding_navigation_item) {
+    $render_array = array(
+      'text' => array(
+        '#prefix' => '<p>',
+        '#suffix' => '</p>',
+        '#markup' => $ding_navigation_item->title,
+      ),
+      'edit_link' => array(
+        '#theme' => 'link',
+        '#text' => 'edit',
+        '#path' => "admin/structure/ding-navigation-box/manage/$ding_navigation_item->dniid",
+        '#options' => array('attributes' => array(), 'html' => FALSE),
+      ),      
+    );
+    $items[] = array(
+      'data' => drupal_render($render_array),
+    );
+  }
+  return theme('item_list', array('items' => $items));
+}
+
+/**
+ * Implements hook_permission().
+ */
+function ding_navigation_box_permission() {
+  return array(
+    'administer ding navigation box' => array(
+      'title' => t('Administer Ding navigation box'),
+      'description' => t('Allows users to configure the Ding navigation box.'),
+      'restrict access' => TRUE,
+    ),
+  );
+}
+
+/**
+ * Implements hook_field_extra_fields().
+ */
+function ding_navigation_box_field_extra_fields() {
+  $extra_fields = array(
+    'title' => array(
+      'label' => t('Title'),
+      'description' => t('The title of the navigation item.'),
+      'weight' => -15,
+    ),
+    'abbreviation' => array(
+      'label' => t('Abbreviation'),
+      'description' => t('An abbreviation of the full title to display on small screens.'),
+      'weight' => -14,
+    ),
+    'position' => array(
+      'label' => t('Position'),
+      'description' => t('The position of the item in the navigation box.'),
+      'weight' => -13,
+    ),    
+  );
+  $return = array();
+  $return['ding_navigation_item']['ding_navigation_item'] = array(
+    'form' => $extra_fields,
+    'display' => $extra_fields,
+  );
+  return $return;
+}
+
+/**
+ * Fetch a Ding navigation item from the database. 
+ *
+ * @param $dniid
+ *   Integer specifying the ding navigation item id.
+ * @param $reset
+ *   A boolean indicating that the internal cache should be reset.
+ * @return
+ *   A fully-loaded $postit object or FALSE if it cannot be loaded.
+ */
+function ding_navigation_item_load($dniid = NULL, $reset = FALSE) {
+  $dniids = (isset($dniid) ? array($dniid) : array());
+  $ding_navigation_item = ding_navigation_item_load_multiple($dniids, array(), $reset);
+  return $ding_navigation_item ? reset($ding_navigation_item) : FALSE;
+}
+
+/**
+ * Fetch mulitple Ding naviation items from the database
+ * 
+ * @param $dniids
+ *   An array of Ding navigation item ids. 
+ * @param $conditions
+ *   An array of conditions to match against
+ * @param $reset
+ *   A boolean indicating if the internal cache should be reset.
+ * @return
+ *   An array of Ding navigation items keyd by the primary key dniid.
+ */
+function ding_navigation_item_load_multiple($dniids = array(), $conditions = array(), $reset = FALSE) {
+  return entity_load('ding_navigation_item', $dniids, $conditions, $reset);
+}
+
+/**
+ * Delete a Ding navigation item from the database.
+ */
+function ding_navigation_item_delete(DingNavigationItem $ding_navigation_item) {
+  $dniids = array($ding_navigation_item->dniid);
+  ding_navigation_item_delete_multiple($dniids);
+}
+
+/**
+ * Delete multiple Ding naviation items.
+ * 
+ * @param $dniids
+ *   An array of Ding navigation item IDs to match against.
+ */
+function ding_navigation_item_delete_multiple($dniids = array()) {
+  entity_get_controller('ding_navigation_item')->delete($dniids);
+}
+
+/**
+ * Create and return a Ding navigation item.
+ */
+function ding_navigation_item_create($values = array()) {
+  return entity_get_controller('ding_navigation_item')->create($values);
+}
+
+/**
+ * Saves a Ding navigation item to the database.
+ * 
+ * @param $ding_navigation_item
+ *   The Ding navigation item to be saved.
+ */
+function ding_navigation_item_save(DingNavigationItem $ding_navigation_item) {
+  return entity_get_controller('ding_navigation_item')->save($ding_navigation_item);
+}
+
+/**
+ * The class used for Ding navigation items.
+ */
+class DingNavigationItem extends Entity {
+  
+  public function __construct($values = array()) {
+    parent::__construct($values, 'ding_navigation_item');
+  }
+  
+  /**
+   * Specifies the default label, which is picked up by label() by default.
+   */
+  protected function defaultLabel() {
+    return 'Navigation item ' . $this->position;
+  }
+
+  /**
+   * Specifies the default uri, which is picked up by uri() by default.
+   */
+  protected function defaultUri() {
+    return array('path' => 'admin/structure/ding-navigation-item/manage');
+  }  
+  
+}
+
+/**
+ * The controller class used for Ding navigation items.
+ */
+class DingNavigationItemController extends EntityAPIController {
+  
+  public function __construct($entityType) {
+    parent::__construct($entityType);
+  }
+  
+  /**
+   * Create a Ding navigation item
+   * 
+   * First setup the values that are the specific to the ding navigation item 
+   * schema, then go through the parent imlplementation.
+   */
+  public function create(array $values = array()) {
+    // Add values that are specific to the Ding navigation item.
+    $values += array(
+      'dniid' => '',
+      'title' => '',
+      'abbreviation' => '',
+      'position' => 0,
+      'is_new' => TRUE,
+    );
+    $ding_navigation_item = parent::create($values);
+    return $ding_navigation_item;    
+  }
+  
+  /**
+   * Override the buildContent function to setup fields that are specific to
+   * the ding navigation item.
+   */
+  public function buildContent($entity, $view_mode = 'full', $langcode = NULL, $content = array()) {
+    // Let the parent class build it's field content first.
+    $content = parent::buildContent($entity, $view_mode, $langcode, $content);
+    // We show our internal fields using a theming function from the FIELD
+    // API, so the behaviour will be the same as other fields added with the 
+    // FIELD API.
+    $content['title'] = array(
+      '#theme' => 'field',
+      '#weight' => -40,
+      '#title' => t('Title'),
+      '#label_display' => 'hidden',
+      '#access' => TRUE,
+      '#view_mode' => 'full',
+      '#language' => LANGUAGE_NONE,
+      '#field_name' => 'field_ding_navigation_item_title',
+      '#field_type' => 'text',
+      '#entity_type' => 'ding_navigation_item',
+      '#bundle' => 'ding_navigation_item',
+      '#items' => array(array('value' => $entity->title)),
+      '#formatter' => 'text_default',
+       0 => array('#markup' => check_plain($entity->title)),
+    );
+    return $content;
+  }
+  
+}
