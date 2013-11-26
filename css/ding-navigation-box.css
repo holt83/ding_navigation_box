@@ -6,7 +6,8 @@
   background-color: #f5f5f5;
   max-width: 1200px;
   font-size: 100%;
-  border-bottom: 0.0625em solid #e5e5e5;  
+  border: 0.0625em solid #e5e5e5;
+  border-top: none;  
 }
 
 .ding-navigation-box * {
@@ -30,16 +31,13 @@
 }
 
 .ding-navigation-box .content-areas {
-	width: 82%;
-	padding: 0.625em;
+	width: 80%;
 	padding-left: 1.875em;
-	border: 0.0625em solid #e5e5e5;
-  border-left: none;
-  border-bottom: none;
+	border-top: 0.0625em solid #e5e5e5;
 }
 
 .ding-navigation-box .activation-areas {
-  width: 18%;
+  width: 20%;
   background-color: rgba(0, 0, 0, 0.5);
 }
 
@@ -97,6 +95,52 @@
 	color: black;
 }
 
+/* ==========================================================================
+   Ding navigation box - Content area styling
+   ========================================================================== */
+
+.ding-navigation-box .content-area .header {
+  border-bottom: 0.0625em solid #e5e5e5;
+  margin-right: 1em;
+  margin-bottom: 1em;
+}
+
+.ding-navigation-box .content-area h2 {
+  font-size: 1.5em; /* 24px / 16px = 1.5em */
+  margin-top: 0.66667em; /* 16px / 24px = 0.66667em */  
+  margin-bottom: 0.66667em;  
+}
+
+.ding-navigation-box .content-area .header-text-paragraph {
+  color: rgba(0, 0, 0, 0.698);
+  margin-bottom: 1em;
+}
+
+/* ========================================================================== 
+   Breakpoint: 1120px / 16px = 78.125rem
+   Switch to title abbreviation in activation areas 
+   ========================================================================== */
+   
+@media screen and (max-width: 70rem) {
+  
+  .ding-navigation-box .activation-areas {
+    width: 15%;
+  }
+
+  .ding-navigation-box .content-areas {
+    width: 85%;
+  }
+
+  .ding-navigation-box .activation-area p.full {
+    display: none;
+  }
+  
+  .ding-navigation-box .activation-area p.abbreviation {
+    display: inline;
+  }  
+  
+}
+
 /* ========================================================================== 
    Breakpoint: 860px / 16px = 53.75rem
    Switch to horizontal side by side activation areas. 
@@ -104,6 +148,10 @@
    
 @media screen and (max-width: 53.75rem) {
   
+  .ding-navigation-box {
+    border: none;
+  }
+
   .ding-navigation-box .activation-areas,
   .ding-navigation-box .content-areas {
     float: none;
@@ -113,7 +161,7 @@
     clear: both;
     margin: 0;
     width: 100%;
-    padding: 0.625em;
+    padding-left: 0;
     padding-top: 1.875em;
     border: 0.0625em solid #e5e5e5;
     border-top: none;
@@ -151,24 +199,15 @@
   
   .ding-navigation-box .activation-area p {
     line-height: normal;
-  }	  
-  
-}
+  }
 
-/* ========================================================================== 
-   Breakpoint: 720px / 16px = 45rem
-   Switch to short notation text in activation areas 
-   ========================================================================== */
-   
-@media screen and (max-width: 45rem) {
-  
-	.ding-navigation-box .activation-area p.full {
-	  display: none;
-	}
-	
-	.ding-navigation-box .activation-area p.abbreviation {
-	  display: inline;
-	}  
+  .ding-navigation-box .content-area .header {
+    margin-left: 1em;
+  }
+
+  .ding-navigation-box .content-area h2 {
+    margin-top: 0;
+  }	  
   
 }
 

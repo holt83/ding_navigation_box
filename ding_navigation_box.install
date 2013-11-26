@@ -29,9 +29,9 @@ function ding_navigation_box_schema() {
       'abbreviation' => array(
         'description' => 'An abbreviation of the full title to display on small screens.',
         'type' => 'varchar',
-        'length' => '12',
+        'length' => '6',
         'not null' => TRUE,
-        'default' => 'Nav item',
+        'default' => 'Item',
       ),
       'position' => array(
         'description' => 'A number indicating the position of the item in the navigation box.',
@@ -56,7 +56,7 @@ function ding_navigation_box_install() {
   for ($i=1; $i < 6; $i++) { 
     $ding_navigation_item = entity_create('ding_navigation_item', array('type' => 'ding_navigation_item'));
     $ding_navigation_item->title = 'Ding navigation item ' . $i;
-    $ding_navigation_item->abbreviation = 'Nav item ' . $i;
+    $ding_navigation_item->abbreviation = 'Item' . $i;
     $ding_navigation_item->position = $i;
     ding_navigation_item_save($ding_navigation_item);
   }

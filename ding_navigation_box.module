@@ -96,12 +96,9 @@ function template_preprocess_ding_navigation_box(&$variables) {
  */
 function template_preprocess_ding_nav_box_activation_area(&$variables) {
   $variables['classes_array'][] = 'activation-area';
-  $ding_navigation_item = $variables['item'];
-  // The default implementation of an activation area doesn't use the Field API
-  // theme hooks for the 'title' and 'abbrevation' internal fields. Below we
-  // just get the raw values and expose them to the template.
-  $variables['title'] = $ding_navigation_item['title']['#items'][0]['value'];
-  $variables['abbreviation'] = $ding_navigation_item['abbreviation']['#items'][0]['value'];
+  $item = $variables['item'];
+  $variables['title'] = $item['title']['#items'][0]['value'];
+  $variables['abbreviation'] = $item['abbreviation']['#items'][0]['value'];
 }
 
 /**
@@ -109,6 +106,20 @@ function template_preprocess_ding_nav_box_activation_area(&$variables) {
  */
 function template_preprocess_ding_nav_box_content_area(&$variables) {
   $variables['classes_array'][] = 'content-area';
+  $item = $variables['item'];
+  $variables['title'] = $item['title']['#items'][0]['value'];
+  // Setup the header text render arrays from the data supplied by the
+  // ding_nav_box_header_text field.
+  if (isset($item['field_ding_nav_box_header_text'])) {
+    $variables['header_text'] = array();
+    foreach ($item['field_ding_nav_box_header_text']['#items'] as $header_text) {
+      $variables['header_text'][] = array(
+        '#prefix' => '<p>',
+        '#suffix' => '</p>',
+        '#markup' => $header_text['value'],
+      );
+    }
+  }
 }
 
 /**
@@ -283,8 +294,8 @@ function ding_navigation_item_form($form, &$form_state, $ding_navigation_item) {
     '#description' => t('An abbreviation of the full title to display on small screens.'),
     '#weight' => -14,
     '#required' => TRUE,
-    '#maxlength' => 12,
-    '#size' => 20,
+    '#maxlength' => 6,
+    '#size' => 12,
   );
   $form['buttons'] = array();
   $form['buttons']['#weight'] = 100;
@@ -299,6 +310,7 @@ function ding_navigation_item_form($form, &$form_state, $ding_navigation_item) {
     '#value' => t('Cancel'),
     '#submit' => array('ding_navigation_item_form_cancel'),
   );
+  $form['#validate'][] = 'ding_navigation_item_form_validate'; 
   // Let the Field API attach fields assigned to the ding navigation item entity
   field_attach_form('ding_navigation_item', $ding_navigation_item, $form, $form_state);
   // Continue the breadcrumb trail from the previous admin pages, to integrate
@@ -315,6 +327,12 @@ function ding_navigation_item_form($form, &$form_state, $ding_navigation_item) {
   return $form;
 }
 
+function ding_navigation_item_form_validate($form, &$form_state) {
+  $ding_navigation_item = $form_state['ding_navigation_item'];
+  // Let the Field API perform validation on the data submitted by the form.
+  field_attach_form_validate('ding_navigation_item', $ding_navigation_item, $form, $form_state);
+}
+
 /**
  * Submit handler for the submit button on the ding_navigation_item form.
  */
@@ -322,6 +340,9 @@ function ding_navigation_item_form_submit($form, &$form_state) {
   $ding_navigation_item = $form_state['ding_navigation_item'];
   $ding_navigation_item->title = $form_state['values']['title'];
   $ding_navigation_item->abbreviation = $form_state['values']['abbreviation'];
+  // Let the Field API perform necessary operations on the data submitted by
+  // the form
+  field_attach_submit('ding_navigation_item', $ding_navigation_item, $form, $form_state);
   // Save and go back.
   ding_navigation_item_save($ding_navigation_item);
   $form_state['redirect'] = 'admin/structure/ding-navigation-box/manage/navigation-box';
@@ -489,14 +510,14 @@ class DingNavigationItem extends Entity {
    * Specifies the default label, which is picked up by label() by default.
    */
   protected function defaultLabel() {
-    return 'Navigation item ' . $this->position;
+    return 'Ding navigation item ' . $this->position;
   }
 
   /**
    * Specifies the default uri, which is picked up by uri() by default.
    */
   protected function defaultUri() {
-    return array('path' => 'admin/structure/ding-navigation-item/manage');
+    return array('path' => 'admin/structure/ding-navigation-box/manage');
   }  
   
 }

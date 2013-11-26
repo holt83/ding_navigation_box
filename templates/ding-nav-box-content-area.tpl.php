@@ -18,6 +18,27 @@
 
 ?>
 
-<div class="<?php print $classes; ?>" <?php print $attributes ?>>
-  <h3><?php print render($item['title']); ?></h3>
+<div class="<?php print $classes; ?>" <?php print $attributes; ?>>
+  <div class="header">
+    <!-- Title -->
+	  <?php print render($title_prefix); ?>
+	  <h2 <?php print $title_attributes ?>><?php print $title; ?></h2>
+	  <?php print render($title_suffix); ?>
+	  <!-- Header text -->
+	  <?php if (isset($header_text)): ?>
+	  	<div class="header-text">
+			  <?php foreach($header_text as $paragraph): ?>
+			  	<div class="header-text-paragraph">
+			  		<?php print render($paragraph); ?>
+			  	</div>
+			  <?php endforeach; ?>
+		  </div>
+	  <?php endif; ?>	
+  </div>
+  <div class="main-content">
+  	
+  </div>
+  <div class="footer">
+  	
+  </div>
 </div>
