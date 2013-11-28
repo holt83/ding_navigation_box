@@ -4,12 +4,12 @@
   
   Drupal.behaviors.dingNavigationBox = {     
     attach: function(context, settings) {
-      $(".ding-navigation-box .content-areas .content-area").hide();
-      $(".ding-navigation-box .activation-areas .activation-area .activation-arrow").hide();
+      $(".ding-navigation-box .content-areas .content-area", context).hide();
+      $(".ding-navigation-box .activation-areas .activation-area .activation-arrow", context).hide();
       // Activate the default navigation item.
-      toggleNavigationItem(settings.dingNavigationBox.defaultItemNumber, true);
+      toggleNavigationItem(settings.dingNavigationBox.activeItemNumber, true);
       // Iterate over each activation area and attach event-handlers.
-      $(".ding-nav-box-activation-area", context).each(function(index) {
+      $(".ding-navigation-box .activation-area", context).each(function(index) {
       	var itemNumber = index + 1;  
       	$(this).bind("click touchstart", function(e) {
       	  // Deactivate the active navigation item.	

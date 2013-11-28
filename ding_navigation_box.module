@@ -29,7 +29,7 @@ function ding_navigation_box_block_view($delta) {
   $block = array();
   $block['subject'] = t('Ding navigation box');
   // Fetch ding-navigation-item node entities from the database.
-  $items = _ding_navigation_box_get_items();
+  $items = _ding_navigation_box_get_items(FALSE);
   $block['content']['ding_navigation_box'] = array(
     '#theme' => 'ding_navigation_box',
     'activation_areas' => $items['activation_areas'],
@@ -154,16 +154,11 @@ function _ding_navigation_box_get_css($admin = false) {
 /**
  * Returns an array with the javascript for the navigation box. This array can
  * be used on the attached property in a render array.
- */
-
-/**
- * Returns an array with the javascript for the navigation box. This array can
- * be used on the attached property in a render array.
  * 
  * @param  boolean $admin (Optional)
  *   If true admin JS will be included.
  */
-function _ding_navigation_box_get_javascript($admin = false) {
+function _ding_navigation_box_get_javascript($admin = false, $settings = array()) {
   $js = array();
   $js_base = array(
     'group' => JS_DEFAULT,
@@ -176,7 +171,8 @@ function _ding_navigation_box_get_javascript($admin = false) {
     'type' => 'setting',
     'data' => array(
       'dingNavigationBox' => array(
-        'defaultItemNumber' => 1,
+        'activeItemNumber' => isset($settings['activeItemNumber']) ? 
+                               $settings['activeItemNumber'] : 1,
       ),
     ),    
   ) + $js_base;
@@ -272,10 +268,11 @@ function ding_navigation_box_menu() {
     'page callback' => 'ding_navigation_box_page_info',
     'access arguments' => array('administer ding navigation box'),
   );
-  $items['admin/structure/ding-navigation-box/manage/navigation-box'] = array(
+  $items['admin/structure/ding-navigation-box/manage/navigation-box/%'] = array(
     'title' => 'Navigation Box',
     'description' => t('On this page you can configure the Ding navigation box and its contents.'),
     'page callback' => 'ding_navigation_box_page_manage',
+    'page arguments' => array(5),
     'access arguments' => array('administer ding navigation box'),
     'type' => MENU_LOCAL_TASK,
   );
@@ -373,20 +370,22 @@ function ding_navigation_item_form_submit($form, &$form_state) {
   field_attach_submit('ding_navigation_item', $ding_navigation_item, $form, $form_state);
   // Save and go back.
   ding_navigation_item_save($ding_navigation_item);
-  $form_state['redirect'] = 'admin/structure/ding-navigation-box/manage/navigation-box';
+  $form_state['redirect'] = 'admin/structure/ding-navigation-box/manage/navigation-box/' . $ding_navigation_item->position;
 }
 
 /**
  * Submit handler for the cancel button on the ding_navigation_item form.
  */
 function ding_navigation_item_form_cancel($form, &$form_state) {
-  $form_state['redirect'] = 'admin/structure/ding-navigation-box/manage/navigation-box'; 
+  $ding_navigation_item = $form_state['ding_navigation_item'];
+  $form_state['redirect'] = 'admin/structure/ding-navigation-box/manage/navigation-box/'. $ding_navigation_item->position; 
 }
 
 /**
  * Menu callback: admin/structure/ding-navigation-box/manage/navigation-box.
  */
-function ding_navigation_box_page_manage() {
+function ding_navigation_box_page_manage($active_item_position = 1) {
+  file_put_contents("/home/drupalpro/debug/debug.txt", print_r($active_item_position , TRUE), FILE_APPEND);
   $return = array();
   $return['header'] = array(
     '#prefix' => '<span>',
@@ -405,7 +404,7 @@ function ding_navigation_box_page_manage() {
     $item = $activation_area['#item'];
     $return['edit_links']['edit_link_' . $item->position] = array(
       '#theme' => 'link',
-      '#text' => 'Edit',
+      '#text' => 'Edit ' . $item->title,
       '#path' => 'admin/structure/ding-navigation-box/manage/' . $item->dniid,
       '#options' => array('attributes' => array(), 'html' => FALSE),      
     );
@@ -417,7 +416,10 @@ function ding_navigation_box_page_manage() {
     'content_areas' => $ding_navigation_items['content_areas'],
   );
   // Attach javascript
-  foreach (_ding_navigation_box_get_javascript(TRUE) as $js) {
+  $settings = array(
+    'activeItemNumber' => $active_item_position,
+  );
+  foreach (_ding_navigation_box_get_javascript(TRUE, $settings) as $js) {
     $return['#attached']['js'][] = $js;
   }
   // Attach css
