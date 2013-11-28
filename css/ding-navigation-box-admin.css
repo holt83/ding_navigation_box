@@ -1,0 +1,19 @@
+/* ==========================================================================
+   Ding navigation box - Admin page styling
+   ========================================================================== */
+
+.content span:first-child {
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 0.923em;
+  line-height: 2.6em;
+}
+
+.content .edit-item-links {
+	margin-bottom: 1em;
+}
+
+.content .edit-item-links a {
+	text-decoration: none;
+	text-transform: uppercase;
+}
