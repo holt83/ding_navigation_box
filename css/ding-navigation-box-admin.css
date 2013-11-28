@@ -5,7 +5,7 @@
 .content span:first-child {
   text-transform: uppercase;
   font-weight: bold;
-  font-size: 0.923em;
+  font-size: 0.923em; 
   line-height: 2.6em;
 }
 
