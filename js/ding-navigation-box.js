@@ -7,7 +7,7 @@
       $(".ding-navigation-box .content-areas .content-area", context).hide();
       $(".ding-navigation-box .activation-areas .activation-area .activation-arrow", context).hide();
       // Activate the default navigation item.
-      toggleNavigationItem(settings.dingNavigationBox.activeItemNumber, true);
+      toggleNavigationItem(settings.dingNavigationBox.activeItemPosition, true);
       // Iterate over each activation area and attach event-handlers.
       $(".ding-navigation-box .activation-area", context).each(function(index) {
       	var itemNumber = index + 1;  

@@ -171,8 +171,7 @@ function _ding_navigation_box_get_javascript($admin = false, $settings = array()
     'type' => 'setting',
     'data' => array(
       'dingNavigationBox' => array(
-        'activeItemNumber' => isset($settings['activeItemNumber']) ? 
-                               $settings['activeItemNumber'] : 1,
+        'activeItemPosition' => isset($settings['activeItemPosition']) ? $settings['activeItemPosition'] : 1,
       ),
     ),    
   ) + $js_base;
@@ -417,7 +416,7 @@ function ding_navigation_box_page_manage($active_item_position = 1) {
   );
   // Attach javascript
   $settings = array(
-    'activeItemNumber' => $active_item_position,
+    'activeItemPosition' => $active_item_position,
   );
   foreach (_ding_navigation_box_get_javascript(TRUE, $settings) as $js) {
     $return['#attached']['js'][] = $js;
