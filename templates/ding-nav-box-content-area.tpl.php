@@ -26,7 +26,7 @@
 	  <?php print render($title_suffix); ?>
 	  <!-- Header text -->
 	  <?php if (isset($header_text)): ?>
-	  	<div class="header-text">
+	  	<div class="header-text">	
 			  <?php foreach($header_text as $paragraph): ?>
 			  	<div class="header-text-paragraph">
 			  		<?php print render($paragraph); ?>
