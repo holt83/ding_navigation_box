@@ -7,4 +7,15 @@ files[] = ding_navigation_box.module
 files[] = ding_navigation_box.install
 
 dependencies[] = entity
+dependencies[] = features
+dependencies[] = link
+dependencies[] = text
 
+;features
+version = 7.x-1.0
+project = ding_navigation_box
+features[features_api][] = api:2
+features[field_base][] = field_ding_nav_box_header_text
+features[field_base][] = field_ding_nav_box_links
+features[field_instance][] = ding_navigation_item-ding_navigation_item-field_ding_nav_box_header_text
+features[field_instance][] = ding_navigation_item-ding_navigation_item-field_ding_nav_box_links

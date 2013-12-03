@@ -39,6 +39,10 @@
   	
   </div>
   <div class="footer">
-  	
+  	<?php if (isset($link_test)): ?>
+  		<div class="links">
+  			<?php print render($link_test); ?>
+  		</div>
+  	<?php endif; ?>
   </div>
 </div>

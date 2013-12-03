@@ -124,6 +124,9 @@ function template_preprocess_ding_nav_box_content_area(&$variables) {
       );
     }
   }
+  $field_items = field_get_items('ding_navigation_item', $item, 'field_ding_nav_box_links');
+  $field_item = field_view_value('ding_navigation_item', $item, 'field_ding_nav_box_links', $field_items[0]);
+  $variables['link_test'] = $field_item;
 }
 
 /**
@@ -276,20 +279,6 @@ function ding_navigation_box_menu() {
     'type' => MENU_CALLBACK,
   );
   return $items;
-}
-
-/**
- * Menu callback: admin/structure/ding-navigation-box/manage
- */
-function ding_navigation_box_page_info() {
-  $return = array();
-  $return['header'] = array(
-    '#markup' => t('Welcome to the administrative pages for the Ding navigation box.'),
-  );
-  $return['edit_link'] = array(
-    ''
-  );
-  return $return;
 }
 
 /**
