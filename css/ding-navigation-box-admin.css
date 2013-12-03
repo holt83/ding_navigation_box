@@ -2,7 +2,7 @@
    Ding navigation box - Admin page styling
    ========================================================================== */
 
-.content span:first-child {
+.content .admin-header-text {
   text-transform: uppercase;
   font-weight: bold;
   font-size: 0.923em; 

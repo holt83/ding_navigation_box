@@ -43,6 +43,7 @@
 
 .ding-navigation-box .activation-areas-pull {
   display: none;
+  cursor: pointer;
 }
 
 /* ==========================================================================
@@ -51,6 +52,9 @@
 
 .ding-navigation-box .activation-area {
 	position: relative;
+  display: block;
+  outline: 0;
+  text-decoration: none;
   border-bottom: 0.125em solid white;
 }
 
@@ -58,18 +62,18 @@
 	border-bottom: none;
 }
 
-.ding-navigation-box .activation-area p {
+.ding-navigation-box .activation-area span {
 	line-height: 4.125em;
 	margin-left: 0.625em; 
 	margin-right: 0.625em;
 	color: white;
 }
 
-.ding-navigation-box .activation-area p.full {
+.ding-navigation-box .activation-area span.full {
   display: inline;
 }
 
-.ding-navigation-box .activation-area p.abbreviation {
+.ding-navigation-box .activation-area span.abbreviation {
 	display: none;
 }
 
@@ -83,16 +87,23 @@
   border-bottom: 1.5625em solid transparent;  
 }
 
+.ding-navigation-box .activation-area:hover,
+.ding-navigation-box .activation-area:focus {
+  background-color: powderblue;
+}
+
+.ding-navigation-box .activation-area:hover span,
+.ding-navigation-box .activation-area:focus span {
+  color: black;
+}
+
 .ding-navigation-box .activation-area.active {
 	background-color: black;
 }
 
-.ding-navigation-box .activation-area.hover {
-	background-color: powderblue;
-}
-
-.ding-navigation-box .activation-area.hover p {
-	color: black;
+.ding-navigation-box .activation-area.active span {
+  background-color: black;
+  color: white;
 }
 
 /* ==========================================================================
@@ -131,11 +142,11 @@
     width: 85%;
   }
 
-  .ding-navigation-box .activation-area p.full {
+  .ding-navigation-box .activation-area span.full {
     display: none;
   }
   
-  .ding-navigation-box .activation-area p.abbreviation {
+  .ding-navigation-box .activation-area span.abbreviation {
     display: inline;
   }  
   
@@ -197,7 +208,7 @@
     border-top: 0.6875em solid black; 
   }
   
-  .ding-navigation-box .activation-area p {
+  .ding-navigation-box .activation-area span {
     line-height: normal;
   }
 
@@ -263,11 +274,11 @@
 	  border-bottom: none;
 	}
 	
-  .ding-navigation-box .activation-area p.full {
+  .ding-navigation-box .activation-area span.full {
     display: inline;
   }
   
-  .ding-navigation-box .activation-area p.abbreviation {
+  .ding-navigation-box .activation-area span.abbreviation {
     display: none;
   }
 	

@@ -16,8 +16,8 @@
 
 ?>
 
-<div class="<?php print $classes;?>" <?php print $attributes ?>>
-  <p class="full"><?php print $title; ?></p>
-  <p class="abbreviation"><?php print $abbreviation; ?></p>
+<a href="#" class="<?php print $classes;?>" <?php print $attributes ?>>
+  <span class="full"><?php print $title; ?></span>
+  <span class="abbreviation"><?php print $abbreviation; ?></span>
   <div class="activation-arrow"></div>
-</div>
+</a>

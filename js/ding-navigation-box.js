@@ -17,13 +17,6 @@
       	  // Activate this naviation item.
       	  toggleNavigationItem(itemNumber, true);
       	});
-      	$(this).hover(function() {
-      	  if (itemNumber != activeItemNumber) {
-      		$(this).addClass("hover");	    		  
-      	  }  
-      	},function() {
-      	  $(this).removeClass("hover");	    		  
-      	});
       });
       $(".ding-navigation-box .activation-areas-pull").bind("click touchstart", function(e) {
         $(".ding-navigation-box .activation-areas").slideToggle();
@@ -43,16 +36,15 @@
     }  
   };
   
-  // Deactivates or activates the given navigation item.
+  // Deactivates or activates a navigation item.
   function toggleNavigationItem(itemNumber, activate) {
   	var contentArea = $(".ding-navigation-box .content-areas > div:nth-of-type(" + itemNumber + ")");
-  	var activationAreaSelector = ".ding-navigation-box .activation-areas > div:nth-of-type(" + itemNumber + ")";
+  	var activationAreaSelector = ".ding-navigation-box .activation-areas > a:nth-of-type(" + itemNumber + ")";
   	if (activate) {
   	  contentArea.show();
   	  $(activationAreaSelector).addClass("active");
-  	  $(activationAreaSelector).removeClass("hover");
   	  $(activationAreaSelector + " .activation-arrow").show();
-      $(".ding-navigation-box .activation-areas-pull").html($(activationAreaSelector + " p.full").text());
+      $(".ding-navigation-box .activation-areas-pull").html($(activationAreaSelector + " .full").text());
   	  activeItemNumber = itemNumber;
   	}
   	else {
