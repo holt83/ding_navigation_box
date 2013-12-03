@@ -267,13 +267,12 @@ function ding_navigation_box_menu() {
     'page callback' => 'ding_navigation_box_page_info',
     'access arguments' => array('administer ding navigation box'),
   );
-  $items['admin/structure/ding-navigation-box/manage/navigation-box/%'] = array(
+  $items['admin/structure/ding-navigation-box/manage/navigation-box'] = array(
     'title' => 'Navigation Box',
     'description' => t('On this page you can configure the Ding navigation box and its contents.'),
     'page callback' => 'ding_navigation_box_page_manage',
-    'page arguments' => array(5),
     'access arguments' => array('administer ding navigation box'),
-    'type' => MENU_CALLBACK,
+    'type' => MENU_LOCAL_TASK,
   );
   $items['admin/structure/ding-navigation-box/manage/%ding_navigation_item'] = array(
     'title' => 'Edit Navigation Item',
