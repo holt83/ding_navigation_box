@@ -244,7 +244,7 @@ function ding_navigation_box_entity_info() {
       'ding_navigation_item' => array(
         'label' => t('Ding navigation item'), 
         'admin' => array(
-          'path' => 'admin/structure/ding-navigation-box/manage',
+          'path' => 'admin/structure/ding-navigation-box',
           'access arguments' => array('administer ding navigation box'),
         ),
       ),
@@ -261,20 +261,13 @@ function ding_navigation_box_entity_info() {
  * Implements hook_menu(). 
  */
 function ding_navigation_box_menu() {
-  $items['admin/structure/ding-navigation-box/manage'] = array(
+  $items['admin/structure/ding-navigation-box'] = array(
     'title' => 'Navigation Box Admin',
     'description' => t('Manage the Ding Navigation Box and it\'s content.'),
-    'page callback' => 'ding_navigation_box_page_info',
-    'access arguments' => array('administer ding navigation box'),
-  );
-  $items['admin/structure/ding-navigation-box/manage/navigation-box'] = array(
-    'title' => 'Navigation Box',
-    'description' => t('On this page you can configure the Ding navigation box and its contents.'),
     'page callback' => 'ding_navigation_box_page_manage',
     'access arguments' => array('administer ding navigation box'),
-    'type' => MENU_LOCAL_TASK,
   );
-  $items['admin/structure/ding-navigation-box/manage/%ding_navigation_item'] = array(
+  $items['admin/structure/ding-navigation-box/edit/%ding_navigation_item'] = array(
     'title' => 'Edit Navigation Item',
     'description' => t('Edit the chosen Ding navigation item'),
     'page callback' => 'drupal_get_form',
@@ -350,9 +343,7 @@ function ding_navigation_item_form($form, &$form_state, $ding_navigation_item) {
   $breadcrumb[] = l(t('Home'), '<front>');
   $breadcrumb[] = l(t('Administration'), 'admin');
   $breadcrumb[] = l(t('Structure'), 'admin/structure');
-  $breadcrumb[] = l(t('Navigation Box Admin'), 'admin/structure/ding-navigation-box/manage/navigation-box');
-  $breadcrumb[] = l(t('Edit @title', array('@title' => $ding_navigation_item->title)), 
-                    'admin/structure/ding-navigation-box/manage/' . $ding_navigation_item->dniid);
+  $breadcrumb[] = l(t('Navigation Box Admin'), 'admin/structure/ding-navigation-box/' . $ding_navigation_item->position);
   drupal_set_breadcrumb($breadcrumb);
   return $form;
 }
@@ -375,7 +366,7 @@ function ding_navigation_item_form_submit($form, &$form_state) {
   field_attach_submit('ding_navigation_item', $ding_navigation_item, $form, $form_state);
   // Save and go back.
   ding_navigation_item_save($ding_navigation_item);
-  $form_state['redirect'] = 'admin/structure/ding-navigation-box/manage/navigation-box/' . $ding_navigation_item->position;
+  $form_state['redirect'] = 'admin/structure/ding-navigation-box/' . $ding_navigation_item->position;
 }
 
 /**
@@ -383,7 +374,7 @@ function ding_navigation_item_form_submit($form, &$form_state) {
  */
 function ding_navigation_item_form_cancel($form, &$form_state) {
   $ding_navigation_item = $form_state['ding_navigation_item'];
-  $form_state['redirect'] = 'admin/structure/ding-navigation-box/manage/navigation-box/'. $ding_navigation_item->position; 
+  $form_state['redirect'] = 'admin/structure/ding-navigation-box/'. $ding_navigation_item->position; 
 }
 
 /**
@@ -409,7 +400,7 @@ function ding_navigation_box_page_manage($active_item_position = 1) {
     $return['edit_links']['edit_link_' . $item->position] = array(
       '#theme' => 'link',
       '#text' => 'Edit ' . $item->title,
-      '#path' => 'admin/structure/ding-navigation-box/manage/' . $item->dniid,
+      '#path' => 'admin/structure/ding-navigation-box/edit/' . $item->dniid,
       '#options' => array('attributes' => array(), 'html' => FALSE),      
     );
   }
