@@ -273,7 +273,7 @@ function ding_navigation_box_menu() {
     'page callback' => 'ding_navigation_box_page_manage',
     'page arguments' => array(5),
     'access arguments' => array('administer ding navigation box'),
-    'type' => MENU_LOCAL_TASK,
+    'type' => MENU_CALLBACK,
   );
   $items['admin/structure/ding-navigation-box/manage/%ding_navigation_item'] = array(
     'title' => 'Edit Navigation Item',
@@ -290,7 +290,14 @@ function ding_navigation_box_menu() {
  * Menu callback: admin/structure/ding-navigation-box/manage
  */
 function ding_navigation_box_page_info() {
-  return t('Welcome to the administrative pages for the Ding navigation box.');
+  $return = array();
+  $return['header'] = array(
+    '#markup' => t('Welcome to the administrative pages for the Ding navigation box.'),
+  );
+  $return['edit_link'] = array(
+    ''
+  );
+  return $return;
 }
 
 /**
@@ -384,7 +391,6 @@ function ding_navigation_item_form_cancel($form, &$form_state) {
  * Menu callback: admin/structure/ding-navigation-box/manage/navigation-box.
  */
 function ding_navigation_box_page_manage($active_item_position = 1) {
-  file_put_contents("/home/drupalpro/debug/debug.txt", print_r($active_item_position , TRUE), FILE_APPEND);
   $return = array();
   $return['header'] = array(
     '#prefix' => '<span>',

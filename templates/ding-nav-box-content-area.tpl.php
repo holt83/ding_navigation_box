@@ -39,14 +39,6 @@
   	
   </div>
   <div class="footer">
-	  <?php if (isset($footer_text)): ?>
-	  	<div class="header-text">
-			  <?php foreach($footer_text as $paragraph): ?>
-			  	<div class="header-text-paragraph">
-			  		<?php print render($paragraph); ?>
-			  	</div>
-			  <?php endforeach; ?>
-		  </div>
-	  <?php endif; ?>	  	
+  	
   </div>
 </div>
