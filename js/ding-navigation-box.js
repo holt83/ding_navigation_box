@@ -12,6 +12,7 @@
       $(".ding-navigation-box .activation-area", context).each(function(index) {
       	var itemNumber = index + 1;  
       	$(this).bind("click touchstart", function(e) {
+          e.preventDefault();
       	  // Deactivate the active navigation item.	
       	  toggleNavigationItem(activeItemNumber, false);
       	  // Activate this naviation item.

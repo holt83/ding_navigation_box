@@ -5,6 +5,8 @@
 .ding-navigation-box { 
   max-width: 1200px;
   font-size: 100%;
+  border: 0.0625em solid #e5e5e5;
+  border-top: none;
 }
 
 .ding-navigation-box * {
@@ -29,9 +31,7 @@
 
 .ding-navigation-box .content-areas {
   background-color: #f5f5f5;
-  border: 0.0625em solid #e5e5e5;
 	width: 80%;
-  min-height: 21em;
 	padding-left: 1.875em;
 	border-top: 0.0625em solid #e5e5e5;
 }

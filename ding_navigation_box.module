@@ -29,20 +29,14 @@ function ding_navigation_box_block_view($delta) {
   $block = array();
   $block['subject'] = t('Ding navigation box');
   // Fetch ding-navigation-item node entities from the database.
-  $items = _ding_navigation_box_get_items(FALSE);
+  $items = _ding_navigation_box_get_items();
   $block['content']['ding_navigation_box'] = array(
     '#theme' => 'ding_navigation_box',
     'activation_areas' => $items['activation_areas'],
     'content_areas' => $items['content_areas'],
   );
-  // Attach javascript
-  foreach (_ding_navigation_box_get_javascript() as $js) {
-    $block['content']['#attached']['js'][] = $js;
-  }
-  // Attach css
-  foreach (_ding_navigation_box_get_css() as $css) {
-    $block['content']['#attached']['css'][] = $css; 
-  }
+  $block['content']['#attached']['js'] = _ding_navigation_box_get_javascript();
+  $block['content']['#attached']['css'] = _ding_navigation_box_get_css(); 
   return $block;
 }
 
@@ -125,8 +119,13 @@ function template_preprocess_ding_nav_box_content_area(&$variables) {
     }
   }
   $field_items = field_get_items('ding_navigation_item', $item, 'field_ding_nav_box_links');
-  $field_item = field_view_value('ding_navigation_item', $item, 'field_ding_nav_box_links', $field_items[0]);
-  $variables['link_test'] = $field_item;
+  if ($field_items) {
+    $variables['links'] = array();
+    foreach ($field_items as $field_item) {
+      $field_item = field_view_value('ding_navigation_item', $item, 'field_ding_nav_box_links', $field_item);
+      $variables['links'][] = $field_item;
+    }
+  }
 }
 
 /**
@@ -399,17 +398,12 @@ function ding_navigation_box_page_manage($active_item_position = 1) {
     'activation_areas' => $ding_navigation_items['activation_areas'],
     'content_areas' => $ding_navigation_items['content_areas'],
   );
-  // Attach javascript
+  // Javascript settings
   $settings = array(
     'activeItemPosition' => $active_item_position,
   );
-  foreach (_ding_navigation_box_get_javascript(TRUE, $settings) as $js) {
-    $return['#attached']['js'][] = $js;
-  }
-  // Attach css
-  foreach (_ding_navigation_box_get_css(TRUE) as $css) {
-    $return['#attached']['css'][] = $css; 
-  }
+  $return['#attached']['js'] = _ding_navigation_box_get_javascript(TRUE, $settings);
+  $return['#attached']['css'] = _ding_navigation_box_get_css(TRUE);
   return $return;
 }
 

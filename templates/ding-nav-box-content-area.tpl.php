@@ -39,9 +39,14 @@
   	
   </div>
   <div class="footer">
-  	<?php if (isset($link_test)): ?>
+  	<!-- Links -->
+  	<?php if (isset($links)): ?>
   		<div class="links">
-  			<?php print render($link_test); ?>
+  			<?php foreach($links as $link): ?>
+  				<div class="link">
+  					<?php print render($link); ?>
+  				</div>
+  			<?php endforeach; ?>	
   		</div>
   	<?php endif; ?>
   </div>
