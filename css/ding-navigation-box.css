@@ -5,8 +5,6 @@
 .ding-navigation-box { 
   max-width: 1200px;
   font-size: 100%;
-  border: 0.0625em solid #e5e5e5;
-  border-top: none;
 }
 
 .ding-navigation-box * {
@@ -32,13 +30,15 @@
 .ding-navigation-box .content-areas {
   background-color: #f5f5f5;
 	width: 80%;
+  min-height: 21em;
 	padding-left: 1.875em;
-	border-top: 0.0625em solid #e5e5e5;
+	border: 0.0625em solid #e5e5e5;
 }
 
 .ding-navigation-box .activation-areas {
   background-color: rgba(0, 0, 0, 0.5);
   width: 20%;
+  height: 21em;
 }
 
 .ding-navigation-box .activation-areas-pull {
@@ -53,6 +53,7 @@
 .ding-navigation-box .activation-area {
 	position: relative;
   display: block;
+  height: 20%;
   outline: 0;
   text-decoration: none;
   border-bottom: 0.125em solid white;
@@ -63,7 +64,7 @@
 }
 
 .ding-navigation-box .activation-area span {
-	line-height: 4.125em;
+	line-height: 4.15em;
 	margin-left: 0.625em; 
 	margin-right: 0.625em;
 	color: white;
@@ -180,11 +181,13 @@
   
   .ding-navigation-box .activation-areas {
     width: 100%;
+    height: auto;
   }
   
   .ding-navigation-box .activation-area {
     float: left;
     width: 20%;
+    height: auto;
     text-align: center;
     padding-top: 0.5625em;
     padding-bottom: 0.625em;
