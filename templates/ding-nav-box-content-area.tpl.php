@@ -41,13 +41,13 @@
   <div class="footer">
   	<!-- Links -->
   	<?php if (isset($links)): ?>
-  		<div class="links">
+  		<ul class="links">
   			<?php foreach($links as $link): ?>
-  				<div class="link">
+  				<li class="link">
   					<?php print render($link); ?>
-  				</div>
+  				</li>
   			<?php endforeach; ?>	
-  		</div>
+  		</ul>
   	<?php endif; ?>
   </div>
 </div>

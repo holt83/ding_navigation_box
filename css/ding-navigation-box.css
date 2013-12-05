@@ -113,7 +113,7 @@
 
 .ding-navigation-box .content-area .header {
   border-bottom: 0.0625em solid #e5e5e5;
-  margin-right: 1em;
+  margin-right: 1em;  /* 16px / 16px = 1em */
   margin-bottom: 1em;
 }
 
@@ -126,6 +126,22 @@
 .ding-navigation-box .content-area .header-text-paragraph {
   color: rgba(0, 0, 0, 0.698);
   margin-bottom: 1em;
+}
+
+.ding-navigation-box .content-area .footer {
+  margin-right: 1em;
+  margin-bottom: 1em;
+}
+
+.ding-navigation-box .content-area .links {
+  margin: 0;
+  width: 60%;
+}
+
+.ding-navigation-box .content-area .link {
+  padding: 0;
+  width: 33.33333%;
+  float: left;
 }
 
 /* ========================================================================== 
