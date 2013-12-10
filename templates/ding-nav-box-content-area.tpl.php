@@ -41,11 +41,9 @@
   <div class="footer">
   	<!-- Links -->
   	<?php if (isset($links)): ?>
-  		<ul class="links">
+  		<ul class="links clearfix">
   			<?php foreach($links as $link): ?>
-  				<li class="link">
-  					<?php print render($link); ?>
-  				</li>
+  				<li><?php print render($link); ?></li>
   			<?php endforeach; ?>	
   		</ul>
   	<?php endif; ?>

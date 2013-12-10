@@ -74,11 +74,9 @@ function ding_navigation_box_theme() {
  */
 function template_preprocess_ding_navigation_box(&$variables) {
   $element = $variables['element'];
-  // If there's no items or content areas present dont render entries at all. 
   if (empty($element['activation_areas']) || empty($element['content_areas'])) {
     $variables['activation_areas'] = $variables['content_areas'] = FALSE;
   }
-  // Else we setup the variables for the navigation box template.
   else {
     $variables['activation_areas'] = $element['activation_areas'];
     $variables['content_areas'] = $element['content_areas'];
@@ -110,7 +108,7 @@ function template_preprocess_ding_nav_box_content_area(&$variables) {
   if ($field_items) {
     $variables['header_text'] = array();
     foreach ($field_items as $field_item) {
-      // Prepare the field item for viewing (safe).
+      // Prepare the field item for viewing.
       $field_item = field_view_value('ding_navigation_item', $item, 'field_ding_nav_box_header_text', $field_item);
       $variables['header_text'][] = array(
         '#type' => 'markup',
@@ -389,7 +387,7 @@ function ding_navigation_box_page_manage($active_item_position = 1) {
       '#theme' => 'link',
       '#text' => 'Edit ' . $item->title,
       '#path' => 'admin/structure/ding-navigation-box/edit/' . $item->dniid,
-      '#options' => array('attributes' => array(), 'html' => FALSE),      
+      '#options' => array('attributes' => array('class' => 'button'), 'html' => FALSE),      
     );
   }
   // Setup render array for the navigation box.

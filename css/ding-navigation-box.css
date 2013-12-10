@@ -111,37 +111,62 @@
    Ding navigation box - Content area styling
    ========================================================================== */
 
-.ding-navigation-box .content-area .header {
+.ding-navigation-box .header {
   border-bottom: 0.0625em solid #e5e5e5;
   margin-right: 1em;  /* 16px / 16px = 1em */
   margin-bottom: 1em;
 }
 
-.ding-navigation-box .content-area h2 {
+.ding-navigation-box .header h2 {
   font-size: 1.5em; /* 24px / 16px = 1.5em */
   margin-top: 0.66667em; /* 16px / 24px = 0.66667em */  
   margin-bottom: 0.66667em;  
 }
 
-.ding-navigation-box .content-area .header-text-paragraph {
+.ding-navigation-box .header .header-text-paragraph {
   color: rgba(0, 0, 0, 0.698);
   margin-bottom: 1em;
 }
 
-.ding-navigation-box .content-area .footer {
+.ding-navigation-box .footer {
   margin-right: 1em;
   margin-bottom: 1em;
 }
 
-.ding-navigation-box .content-area .links {
+.ding-navigation-box .footer .links {
   margin: 0;
-  width: 60%;
+  width: 100%;
 }
 
-.ding-navigation-box .content-area .link {
+.ding-navigation-box .footer .links li {
   padding: 0;
+  list-style: none;
   width: 33.33333%;
   float: left;
+  text-align: center;
+}
+
+.ding-navigation-box .footer .links li a {
+  text-decoration: none;
+  font-size: 1.2em;
+  text-transform: uppercase;
+}
+
+.ding-navigation-box .footer .links li a:link {
+  color: #222;
+  text-shadow: 0px 2px 3px #555;
+} 
+
+.ding-navigation-box .footer .links li a:visited {
+  color: #222;
+}
+
+.ding-navigation-box .footer .links li a:active {
+  color: #222;
+}
+
+.ding-navigation-box .footer .links li a:hover {
+  color: #00c;
 }
 
 /* ========================================================================== 
@@ -231,7 +256,8 @@
     line-height: normal;
   }
 
-  .ding-navigation-box .content-area .header {
+  .ding-navigation-box .header,
+  .ding-navigation-box .footer {
     margin-left: 1em;
   }
 
@@ -299,6 +325,10 @@
   
   .ding-navigation-box .activation-area span.abbreviation {
     display: none;
+  }
+
+  .ding-navigation-box .footer .links li {
+    width: 50%;
   }
 	
 }
