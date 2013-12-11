@@ -98,11 +98,11 @@
   color: black;
 }
 
-.ding-navigation-box .activation-area.active {
+.ding-navigation-box .activation-area.active-item {
 	background-color: black;
 }
 
-.ding-navigation-box .activation-area.active span {
+.ding-navigation-box .activation-area.active-item span {
   background-color: black;
   color: white;
 }
@@ -129,6 +129,10 @@
 }
 
 .ding-navigation-box .footer {
+  padding: 0;  /* Reset */
+  margin: 0;  /* Reset */
+  margin-top: 1.875em;
+  background-color: inherit;
   margin-right: 1em;
   margin-bottom: 1em;
 }

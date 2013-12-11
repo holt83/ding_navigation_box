@@ -4,22 +4,26 @@
   
   Drupal.behaviors.dingNavigationBox = {     
     attach: function(context, settings) {
-      $(".ding-navigation-box .content-areas .content-area", context).hide();
-      $(".ding-navigation-box .activation-areas .activation-area .activation-arrow", context).hide();
-      // Activate the default navigation item.
-      toggleNavigationItem(settings.dingNavigationBox.activeItemPosition, true);
+      // Use the jQuery once method to ensure the navigation box only gets
+      // initialised once.
+      $(".ding-navigation-box").once("ding-navigation-box-attach", function() {
+        $(".ding-navigation-box .content-areas .content-area", context).hide();
+        $(".ding-navigation-box .activation-areas .activation-area .activation-arrow", context).hide();
+        // Activate the default navigation item.
+        toggleNavigationItem(settings.dingNavigationBox.activeItemPosition, true);
+      });
       // Iterate over each activation area and attach event-handlers.
       $(".ding-navigation-box .activation-area", context).each(function(index) {
       	var itemNumber = index + 1;  
       	$(this).bind("click touchstart", function(e) {
-          e.preventDefault();
       	  // Deactivate the active navigation item.	
       	  toggleNavigationItem(activeItemNumber, false);
       	  // Activate this naviation item.
       	  toggleNavigationItem(itemNumber, true);
+          return false;
       	});
       });
-      $(".ding-navigation-box .activation-areas-pull").bind("click touchstart", function(e) {
+      $(".ding-navigation-box .activation-areas-pull", context).bind("click touchstart", function(e) {
         $(".ding-navigation-box .activation-areas").slideToggle();
       });
       $(window).resize(function() {
@@ -39,18 +43,18 @@
   
   // Deactivates or activates a navigation item.
   function toggleNavigationItem(itemNumber, activate) {
-  	var contentArea = $(".ding-navigation-box .content-areas > div:nth-of-type(" + itemNumber + ")");
+  	var contentAreaSelector = ".ding-navigation-box .content-areas > div:nth-of-type(" + itemNumber + ")";
   	var activationAreaSelector = ".ding-navigation-box .activation-areas > a:nth-of-type(" + itemNumber + ")";
   	if (activate) {
-  	  contentArea.show();
-  	  $(activationAreaSelector).addClass("active");
+  	  $(contentAreaSelector).show();
+  	  $(activationAreaSelector).addClass("active-item");
   	  $(activationAreaSelector + " .activation-arrow").show();
       $(".ding-navigation-box .activation-areas-pull").html($(activationAreaSelector + " .full").text());
   	  activeItemNumber = itemNumber;
   	}
   	else {
-  	  contentArea.hide();
-  	  $(activationAreaSelector).removeClass("active");
+  	  $(contentAreaSelector).hide();
+  	  $(activationAreaSelector).removeClass("active-item");
   	  $(activationAreaSelector + " .activation-arrow").hide();
   	  activeItemNumber = 0;
   	}
