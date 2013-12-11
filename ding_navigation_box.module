@@ -368,11 +368,6 @@ function ding_navigation_item_form_cancel($form, &$form_state) {
  */
 function ding_navigation_box_page_manage($active_item_position = 1) {
   $return = array();
-  $return['header'] = array(
-    '#prefix' => '<span class=\'admin-header-text\'>',
-    '#suffix' => '</span>',
-    '#markup' => t('Select a navigation item to edit'),
-  );
   $ding_navigation_items = _ding_navigation_box_get_items();
   $return['edit_links'] = array(
     '#prefix' => "<div class='edit-item-links'>",
@@ -402,7 +397,11 @@ function ding_navigation_box_page_manage($active_item_position = 1) {
   );
   $return['#attached']['js'] = _ding_navigation_box_get_javascript(TRUE, $settings);
   $return['#attached']['css'] = _ding_navigation_box_get_css(TRUE);
-  return $return;
+  return array(
+    '#prefix' => '<div id=\'ding-navigation-box-admin\'>',
+    '#suffix' => '</div>',
+    $return,
+  );  
 }
 
 /**

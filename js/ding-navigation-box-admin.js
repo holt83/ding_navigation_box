@@ -1,13 +1,14 @@
 (function($) {
 	Drupal.behaviors.dingNavigationBoxAdmin = {
 		attach: function(context, settings) {
-			$(".content .edit-item-links a").hide();
+			var prefix = "#ding-navigation-box-admin";
+			$(prefix + " .edit-item-links a").hide();
 			var activeItem = settings.dingNavigationBox.activeItemPosition;
-			$(".content .edit-item-links a:nth-of-type(" + activeItem + ")").show();
+			$(prefix + " .edit-item-links a:nth-of-type(" + activeItem + ")").show();
 			$(".ding-navigation-box .activation-area", context).each(function(index) {
 				$(this).click(function() {
-					$(".content .edit-item-links a").hide();
-					$(".content .edit-item-links a:nth-of-type(" + (index + 1) + ")").show();					
+					$(prefix + " .edit-item-links a").hide();
+					$(prefix + " .edit-item-links a:nth-of-type(" + (index + 1) + ")").show();					
 				})
 			});	
 		}
