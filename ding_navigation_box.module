@@ -411,8 +411,7 @@ function ding_navigation_box_page_manage($form, &$form_state, $active_item_posit
       'callback' => 'ding_navigation_box_change_position_callback',
     ),
   );
-  // Javascript settings
-  $settings = array('activeItemPosition' => $active_item_position);
+  $settings = array('activeItemPosition' => $active_item_position); // Javascript settings
   $form['#attached']['js'] = _ding_navigation_box_get_javascript(TRUE, $settings);
   $form['#attached']['css'] = _ding_navigation_box_get_css(TRUE);
   return $form;
