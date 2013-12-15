@@ -264,7 +264,8 @@ function ding_navigation_box_menu() {
   $items['admin/structure/ding-navigation-box'] = array(
     'title' => 'Navigation box admin',
     'description' => t('Manage the Ding Navigation Box and it\'s content.'),
-    'page callback' => 'ding_navigation_box_page_manage',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('ding_navigation_box_page_manage'),
     'access arguments' => array('administer ding navigation box'),
   );
   $items['admin/structure/ding-navigation-box/edit/%ding_navigation_item'] = array(
@@ -366,10 +367,11 @@ function ding_navigation_item_form_cancel($form, &$form_state) {
 /**
  * Menu callback: admin/structure/ding-navigation-box/manage/navigation-box.
  */
-function ding_navigation_box_page_manage($active_item_position = 1) {
-  $return = array();
+function ding_navigation_box_page_manage($form, &$form_state, $active_item_position = 1) {
   $ding_navigation_items = _ding_navigation_box_get_items();
-  $return['edit_links'] = array(
+  $form['#prefix'] = '<div id=\'ding-navigation-box-admin\'>';
+  $form['#suffix'] = '</div>';
+  $form['edit_links'] = array(
     '#prefix' => "<div class='edit-item-links'>",
     '#suffix' => '</div>',
   );
@@ -378,7 +380,7 @@ function ding_navigation_box_page_manage($active_item_position = 1) {
   // sorted by item position key.
   foreach ($ding_navigation_items['activation_areas'] as $activation_area) {
     $item = $activation_area['#item'];
-    $return['edit_links']['edit_link_' . $item->position] = array(
+    $form['edit_links']['edit_link_' . $item->position] = array(
       '#theme' => 'link',
       '#text' => 'Edit ' . $item->title,
       '#path' => 'admin/structure/ding-navigation-box/edit/' . $item->dniid,
@@ -386,7 +388,7 @@ function ding_navigation_box_page_manage($active_item_position = 1) {
     );
   }
   // Setup render array for the navigation box.
-  $return['ding_navigation_box'] = array(
+  $form['ding_navigation_box'] = array(
     '#theme' => 'ding_navigation_box',
     'activation_areas' => $ding_navigation_items['activation_areas'],
     'content_areas' => $ding_navigation_items['content_areas'],
@@ -395,13 +397,9 @@ function ding_navigation_box_page_manage($active_item_position = 1) {
   $settings = array(
     'activeItemPosition' => $active_item_position,
   );
-  $return['#attached']['js'] = _ding_navigation_box_get_javascript(TRUE, $settings);
-  $return['#attached']['css'] = _ding_navigation_box_get_css(TRUE);
-  return array(
-    '#prefix' => '<div id=\'ding-navigation-box-admin\'>',
-    '#suffix' => '</div>',
-    $return,
-  );  
+  $form['#attached']['js'] = _ding_navigation_box_get_javascript(TRUE, $settings);
+  $form['#attached']['css'] = _ding_navigation_box_get_css(TRUE);
+  return $form;
 }
 
 /**
