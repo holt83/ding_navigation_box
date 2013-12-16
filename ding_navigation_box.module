@@ -398,18 +398,14 @@ function ding_navigation_box_page_manage($form, &$form_state, $active_item_posit
     '#title' => t('Change position of navigation items.'),
   );
   $form['change_item_position']['move_up'] = array(
-    '#type' => 'submit',
+    '#type' => 'button',
     '#value' => t('Move up'),
-    '#ajax' => array(
-      'callback' => 'ding_navigation_box_change_position_callback',
-    ),
+    '#size' => 50,
   );
   $form['change_item_position']['move_down'] = array(
-    '#type' => 'submit',
+    '#type' => 'button',
     '#value' => t('Mode down'),
-    '#ajax' => array(
-      'callback' => 'ding_navigation_box_change_position_callback',
-    ),
+    '#size' => 50,
   );
   $settings = array('activeItemPosition' => $active_item_position); // Javascript settings
   $form['#attached']['js'] = _ding_navigation_box_get_javascript(TRUE, $settings);
