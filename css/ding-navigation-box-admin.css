@@ -10,11 +10,11 @@
 	margin-top: 1.5em;
 }
 
-#ding-navigation-box-admin .edit-item-links {
+#ding-navigation-box-admin .edit-item-link {
 	margin: 1em 0 0 0;
 }
 
-#ding-navigation-box-admin .edit-item-links a {
+#ding-navigation-box-admin .edit-item-link a {
 	text-decoration: none;
 	text-transform: uppercase;
 }
