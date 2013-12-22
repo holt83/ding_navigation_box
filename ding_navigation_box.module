@@ -423,26 +423,25 @@ function ding_navigation_box_page_manage($form, &$form_state, $active_item_posit
 
   );
 
+  $form['ding_navigation_box_admin']['move_up'] = array(
+    '#type' => 'button',
+    '#value' => t('Move up'),
+    '#size' => 50,
+  );
+  $form['ding_navigation_box_admin']['move_down'] = array(
+    '#type' => 'button',
+    '#value' => t('Mode down'),
+    '#size' => 50,
+  );
+
   // Setup render array for the navigation box.
   $form['ding_navigation_box_admin']['ding_navigation_box'] = array(
     '#theme' => 'ding_navigation_box',
     'activation_areas' => $ding_navigation_items['activation_areas'],
     'content_areas' => $ding_navigation_items['content_areas'],
   );
-  $form['change_item_position'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Change position of navigation items.'),
-  );
-  $form['change_item_position']['move_up'] = array(
-    '#type' => 'button',
-    '#value' => t('Move up'),
-    '#size' => 50,
-  );
-  $form['change_item_position']['move_down'] = array(
-    '#type' => 'button',
-    '#value' => t('Mode down'),
-    '#size' => 50,
-  );
+
+  // Javascript and CSS.
   $settings = array('activeItemPosition' => $active_item_position); // Javascript settings
   $form['#attached']['js'] = _ding_navigation_box_get_javascript(TRUE, $settings);
   $form['#attached']['css'] = _ding_navigation_box_get_css(TRUE);

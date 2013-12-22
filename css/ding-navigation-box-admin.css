@@ -18,3 +18,8 @@
 	text-decoration: none;
 	text-transform: uppercase;
 }
+
+#edit-move-up,
+#edit-move-down {
+	display: inline;
+}
