@@ -3,7 +3,7 @@
 /**
  * @file
  *
- * Contaings theme functions for Ding navigation box module.
+ * Contains theme functions for Ding navigation box module.
  */
 
 /**

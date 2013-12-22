@@ -14,6 +14,7 @@ function ding_navigation_item_form($form, &$form_state, $ding_navigation_item) {
     $form_state['ding_navigation_item'] = $ding_navigation_item;
   }
   $ding_navigation_item = $form_state['ding_navigation_item'];
+
   $form['title'] = array(
     '#type' => 'textfield',
     '#title' => t('Title'),
@@ -34,6 +35,7 @@ function ding_navigation_item_form($form, &$form_state, $ding_navigation_item) {
     '#maxlength' => 6,
     '#size' => 12,
   );
+
   $form['buttons'] = array();
   $form['buttons']['#weight'] = 100;
   $form['buttons']['submit'] = array(
@@ -47,9 +49,12 @@ function ding_navigation_item_form($form, &$form_state, $ding_navigation_item) {
     '#value' => t('Cancel'),
     '#submit' => array('ding_navigation_item_form_cancel'),
   );
+
   $form['#validate'][] = 'ding_navigation_item_form_validate'; 
+
   // Let the Field API attach fields assigned to the ding navigation item entity
   field_attach_form('ding_navigation_item', $ding_navigation_item, $form, $form_state);
+  
   // Continue the breadcrumb trail from the previous admin pages.
   $breadcrumb = array();
   $breadcrumb[] = l(t('Home'), '<front>');
@@ -125,6 +130,7 @@ function ding_navigation_box_page_manage($form, &$form_state, $active_item_posit
       'html' => FALSE),
   );
 
+  // Attach the change item position links.
   $form['ding_navigation_box_admin']['move_up_link'] = array(
     '#prefix' => "<a id='move-up-link' class='move-link button' href='#'>",
     '#suffix' => '</a>',
@@ -134,7 +140,9 @@ function ding_navigation_box_page_manage($form, &$form_state, $active_item_posit
     '#prefix' => "<a id='move-down-link' class='move-link button' href='#'>",
     '#suffix' => '</a>',
     '#markup' => 'Move down',
-  );  
+  );
+  $form['ding_navigation_box_admin']['change_position_info'] = array(
+  );
 
   // Setup render array for the navigation box.
   $form['ding_navigation_box_admin']['ding_navigation_box'] = array(
@@ -162,6 +170,7 @@ function ding_navigation_box_change_position_callback() {
   $query->entityCondition('entity_type', 'ding_navigation_item');
   // Get the change position action ('up' or 'down').
   $change_position_action = $_POST['changePositionAction'];
+
   // If the action is up we need the item before the position to change.
   if ($change_position_action == 'up') {
     $query->propertyCondition('position', $active_item_position - 1);
@@ -170,11 +179,14 @@ function ding_navigation_box_change_position_callback() {
   else if ($change_position_action == 'down') {
     $query->propertyCondition('position', $active_item_position + 1);
   }
+
   $result = $query->execute();
+
   if (isset($result['ding_navigation_item'])) {
     // Get the first element of the result array.
     $dniid = array_shift(array_values($result['ding_navigation_item']));
     $ding_navigation_item = ding_navigation_item_load(array($dniid->dniid));
+
     if ($change_position_action == "up") {
       $active_item->position -= 1;
       $ding_navigation_item->position += 1;
@@ -183,6 +195,7 @@ function ding_navigation_box_change_position_callback() {
       $active_item->position += 1;
       $ding_navigation_item->position -= 1;
     }
+
     // Save the new position of the other item in a temporary variable. This is
     // to avoid unique key violation in the database.
     // TODO: Remove unique key constraint on position field in the database or 
@@ -197,6 +210,7 @@ function ding_navigation_box_change_position_callback() {
     // the client.
     drupal_json_output('success');  
   }
+  
   // If there was no navigation items returned from the enity query, the 
   // requested position change was not possible. Communicate this to the client
   // by sending an error string.
