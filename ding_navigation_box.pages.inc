@@ -239,18 +239,18 @@ function ding_navigation_box_change_position_callback() {
     // Switch position of the items based on the change position action passed
     // from Javascript.
     if ($change_position_action == "up") {
-      $active_item->position -= 1;
-      $other_item->position += 1;
+      $active_item->position--;
+      $other_item->position++;
     }
     else if ($change_position_action == "down") {
-      $active_item->position += 1;
-      $other_item->position -= 1;
-    }
+      $active_item->position++;
+      $other_item->position--;
+    }	
 
     // Save the new position of the other item in a temporary variable. This is
     // to avoid unique key violation in the database.
     // TODO: Remove unique key constraint on position field in the database or 
-    // make a tranceaction instead to avoid having to do this.
+    // make a transaction instead to avoid having to do this.
     $temp = $other_item->position;
     $other_item->position = 0; // Use 0 since this will never be used
     ding_navigation_item_save($other_item);
