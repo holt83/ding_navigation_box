@@ -37,6 +37,8 @@
 					}	
 					nextActivationArea.after(activeActivationArea);
 				}
+				// Make the ajax call to the callback function responsible for changing
+				// position of navigation items.
 				$.ajax({
 					type: "POST",
 					url: "/" + adminURI + "/change-item-position",
@@ -48,7 +50,12 @@
 				return false;
 			});
 			function changePositionSuccess(data) {
-				alert("Position was changed successfully.");
+				if (data === "success") {
+					alert("Position was changed successfully.");	
+				}
+				else {
+					alert("There was a problem changing the position.");		
+				}
 			}
 			function changePositionError(data) {
 				// TODO: Notify user about error in ajax call.
