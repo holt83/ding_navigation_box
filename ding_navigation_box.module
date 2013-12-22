@@ -91,22 +91,39 @@ function ding_navigation_box_permission() {
 }
 
 /**
- * Implements hook_menu_local_tasks_alter().
+ * Implements hook_form_alter().
  *
- * Disables the Field API's display ui.
+ * Hide unwanted settings from the user in the Field API display form.
  */
-/*function ding_navigation_box_menu_local_tasks_alter(&$data, $router_item, $root_path) {
-  $path_parts = explode('/', $root_path);
-  if (count($path_parts) >= (count(explode('/', DING_NAV_BOX_ADMIN_PATH))) && !empty($data['tabs'])) {
-    if (($path_parts[0] . '/' . $path_parts[1] . '/' . $path_parts[2]) == DING_NAV_BOX_ADMIN_PATH) {
-      foreach ($data['tabs'][0]['output'] as $key => $tab) {
-        if ($tab['#link']['path'] == 'admin/structure/ding-navigation-box/display') {
-          unset($data['tabs'][0]['output'][$key]);
-        }
-      }
+function ding_navigation_box_form_alter(&$form, $form_state, $form_id) {
+  if ($form_id === 'field_ui_display_overview_form') {
+    if ($form['#action'] === '/' . DING_NAV_BOX_ADMIN_PATH .  '/display') {
+      // Modify the regions of the form.
+      $regions['hidden'] = $form['fields']['#regions']['hidden'] = array(
+        'title' => t('Internal fields from the entity db table'),
+        'message' => t('This is the fields that a navigation item is born with.
+          They have no formatters, but the Ding navigation box module takes
+          care of displaying them in the box.')
+      );
+      $regions['visible'] = $form['fields']['#regions']['visible'] = array(
+        'title' => t('Default fields from the Field API'),
+        'message' => t('This the default fields that a Ding navigation item is
+          born with. They are not internal fields, but are added by the Fields
+          API.'),
+      );
+      $form['fields']['#regions'] = $regions;
+      
+      // Hide the stuff that doesn't apply to navigation items.
+      $style = array('style' => 'display: none;');      
+      $form['fields']['title']['format']['type']['#attributes'] += $style;
+      $form['fields']['abbreviation']['format']['type']['#attributes'] += $style;
+      $form['modes']['#attributes'] = $style;
+      $form['fields']['field_ding_nav_box_header_text']['label']['#attributes'] = $style;
+      $form['fields']['field_ding_nav_box_links']['label']['#attributes'] = $style;
+      //file_put_contents("/home/drupalpro/debug/debug.txt", print_r($field_header_text , TRUE), FILE_APPEND);
     }
   }
-}*/
+}
 
 /**
  * Implements hook_theme().
