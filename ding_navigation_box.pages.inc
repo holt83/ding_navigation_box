@@ -103,22 +103,30 @@ function ding_navigation_box_page_manage($form, &$form_state, $start_item_id = N
   $form['ding_navigation_box_admin']['#prefix'] = '<div id=\'ding-navigation-box-admin\'>';
   $form['ding_navigation_box_admin']['#suffix'] = '</div>';
 
-  // Find the first item in the navigation box (position = 1).
-	$query = new EntityFieldQuery();
-	$query->entityCondition('entity_type', 'ding_navigation_item')
-	      ->propertyCondition('position', '1');
-	$result = $query->execute();
-  $dniid = array_shift(array_values($result['ding_navigation_item']));
-  $first_item = ding_navigation_item_load($dniid->dniid);	
-
-  // If there wasn't an id for a start navigation item supplied from the url 
-  // argument, default to start with the first item loaded above.
-  if ($start_item_id == NULL) {
-		$start_navigation_item = $first_item;   	      
-  }
   // If there was an id supplied, load the start ding navigation item.
+  if ($start_item_id != NULL) {
+		$start_navigation_item = ding_navigation_item_load($start_item_id);
+  }
+	// If there wasn't an id for a start navigation item supplied from the url,
+	// check settings for a start navigation item.
+  elseif (($start_item_position = variable_get('ding_nav_box_start_navigation_item', FALSE))) {
+  	$query = new EntityFieldQuery();
+		$query->entityCondition('entity_type', 'ding_navigation_item')
+	        ->propertyCondition('position', $start_item_position);
+		$result = $query->execute();
+  	$dniid = array_shift(array_values($result['ding_navigation_item']));
+  	$start_navigation_item = ding_navigation_item_load($dniid->dniid);   	      
+  }
+  // IF there was no argument or setting, fallback to use the first item in the
+  // box as start item.
   else {
-  	$start_navigation_item = ding_navigation_item_load($start_item_id);
+		$query = new EntityFieldQuery();
+		$query->entityCondition('entity_type', 'ding_navigation_item')
+		      ->propertyCondition('position', '1');
+		$result = $query->execute();
+	  $dniid = array_shift(array_values($result['ding_navigation_item']));
+	  $first_item = ding_navigation_item_load($dniid->dniid);	  	
+  	$start_navigation_item = $first_item;
   }
 
   // Setup the edit link to point to the active navigation item.
@@ -166,14 +174,14 @@ function ding_navigation_box_page_manage($form, &$form_state, $start_item_id = N
   $options = array();
   foreach ($ding_navigation_items_render['activation_areas'] as $activation_area) {
   	$item = $activation_area['#item'];
-  	$options[$item->dniid] = $item->title;
+  	$options[$item->position] = $item->title;
   }
   $form['start_navigation_item']['change_start_navigation_item'] = array(
   	'#type' => 'select',
   	'#description' => t('Adjust which navigation item should start out as active.'),  	
   	'#options' => $options,
   	// If no item is set default to the first item fetched earlier.
-  	'#default_value' => variable_get('ding_nav_box_start_item', $first_item->dniid),
+  	'#default_value' => variable_get('ding_nav_box_start_navigation_item', $start_navigation_item->position),
   );
 
   // Save settings
@@ -189,11 +197,12 @@ function ding_navigation_box_page_manage($form, &$form_state, $start_item_id = N
   $form['save_settings']['cancel'] = array(
   	'#type' => 'submit',
   	'#value' => t('Cancel'),
-  	'#submit' => array('ding_navigation_box_page_manage_submit'),
+  	'#submit' => array('ding_navigation_box_page_manage_cancel'),
   );
+  $form['#validate'][] = 'ding_navigation_box_page_manage_validate';
 
   // Javascript and CSS.
-  $settings = array('activeItemPosition' => $start_navigation_item->position);
+  $settings = array('startItemPosition' => $start_navigation_item->position);
   $form['#attached']['js'] = _ding_navigation_box_get_javascript(TRUE, $settings);
   $form['#attached']['css'] = _ding_navigation_box_get_css(TRUE);
   return $form;
@@ -259,4 +268,26 @@ function ding_navigation_box_change_position_callback() {
   else {
     drupal_json_output('error');   
   }
+}
+
+/**
+ * Submit callback for the ding_navigation_box_page_manage form.
+ */
+function ding_navigation_box_page_manage_submit($form, &$form_state) {
+	$start_item_position = $form_state['values']['change_start_navigation_item'];
+	variable_set('ding_nav_box_start_navigation_item', $start_item_position);
+}
+
+/**
+ * Cancel callback for the ding_navigation_box_page_manage form.
+ */
+function ding_navigation_box_page_manage_cancel($form, &$form_state) {
+	$form_state['redirect'] = 'admin/structure';
+}
+
+/**
+ * Validation callback for the ding_navigation_box_page_manage form.
+ */
+function ding_navigation_box_page_manage_validate($form, &$form_state) {
+	// Nothing to do here yet.
 }

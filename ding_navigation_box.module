@@ -208,9 +208,7 @@ function _ding_navigation_box_get_javascript($admin = false, $settings = array()
     'type' => 'setting',
     'data' => array(
       'dingNavigationBox' => array(
-        // Allow the caller to specify the item that should be active when the
-        // navigation box is rendererd. If nothing is set, show the first item.
-        'startItemPosition' => isset($settings['activeItemPosition']) ? $settings['activeItemPosition'] : 1,
+        'startItemPosition' => variable_get('ding_nav_box_start_navigation_item', 0),
       ),
     ),    
   ) + $js_base;
@@ -228,6 +226,10 @@ function _ding_navigation_box_get_javascript($admin = false, $settings = array()
           // event handler on the client knows how to build the edit uri for
           // the navigation items.
           'adminPath' => DING_NAV_BOX_ADMIN_PATH,
+          // If it's the admin ui being rendered, allow the caller to specify 
+          // the item that should be active when the navigation box is 
+          // rendererd. If nothing is set, show the first item.
+          'startItemPosition' => isset($settings['startItemPosition']) ? $settings['startItemPosition'] : 1,          
         ),
       ),
     );
