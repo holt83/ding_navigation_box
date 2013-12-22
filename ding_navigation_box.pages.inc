@@ -165,7 +165,6 @@ function ding_navigation_box_page_manage($form, &$form_state, $start_item_id = N
   	'#description' => t('Select the item that starts as active, when the 
   		navigation box is rendered'),  	
   	'#options' => $options,
-  	// If no item is set default to the first item fetched earlier.
   	'#default_value' => variable_get('ding_nav_box_start_navigation_item', $start_navigation_item->dniid),
   );
 
@@ -219,6 +218,7 @@ function ding_navigation_box_change_position_callback() {
 	// If the required json data isn't supplied ignore the request and send an
 	// error message.
 	if (!isset($_POST['activeItemID']) || !isset($_POST['changePositionAction'])) {
+		// TODO: Do something better here..
 		return t('Error. Missing data...');
 	}
 

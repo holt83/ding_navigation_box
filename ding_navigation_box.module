@@ -13,7 +13,7 @@ define('DING_NAV_BOX_ADMIN_PATH', 'admin/structure/ding-navigation-box');
 /**
  * Implements hook_enable().
  *
- * When the module is enabled ensure that our start navigation item setting is
+ * When the module is enabled ensure that a start navigation item setting is
  * set. This will mean less error checking and cleaner code.
  * If nothing is set, find the first item in the navigation box (position = 1)
  * and set that as the start navigation item.
@@ -27,8 +27,6 @@ function ding_navigation_box_enable() {
     $dniid = array_shift(array_values($result['ding_navigation_item']));
     $start_navigation_item = ding_navigation_item_load($dniid->dniid);
     variable_set('ding_nav_box_start_navigation_item', $start_navigation_item->dniid);
-    $test = variable_get('ding_nav_box_start_navigation_item', FALSE);
-    file_put_contents("/home/drupalpro/debug/debug.txt", print_r($test , TRUE), FILE_APPEND);
   }
 }
 
