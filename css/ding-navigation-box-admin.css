@@ -51,11 +51,5 @@ input.form-submit {
 }
 
 #ding-navigation-box-page-manage .fieldset-wrapper {
-	display: inline-block;
-	padding-top: 1.5em;
-	padding-bottom: 1em;
-}
-
-fieldset#edit-dias-show {
-	margin-top: 1.5em;	
+	margin-top: 2em;
 }

@@ -171,13 +171,13 @@ function ding_navigation_box_page_manage($form, &$form_state, $start_item_id = N
   // Setup dias show settings.
   $form['dias_show'] = array(
   	'#type' => 'fieldset',
-  	'#title' => t('Navigation item dias show'),
+  	'#title' => t('Navigation item dias show'),    	
   );
   $form['dias_show']['dias_show_enable'] = array(
   	'#type' => 'checkbox',
   	'#description' => t('Change various settings for the navigation item dias show'),
   	'#title' => t('Enable dias show'),
-  	'#default_value' => variable_get('ding_nav_box_dias_show_enabled', FALSE),
+  	'#default_value' => FALSE,
   );
   $form['dias_show']['dias_show_set_interval'] = array(
   	'#type' => 'textfield',
@@ -185,6 +185,11 @@ function ding_navigation_box_page_manage($form, &$form_state, $start_item_id = N
   	'#description' => t('Adjust the time interval in milliseconds between navigation items'),
   	'#default_value' => variable_get('ding_nav_box_dias_show_interval', 10000),
   	'#size' => 18,
+  	'#states' => array(
+  		'visible' => array(
+  			':input[name="dias_show_enable"]' => array('checked' => TRUE),
+  		),
+  	),    	
   );
 
   $form['save_settings'] = array(
