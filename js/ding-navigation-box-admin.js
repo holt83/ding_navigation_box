@@ -22,7 +22,8 @@
 
 				e.preventDefault();
 
-				// Display message in info element.
+				// Display message to user telling that the ajax request is being sent.
+				$("#change-position-info").removeClass("success").removeClass("error");
 				$("#change-position-info").text("Changing position...");
 
 				var activeActivationArea = $(".ding-navigation-box .activation-area.active-item");
@@ -37,6 +38,7 @@
 					var prevAcivationArea = activeActivationArea.prev();
 					if (prevAcivationArea.length == 0) {
 						$(this).removeClass("disabled");
+						$("#change-position-info").addClass("error");
 						$("#change-position-info").text("The item can't move further up.");
 						return false;
 					}					
@@ -45,6 +47,7 @@
 					var nextActivationArea = activeActivationArea.next();
 					if (nextActivationArea.length == 0) {
 						$(this).removeClass("disabled");
+						$("#change-position-info").addClass("error");
 						$("#change-position-info").text("The item can't move further down.");
 						return false;
 					}					
@@ -58,7 +61,8 @@
 					dataType: "json",
 					data: {"activeItemID": activeItemID, "changePositionAction": changePositionAction},
 					success: changePositionSuccess,
-					error: changePositionError
+					error: changePositionError,
+					timeout: 10000,
 				});
 
 
@@ -73,15 +77,18 @@
 						else if (changePositionAction == "down") { //added for clarity.
 							nextActivationArea.after(activeActivationArea);
 							$("#move-down-link").removeClass("disabled");
-						}			
+						}
+						$("#change-position-info").addClass("success");			
 						$("#change-position-info").text("Position changed succesfully.");	
 					}
 					else {
+						$("#change-position-info").addClass("error");
 						$("#change-position-info").text("There was a problem changing positions.");		
 					}
 				}
 
 				function changePositionError(data) {
+					$("#change-position-info").addClass("error");
 					$("#change-position-info").text("There was a problem changing positions. Error message: " + data);
 				}
 

@@ -28,3 +28,15 @@
 	pointer-events: none;
 	cursor: default;
 }
+
+#change-position-info {
+	color: black;
+}
+
+#change-position-info.success {
+	color: green;
+}
+
+#change-position-info.error {
+	color: red;
+}
