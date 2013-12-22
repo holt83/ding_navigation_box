@@ -154,7 +154,7 @@ function _ding_navigation_box_get_css($admin = false) {
   $css[] = array(
     'data' => DING_NAV_BOX_PATH . '/css/ding-navigation-box.css',  
   ) + $css_base;
-  // If specified, include the admin CSS.
+  // When the admin ui is being rendered we need additional CSS.
   if ($admin) {
     $css[] = array(
       'data' => DING_NAV_BOX_PATH . '/css/ding-navigation-box-admin.css',
@@ -185,10 +185,11 @@ function _ding_navigation_box_get_javascript($admin = false, $settings = array()
       'dingNavigationBox' => array(
         // Allow the caller to specify the item that should be active when the
         // navigation box is rendererd. If nothing is set, show the first item.
-        'activeItemPosition' => isset($settings['activeItemPosition']) ? $settings['activeItemPosition'] : 1,
+        'startItemPosition' => isset($settings['activeItemPosition']) ? $settings['activeItemPosition'] : 1,
       ),
     ),    
   ) + $js_base;
+  // When the admin ui is being rendered we need additional javascript.
   if ($admin) {
     $js[] = array(
       'type' => 'file',
@@ -294,6 +295,13 @@ function ding_navigation_box_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('ding_navigation_box_page_manage'),
     'access arguments' => array('administer ding navigation box'),
+  );
+  $items[DING_NAV_BOX_ADMIN_URI . '/change-item-position'] = array(
+    'title' => 'Change item position',
+    'description' => t('Ajax callback for moving a navigation item up or down.'),
+    'page callback' => 'ding_navigation_box_change_position_callback',
+    'access arguments' => array('administer ding navigation box'),
+    'type' => MENU_CALLBACK,
   );
   $items[DING_NAV_BOX_ADMIN_URI . '/edit/%ding_navigation_item'] = array(
     'title' => 'Edit navigation item',
@@ -414,25 +422,27 @@ function ding_navigation_box_page_manage($form, &$form_state, $active_item_posit
 
   // Setup the edit link to point to the active navigation item.
   $form['ding_navigation_box_admin']['edit_link'] = array(
-    '#prefix' => "<div class='edit-item-link'>",
-    '#suffix' => '</div>',
     '#theme' => 'link',
     '#text' => 'Edit ' . $active_item->title,
     '#path' => DING_NAV_BOX_ADMIN_URI . '/edit/' . $active_item->dniid,
-    '#options' => array('attributes' => array('class' => 'button'), 'html' => FALSE),
-
+    '#options' => array(
+      'attributes' => array(
+        'class' => 'button', 
+        'id' => 'edit-item-link',
+      ), 
+      'html' => FALSE),
   );
 
-  $form['ding_navigation_box_admin']['move_up'] = array(
-    '#type' => 'button',
-    '#value' => t('Move up'),
-    '#size' => 50,
+  $form['ding_navigation_box_admin']['move_up_link'] = array(
+    '#prefix' => "<a id='move-up-link' class='move-link button' href='#'>",
+    '#suffix' => '</a>',
+    '#markup' => 'Move up',
   );
-  $form['ding_navigation_box_admin']['move_down'] = array(
-    '#type' => 'button',
-    '#value' => t('Mode down'),
-    '#size' => 50,
-  );
+  $form['ding_navigation_box_admin']['move_down_link'] = array(
+    '#prefix' => "<a id='move-down-link' class='move-link button' href='#'>",
+    '#suffix' => '</a>',
+    '#markup' => 'Move down',
+  );  
 
   // Setup render array for the navigation box.
   $form['ding_navigation_box_admin']['ding_navigation_box'] = array(
@@ -449,10 +459,12 @@ function ding_navigation_box_page_manage($form, &$form_state, $active_item_posit
 }
 
 /**
- * Ajax callback function.
+ * Ajax callback function to change position of navigation items.
  */
-function ding_navigation_box_change_position_callback($form, $form_state) {
-  //file_put_contents("/home/drupalpro/debug/debug.txt", print_r($form_state , TRUE), FILE_APPEND);
+function ding_navigation_box_change_position_callback() {
+  $active_item_id = $_POST['activeItemID'];
+  $change_position_action = $_POST['changePositionAction'];
+  drupal_json_output('success');
 }
 
 /**

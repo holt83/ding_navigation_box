@@ -7,19 +7,19 @@
 }
 
 #ding-navigation-box-admin .ding-navigation-box {
-	margin-top: 1.5em;
+	margin-top: 1em;
 }
 
 #ding-navigation-box-admin .edit-item-link {
-	margin: 1em 0 0 0;
+	float: left;
 }
 
-#ding-navigation-box-admin .edit-item-link a {
-	text-decoration: none;
+#ding-navigation-box-admin a#edit-item-link,
+#ding-navigation-box-admin a.move-link {
+	display: inline-block;
 	text-transform: uppercase;
 }
 
-#edit-move-up,
-#edit-move-down {
-	display: inline;
+#ding-navigation-box-admin a.move-link {
+	width: 7em;
 }
