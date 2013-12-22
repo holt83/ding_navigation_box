@@ -11,6 +11,24 @@ define('DING_NAV_BOX_PATH', drupal_get_path('module', 'ding_navigation_box'));
 define('DING_NAV_BOX_ADMIN_PATH', 'admin/structure/ding-navigation-box');
 
 /**
+ * Implements hook_enable().
+ *
+ * When the module is enabled ensure that our start navigation item setting is
+ * set. This will mean less error checking and clearner code.
+ * If nothing is set, use the first item in the navigation box.
+ */
+function ding_navigation_box_enable() {
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'ding_navigation_item')
+        ->propertyCondition('position', '1');
+  $result = $query->execute();
+  $dniid = array_shift(array_values($result['ding_navigation_item']));
+  $start_navigation_item = ding_navigation_item_load($dniid->dniid);
+  $start_navigation_item = variable_get('ding_nav_box_start_navigation_item', $start_navigation_item->dniid);
+  variable_set('ding_nav_box_start_navigation_item', $start_navigation_item->dniid);
+}
+
+/**
  * Implements hook_block_info().
  */
 function ding_navigation_box_block_info() {
@@ -192,8 +210,14 @@ function _ding_navigation_box_get_css($admin = false) {
  * Returns an array with the javascript for the navigation box. This array can
  * be used on the attached property in a render array.
  * 
- * @param  boolean $admin (Optional)
+ * @param  $admin (Optional)
  *   If true admin JS will be included.
+ * @param  $settings (Optional)
+ *   Override Javascript settings by supplying them in the $settings array.
+ *   - If the key 'startItem' is set with a navigation item object, that item
+ *     will be used as start item instead of the one from settings. This is 
+ *     usefull on the admin page, where the active item should be the one that
+ *     is currently being edited.
  */
 function _ding_navigation_box_get_javascript($admin = false, $settings = array()) {
   $js = array();
@@ -204,11 +228,20 @@ function _ding_navigation_box_get_javascript($admin = false, $settings = array()
     'type' => 'file',
     'data' => DING_NAV_BOX_PATH . '/js/ding-navigation-box.js',
   ) + $js_base;
+
+  if(isset($settings['startItem'])) {
+    $start_navigation_item = $settings['startItem'];
+  }
+  // If we have a start navigation item stored use that.
+  else if ($start_navigation_id = variable_get('ding_nav_box_start_navigation_item', FALSE)) {
+    $start_navigation_item = ding_navigation_item_load($start_navigation_id);
+  }
+
   $js[] = array(
     'type' => 'setting',
     'data' => array(
       'dingNavigationBox' => array(
-        'startItemPosition' => variable_get('ding_nav_box_start_navigation_item', 0),
+        'startItemPosition' => $start_navigation_item->position,
       ),
     ),    
   ) + $js_base;
@@ -229,7 +262,8 @@ function _ding_navigation_box_get_javascript($admin = false, $settings = array()
           // If it's the admin ui being rendered, allow the caller to specify 
           // the item that should be active when the navigation box is 
           // rendererd. If nothing is set, show the first item.
-          'startItemPosition' => isset($settings['startItemPosition']) ? $settings['startItemPosition'] : 1,          
+          'startItemPosition' => isset($settings['startItemPosition']) ? 
+            $settings['startItemPosition'] : $start_navigation_item->position,          
         ),
       ),
     );

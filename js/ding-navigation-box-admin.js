@@ -86,14 +86,16 @@
 						$("#change-position-info").addClass("success");
 					}
 					else {
-						message = Drupal.t("There was a problem changing positions.");
+						message = Drupal.t("There was a problem changing positions");
 						$("#change-position-info").text(message);
 						$("#change-position-info").addClass("error");		
 					}
 				}
 
 				function changePositionError(data) {
-					message = Drupal.t("There was a problem changing positions. Error message: @data", {'@data': data});
+					message = Drupal.t("There was a problem changing positions. @data", {
+						'@data': data
+					});
 					$("#change-position-info").text(message);
 					$("#change-position-info").addClass("error");
 				}

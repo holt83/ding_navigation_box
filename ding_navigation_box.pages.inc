@@ -109,24 +109,8 @@ function ding_navigation_box_page_manage($form, &$form_state, $start_item_id = N
   }
 	// If there wasn't an id for a start navigation item supplied from the url,
 	// check settings for a start navigation item.
-  elseif (($start_item_position = variable_get('ding_nav_box_start_navigation_item', FALSE))) {
-  	$query = new EntityFieldQuery();
-		$query->entityCondition('entity_type', 'ding_navigation_item')
-	        ->propertyCondition('position', $start_item_position);
-		$result = $query->execute();
-  	$dniid = array_shift(array_values($result['ding_navigation_item']));
-  	$start_navigation_item = ding_navigation_item_load($dniid->dniid);   	      
-  }
-  // IF there was no argument or setting, fallback to use the first item in the
-  // box as start item.
-  else {
-		$query = new EntityFieldQuery();
-		$query->entityCondition('entity_type', 'ding_navigation_item')
-		      ->propertyCondition('position', '1');
-		$result = $query->execute();
-	  $dniid = array_shift(array_values($result['ding_navigation_item']));
-	  $first_item = ding_navigation_item_load($dniid->dniid);	  	
-  	$start_navigation_item = $first_item;
+  else if ($start_item_id = variable_get('ding_nav_box_start_navigation_item', FALSE)) {
+  	$start_navigation_item = ding_navigation_item_load($start_item_id);   	      
   }
 
   // Setup the edit link to point to the active navigation item.
@@ -174,14 +158,15 @@ function ding_navigation_box_page_manage($form, &$form_state, $start_item_id = N
   $options = array();
   foreach ($ding_navigation_items_render['activation_areas'] as $activation_area) {
   	$item = $activation_area['#item'];
-  	$options[$item->position] = $item->title;
+  	$options[$item->dniid] = $item->title;
   }
   $form['start_navigation_item']['change_start_navigation_item'] = array(
   	'#type' => 'select',
-  	'#description' => t('Adjust which navigation item should start out as active.'),  	
+  	'#description' => t('Select the item that starts as active, when the 
+  		navigation box is rendered.'),  	
   	'#options' => $options,
   	// If no item is set default to the first item fetched earlier.
-  	'#default_value' => variable_get('ding_nav_box_start_navigation_item', $start_navigation_item->position),
+  	'#default_value' => variable_get('ding_nav_box_start_navigation_item', $start_navigation_item->dniid),
   );
 
   // Save settings
@@ -202,7 +187,7 @@ function ding_navigation_box_page_manage($form, &$form_state, $start_item_id = N
   $form['#validate'][] = 'ding_navigation_box_page_manage_validate';
 
   // Javascript and CSS.
-  $settings = array('startItemPosition' => $start_navigation_item->position);
+  $settings = array('startItem' => $start_navigation_item);
   $form['#attached']['js'] = _ding_navigation_box_get_javascript(TRUE, $settings);
   $form['#attached']['css'] = _ding_navigation_box_get_css(TRUE);
   return $form;
@@ -212,11 +197,18 @@ function ding_navigation_box_page_manage($form, &$form_state, $start_item_id = N
  * Ajax callback function to change position of navigation items.
  */
 function ding_navigation_box_change_position_callback() {
+	// If the required json data isn't supplied ignore the request and send an
+	// error message.
+	if (!isset($_POST['activeItemID']) || !isset($_POST['changePositionAction'])) {
+		return t('Error. Missing data...');
+	}
+
   // Get the navigation item to change position on.
   $active_item_id = $_POST['activeItemID'];
   $active_item = ding_navigation_item_load($active_item_id);
   $active_item_position = $active_item->position;
 
+  // Get the other navigation item affected by the change in position.
   $query = new EntityFieldQuery();
   $query->entityCondition('entity_type', 'ding_navigation_item');
   // Get the change position action ('up' or 'down').
@@ -236,8 +228,7 @@ function ding_navigation_box_change_position_callback() {
     $dniid = array_shift(array_values($result['ding_navigation_item']));
     $other_item = ding_navigation_item_load(array($dniid->dniid));
 
-    // Switch position of the items based on the change position action passed
-    // from Javascript.
+    // Switch the positions.
     if ($change_position_action == "up") {
       $active_item->position--;
       $other_item->position++;
@@ -245,7 +236,7 @@ function ding_navigation_box_change_position_callback() {
     else if ($change_position_action == "down") {
       $active_item->position++;
       $other_item->position--;
-    }	
+    }        
 
     // Save the new position of the other item in a temporary variable. This is
     // to avoid unique key violation in the database.
@@ -274,8 +265,9 @@ function ding_navigation_box_change_position_callback() {
  * Submit callback for the ding_navigation_box_page_manage form.
  */
 function ding_navigation_box_page_manage_submit($form, &$form_state) {
-	$start_item_position = $form_state['values']['change_start_navigation_item'];
-	variable_set('ding_nav_box_start_navigation_item', $start_item_position);
+	$start_item_id = $form_state['values']['change_start_navigation_item'];
+	variable_set('ding_nav_box_start_navigation_item', $start_item_id);
+	$form_state['redirect'] = 'admin/structure/ding-navigation-box';
 }
 
 /**
