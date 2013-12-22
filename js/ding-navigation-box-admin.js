@@ -7,7 +7,7 @@
 			$(".ding-navigation-box .activation-area", context).each(function(index) {
 				$(this).click(function() {
 					var dniid = $(this).data("dniid");
-					var title = $(".ding-navigation-box a:nth-of-type(" + (index + 1) + ") .full").text();
+					var title = $(this).find(".full").text();
 					$("#edit-item-link").text("Edit " + title);
 					$("#edit-item-link").attr("href", "/" + adminURI + "/edit/" + dniid);
 					return false;
@@ -23,14 +23,16 @@
 				}
 				if (changePositionAction  == "up") {
 					var prevAcivationArea = activeActivationArea.prev();
-					if (prevAcivationArea === "undefined") {
+					// IF the item is top position we cant move up.
+					if (prevAcivationArea.length == 0) {
 						return false;
 					}
 					prevAcivationArea.before(activeActivationArea);
 				}
 				else {
 					var nextActivationArea = activeActivationArea.next();
-					if (nextActivationArea === "undefined") {
+					// If the item is bottom position we cant move down.
+					if (nextActivationArea.length == 0) {
 						return false;
 					}	
 					nextActivationArea.after(activeActivationArea);
@@ -46,7 +48,7 @@
 				return false;
 			});
 			function changePositionSuccess(data) {
-				// TODO: Notify user that position was changed.
+				alert("Position was changed successfully.");
 			}
 			function changePositionError(data) {
 				// TODO: Notify user about error in ajax call.

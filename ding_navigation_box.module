@@ -30,7 +30,7 @@ function ding_navigation_box_block_view($delta) {
   $block = array();
   $block['subject'] = t('Ding navigation box');
   // Fetch ding-navigation-item node entities from the database.
-  $items = _ding_navigation_box_get_items();
+  $items = _ding_navigation_box_get_items_as_render_array();
   $block['content']['ding_navigation_box'] = array(
     '#theme' => 'ding_navigation_box',
     'activation_areas' => $items['activation_areas'],
@@ -214,7 +214,7 @@ function _ding_navigation_box_get_javascript($admin = false, $settings = array()
  * Return an array with the entries for the navigation box setup as 
  * render-arrays.
  */
-function _ding_navigation_box_get_items($admin = false) {
+function _ding_navigation_box_get_items_as_render_array($admin = false) {
   $query = new EntityFieldQuery();
   $query->entityCondition('entity_type', 'ding_navigation_item');
   $result = $query->execute();
@@ -403,7 +403,7 @@ function ding_navigation_item_form_cancel($form, &$form_state) {
  * Menu callback: admin/structure/ding-navigation-box/manage/navigation-box.
  */
 function ding_navigation_box_page_manage($form, &$form_state, $active_item_position = 1) {
-  $ding_navigation_items = _ding_navigation_box_get_items(TRUE);
+  $ding_navigation_items = _ding_navigation_box_get_items_as_render_array(TRUE);
   $form['ding_navigation_box_admin']['#prefix'] = '<div id=\'ding-navigation-box-admin\'>';
   $form['ding_navigation_box_admin']['#suffix'] = '</div>';
 
@@ -462,9 +462,55 @@ function ding_navigation_box_page_manage($form, &$form_state, $active_item_posit
  * Ajax callback function to change position of navigation items.
  */
 function ding_navigation_box_change_position_callback() {
+  // Get the navigation item to change position on.
   $active_item_id = $_POST['activeItemID'];
+  $active_item = ding_navigation_item_load($active_item_id);
+  $active_item_position = $active_item->position;
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'ding_navigation_item');
+  // Get the change position action ('up' or 'down').
   $change_position_action = $_POST['changePositionAction'];
-  drupal_json_output('success');
+  // If the action is up we need the item before the position to change.
+  if ($change_position_action == 'up') {
+    $query->propertyCondition('position', $active_item_position - 1);
+  }
+  // IF the action is down we need the item after the position to change.
+  else if ($change_position_action == 'down') {
+    $query->propertyCondition('position', $active_item_position + 1);
+  }
+  $result = $query->execute();
+  if (isset($result['ding_navigation_item'])) {
+    // Get the first element of the result array.
+    $dniid = array_shift(array_values($result['ding_navigation_item']));
+    $ding_navigation_item = ding_navigation_item_load(array($dniid->dniid));
+    if ($change_position_action == "up") {
+      $active_item->position -= 1;
+      $ding_navigation_item->position += 1;
+    }
+    else if ($change_position_action == "down") {
+      $active_item->position += 1;
+      $ding_navigation_item->position -= 1;
+    }
+    // Save the new position of the other item in a temporary variable. This is
+    // to avoid unique key violation in the database.
+    // TODO: Remove unique key constraint on position field in the database or 
+    // make a tranceaction instead to avoid having to do this.
+    $temp = $ding_navigation_item->position;
+    $ding_navigation_item->position = 0;
+    ding_navigation_item_save($ding_navigation_item);
+    ding_navigation_item_save($active_item);
+    $ding_navigation_item->position = $temp;
+    ding_navigation_item_save($ding_navigation_item);
+    // The item position was chanhed successfully, and we communicate that to 
+    // the client.
+    drupal_json_output('success');  
+  }
+  // If there was no navigation items returned from the enity query, the 
+  // requested position change was not possible. Communicate this to the client
+  // by sending an error string.
+  else {
+    drupal_json_output('error');   
+  }
 }
 
 /**
