@@ -92,12 +92,15 @@ function ding_navigation_box_permission() {
  * Declares the theme hooks that renders the Ding navigation box.
  */
 function ding_navigation_box_theme() {
+  $base = array(
+    'path' => DING_NAV_BOX_PATH . '/theme',
+    'file' => 'theme.inc'
+  );
   return array(
     'ding_navigation_box' => array(
       'render element' => 'element',
       'template' => 'ding-navigation-box',
-      'path' => DING_NAV_BOX_PATH . '/templates',
-    ),
+    ) + $base,
     'ding_nav_box_activation_area' => array(
       'variables' => array(
         'item' => NULL,
@@ -105,82 +108,16 @@ function ding_navigation_box_theme() {
         // admin interface.
         'admin' => FALSE,      
       ),
-      'template' => 'ding-nav-box-activation-area',
-      'path' => DING_NAV_BOX_PATH . '/templates',  
-    ),
+      'template' => 'ding-nav-box-activation-area', 
+    ) + $base,
     'ding_nav_box_content_area' => array(
       'variables' => array(
         'item' => NULL,
         'admin' => FALSE,      
       ),
-      'template' => 'ding-nav-box-content-area',
-      'path' => DING_NAV_BOX_PATH . '/templates',   
-    ),  
+      'template' => 'ding-nav-box-content-area',  
+    ) + $base,  
   );
-}
-
-/**
- * Module template preprocess funtion for the navigation box.
- */
-function template_preprocess_ding_navigation_box(&$variables) {
-  $element = $variables['element'];
-  if (empty($element['activation_areas']) || empty($element['content_areas'])) {
-    $variables['activation_areas'] = $variables['content_areas'] = FALSE;
-  }
-  else {
-    $variables['activation_areas'] = $element['activation_areas'];
-    $variables['content_areas'] = $element['content_areas'];
-  }
-}
-
-/**
- * Module template preprocess function for an activation area.
- */
-function template_preprocess_ding_nav_box_activation_area(&$variables) {
-  $variables['classes_array'][] = 'activation-area';
-  // Get the ding navigation item this activation area belongs to.
-  $item = $variables['item'];
-  $variables['title'] = $item->title;
-  $variables['abbreviation'] = $item->abbreviation;
-  // If the navigation box is being rendered in admin ui, add a custom data
-  // attribute with the ding navigation item id.
-  if ($variables['admin']) {
-    $variables['attributes_array'] += array(
-      'data-dniid' => $item->dniid,
-    );
-  }
-}
-
-/**
- * Module template preprocess function for a content area.
- */
-function template_preprocess_ding_nav_box_content_area(&$variables) {
-  $variables['classes_array'][] = 'content-area';
-  // Get the ding navigation item this content area belongs to.
-  $item = $variables['item'];
-  // Expose our internal title field to the template.
-  $variables['title'] = $item->title;
-  // Expose the data from the field_ding_nav_box_header_text field to the template.
-  $field_items = field_get_items('ding_navigation_item', $item, 'field_ding_nav_box_header_text');
-  if ($field_items) {
-    $variables['header_text'] = array();
-    foreach ($field_items as $field_item) {
-      // Prepare the field item for viewing.
-      $field_item = field_view_value('ding_navigation_item', $item, 'field_ding_nav_box_header_text', $field_item);
-      $variables['header_text'][] = array(
-        '#type' => 'markup',
-        '#markup' => '<p>' . $field_item['#markup'] . '</p>',
-      );
-    }
-  }
-  $field_items = field_get_items('ding_navigation_item', $item, 'field_ding_nav_box_links');
-  if ($field_items) {
-    $variables['links'] = array();
-    foreach ($field_items as $field_item) {
-      $field_item = field_view_value('ding_navigation_item', $item, 'field_ding_nav_box_links', $field_item);
-      $variables['links'][] = $field_item;
-    }
-  }
 }
 
 /**
@@ -439,6 +376,8 @@ class DingNavigationItem extends Entity {
 
   /**
    * Specifies the default uri, which is picked up by uri() by default.
+   * Since the ding navigation items are not meant to be viewed like nodes on
+   * their own page, just link to the edit form here.
    */
   protected function defaultUri() {
     return array('path' => 'admin/structure/ding-navigation-box/' . $this->dniid);

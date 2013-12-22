@@ -4,7 +4,6 @@ core = 7.x
 package = Ding!
 
 files[] = ding_navigation_box.module
-files[] = ding_navigation_box.pages.inc
 files[] = ding_navigation_box.install
 
 dependencies[] = entity
