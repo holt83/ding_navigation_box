@@ -46,14 +46,18 @@ function ding_navigation_box_block_view($delta) {
  */
 function ding_navigation_box_menu() {
   $items[DING_NAV_BOX_ADMIN_PATH] = array(
-    'title' => 'Navigation box admin',
+    'title' => 'Ding navigation box',
     'description' => t('Manage the Ding Navigation Box and it\'s content.'),
     'page callback' => 'drupal_get_form',
     'page arguments' => array('ding_navigation_box_page_manage'),
     'access arguments' => array('administer ding navigation box'),
     'file' => 'ding_navigation_box.pages.inc',
   );
-  $items[DING_NAV_BOX_ADMIN_PATH . '/change-item-position'] = array(
+  $items[DING_NAV_BOX_ADMIN_PATH . '/'] = array(
+    'title' => 'Manage box',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+  );  
+  $items[DING_NAV_BOX_ADMIN_PATH . '/set/item-position'] = array(
     'title' => 'Change item position',
     'description' => t('Ajax callback for moving a navigation item up or down.'),
     'page callback' => 'ding_navigation_box_change_position_callback',
@@ -85,6 +89,24 @@ function ding_navigation_box_permission() {
     ),
   );
 }
+
+/**
+ * Implements hook_menu_local_tasks_alter().
+ *
+ * Disables the Field API's display ui.
+ */
+/*function ding_navigation_box_menu_local_tasks_alter(&$data, $router_item, $root_path) {
+  $path_parts = explode('/', $root_path);
+  if (count($path_parts) >= (count(explode('/', DING_NAV_BOX_ADMIN_PATH))) && !empty($data['tabs'])) {
+    if (($path_parts[0] . '/' . $path_parts[1] . '/' . $path_parts[2]) == DING_NAV_BOX_ADMIN_PATH) {
+      foreach ($data['tabs'][0]['output'] as $key => $tab) {
+        if ($tab['#link']['path'] == 'admin/structure/ding-navigation-box/display') {
+          unset($data['tabs'][0]['output'][$key]);
+        }
+      }
+    }
+  }
+}*/
 
 /**
  * Implements hook_theme().
@@ -380,7 +402,7 @@ class DingNavigationItem extends Entity {
    * their own page, just link to the edit form here.
    */
   protected function defaultUri() {
-    return array('path' => 'admin/structure/ding-navigation-box/' . $this->dniid);
+    return array('path' => 'admin/structure/ding-navigation-box/edit/' . $this->dniid);
   }  
   
 }

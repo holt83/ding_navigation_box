@@ -23,8 +23,9 @@
 				e.preventDefault();
 
 				// Display message to user telling that the ajax request is being sent.
+				var message = Drupal.t("Changing position") + "..."; 
+				$("#change-position-info").text(message);
 				$("#change-position-info").removeClass("success").removeClass("error");
-				$("#change-position-info").text("Changing position...");
 
 				var activeActivationArea = $(".ding-navigation-box .activation-area.active-item");
 				var activeItemID = activeActivationArea.data("dniid");
@@ -38,8 +39,9 @@
 					var prevAcivationArea = activeActivationArea.prev();
 					if (prevAcivationArea.length == 0) {
 						$(this).removeClass("disabled");
+						message = Drupal.t("The item can't be moved further up");
+						$("#change-position-info").text(message);
 						$("#change-position-info").addClass("error");
-						$("#change-position-info").text("The item can't move further up.");
 						return false;
 					}					
 				}
@@ -47,8 +49,9 @@
 					var nextActivationArea = activeActivationArea.next();
 					if (nextActivationArea.length == 0) {
 						$(this).removeClass("disabled");
+						message = Drupal.t("The item can't be moved further down");
+						$("#change-position-info").text(message);
 						$("#change-position-info").addClass("error");
-						$("#change-position-info").text("The item can't move further down.");
 						return false;
 					}					
 				}
@@ -57,7 +60,7 @@
 				// position of navigation items.
 				$.ajax({
 					type: "POST",
-					url: "/" + adminPath + "/change-item-position",
+					url: "/" + adminPath + "/set/item-position",
 					dataType: "json",
 					data: {"activeItemID": activeItemID, "changePositionAction": changePositionAction},
 					success: changePositionSuccess,
@@ -78,18 +81,21 @@
 							nextActivationArea.after(activeActivationArea);
 							$("#move-down-link").removeClass("disabled");
 						}
-						$("#change-position-info").addClass("success");			
-						$("#change-position-info").text("Position changed succesfully.");	
+						message = Drupal.t("Position changed succesfully");
+						$("#change-position-info").text(message);	
+						$("#change-position-info").addClass("success");
 					}
 					else {
-						$("#change-position-info").addClass("error");
-						$("#change-position-info").text("There was a problem changing positions.");		
+						message = Drupal.t("There was a problem changing positions.");
+						$("#change-position-info").text(message);
+						$("#change-position-info").addClass("error");		
 					}
 				}
 
 				function changePositionError(data) {
+					message = Drupal.t("There was a problem changing positions. Error message: @data", {'@data': data});
+					$("#change-position-info").text(message);
 					$("#change-position-info").addClass("error");
-					$("#change-position-info").text("There was a problem changing positions. Error message: " + data);
 				}
 
 			});
