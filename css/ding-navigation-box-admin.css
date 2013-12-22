@@ -45,3 +45,17 @@ input.form-submit {
 	width: 7em;
 	margin-top: 0.65em;
 }
+
+#ding-navigation-box-page-manage .fieldset-legend {
+	padding-top: 1em;
+}
+
+#ding-navigation-box-page-manage .fieldset-wrapper {
+	display: inline-block;
+	padding-top: 1.5em;
+	padding-bottom: 1em;
+}
+
+fieldset#edit-dias-show {
+	margin-top: 1.5em;	
+}

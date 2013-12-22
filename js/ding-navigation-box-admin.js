@@ -39,7 +39,7 @@
 					var prevAcivationArea = activeActivationArea.prev();
 					if (prevAcivationArea.length == 0) {
 						$(this).removeClass("disabled");
-						message = Drupal.t("That item can't be moved further up");
+						message = Drupal.t("That item can't move further up");
 						$("#change-position-info").text(message);
 						$("#change-position-info").addClass("error");
 						return false;
@@ -49,7 +49,7 @@
 					var nextActivationArea = activeActivationArea.next();
 					if (nextActivationArea.length == 0) {
 						$(this).removeClass("disabled");
-						message = Drupal.t("That item can't be moved further down");
+						message = Drupal.t("That item can't move further down");
 						$("#change-position-info").text(message);
 						$("#change-position-info").addClass("error");
 						return false;
