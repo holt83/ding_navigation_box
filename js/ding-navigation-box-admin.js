@@ -6,7 +6,8 @@
 			// Attach event handler to each activation area, that updates the edit
 			// edit link when a new naviation item is activated.
 			$(".ding-navigation-box .activation-area", context).each(function(index) {
-				$(this).click(function(é) {
+				$(this).click(function(e) {
+					e.preventDefault;
 					var dniid = $(this).data("dniid");
 					var title = $(this).find(".full").text();
 					$("#edit-item-link").text("Edit " + title);
