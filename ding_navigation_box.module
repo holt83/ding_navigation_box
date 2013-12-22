@@ -114,13 +114,17 @@ function ding_navigation_box_form_alter(&$form, $form_state, $form_id) {
       $form['fields']['#regions'] = $regions;
       
       // Hide the stuff that doesn't apply to navigation items.
-      $style = array('style' => 'display: none;');      
-      $form['fields']['title']['format']['type']['#attributes'] += $style;
-      $form['fields']['abbreviation']['format']['type']['#attributes'] += $style;
-      $form['modes']['#attributes'] = $style;
-      $form['fields']['field_ding_nav_box_header_text']['label']['#attributes'] = $style;
-      $form['fields']['field_ding_nav_box_links']['label']['#attributes'] = $style;
-      //file_put_contents("/home/drupalpro/debug/debug.txt", print_r($field_header_text , TRUE), FILE_APPEND);
+      $form['fields']['title']['format']['type']['#attributes']['style'] = 'display: none;';
+      $form['fields']['abbreviation']['format']['type']['#attributes']['style'] = 'display: none;';
+      $form['modes']['#attributes']['style'] = 'display: none;';
+      $form['fields']['field_ding_nav_box_header_text']['label']['#attributes']['style'] = 'display: none;';
+      $form['fields']['field_ding_nav_box_links']['label']['#attributes']['style'] = 'display: none;';
+
+      // Removed the option to drag form-elements.
+      foreach ($form['fields'] as $field_name => $field) {
+
+      }
+      //file_put_contents("/home/drupalpro/debug/debug.txt", print_r($form , TRUE), FILE_APPEND);
     }
   }
 }

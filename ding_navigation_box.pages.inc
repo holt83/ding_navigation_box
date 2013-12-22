@@ -178,15 +178,18 @@ function ding_navigation_box_page_manage($form, &$form_state, $start_item_id = N
 
   // Save settings
   $form['save_settings'] = array(
-  	'#type' => 'fieldset',
-  	'#title' => t('Save settings'),
   	'#weight' => 100,
   );
   $form['save_settings']['save'] = array(
   	'#type' => 'submit',
   	'#value' => t('Save'),
   	'#weight' => 5,
-  	'#submit' => array()
+  	'#submit' => array('ding_navigation_box_page_manage_submit'),
+  );
+  $form['save_settings']['cancel'] = array(
+  	'#type' => 'submit',
+  	'#value' => t('Cancel'),
+  	'#submit' => array('ding_navigation_box_page_manage_submit'),
   );
 
   // Javascript and CSS.
