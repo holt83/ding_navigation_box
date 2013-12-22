@@ -8,7 +8,7 @@
 
 // Constants
 define('DING_NAV_BOX_PATH', drupal_get_path('module', 'ding_navigation_box'));
-define('DING_NAV_BOX_ADMIN_URI', 'admin/structure/ding-navigation-box');
+define('DING_NAV_BOX_ADMIN_PATH', 'admin/structure/ding-navigation-box');
 
 /**
  * Implements hook_block_info().
@@ -45,7 +45,7 @@ function ding_navigation_box_block_view($delta) {
  * Implements hook_menu(). 
  */
 function ding_navigation_box_menu() {
-  $items[DING_NAV_BOX_ADMIN_URI] = array(
+  $items[DING_NAV_BOX_ADMIN_PATH] = array(
     'title' => 'Navigation box admin',
     'description' => t('Manage the Ding Navigation Box and it\'s content.'),
     'page callback' => 'drupal_get_form',
@@ -53,7 +53,7 @@ function ding_navigation_box_menu() {
     'access arguments' => array('administer ding navigation box'),
     'file' => 'ding_navigation_box.pages.inc',
   );
-  $items[DING_NAV_BOX_ADMIN_URI . '/change-item-position'] = array(
+  $items[DING_NAV_BOX_ADMIN_PATH . '/change-item-position'] = array(
     'title' => 'Change item position',
     'description' => t('Ajax callback for moving a navigation item up or down.'),
     'page callback' => 'ding_navigation_box_change_position_callback',
@@ -61,7 +61,7 @@ function ding_navigation_box_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'ding_navigation_box.pages.inc',
   );
-  $items[DING_NAV_BOX_ADMIN_URI . '/edit/%ding_navigation_item'] = array(
+  $items[DING_NAV_BOX_ADMIN_PATH . '/edit/%ding_navigation_item'] = array(
     'title' => 'Edit navigation item',
     'description' => t('Edit the chosen Ding navigation item'),
     'page callback' => 'drupal_get_form',
@@ -184,7 +184,7 @@ function _ding_navigation_box_get_javascript($admin = false, $settings = array()
           // If it's the admin ui being rendered, pass the admin uri so the 
           // event handler on the client knows how to build the edit uri for
           // the navigation items.
-          'adminURI' => DING_NAV_BOX_ADMIN_URI,
+          'adminPath' => DING_NAV_BOX_ADMIN_PATH,
         ),
       ),
     );
@@ -218,7 +218,7 @@ function ding_navigation_box_entity_info() {
       'ding_navigation_item' => array(
         'label' => t('Ding navigation item'), 
         'admin' => array(
-          'path' => DING_NAV_BOX_ADMIN_URI,
+          'path' => DING_NAV_BOX_ADMIN_PATH,
           'access arguments' => array('administer ding navigation box'),
         ),
       ),

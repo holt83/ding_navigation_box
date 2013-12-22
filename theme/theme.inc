@@ -47,6 +47,7 @@ function template_preprocess_ding_nav_box_content_area(&$variables) {
   $item = $variables['item'];
   // Expose our internal title field to the template.
   $variables['title'] = $item->title;
+
   // Expose the data from the field_ding_nav_box_header_text field to the template.
   $field_items = field_get_items('ding_navigation_item', $item, 'field_ding_nav_box_header_text');
   if ($field_items) {
@@ -60,6 +61,8 @@ function template_preprocess_ding_nav_box_content_area(&$variables) {
       );
     }
   }
+
+  // Expose the bottom links to the template.
   $field_items = field_get_items('ding_navigation_item', $item, 'field_ding_nav_box_links');
   if ($field_items) {
     $variables['links'] = array();

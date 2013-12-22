@@ -1,7 +1,7 @@
 (function($) {
 	Drupal.behaviors.dingNavigationBoxAdmin = {
 		attach: function(context, settings) {
-			var adminURI = settings.dingNavigationBoxAdmin.adminURI;
+			var adminPath = settings.dingNavigationBoxAdmin.adminPath
 			// Attach event handler to each activation area, that updates the edit
 			// edit link when a new naviation item is activated.
 			$(".ding-navigation-box .activation-area", context).each(function(index) {
@@ -9,7 +9,7 @@
 					var dniid = $(this).data("dniid");
 					var title = $(this).find(".full").text();
 					$("#edit-item-link").text("Edit " + title);
-					$("#edit-item-link").attr("href", "/" + adminURI + "/edit/" + dniid);
+					$("#edit-item-link").attr("href", "/" + adminPath + "/edit/" + dniid);
 					return false;
 				})
 			});
@@ -41,7 +41,7 @@
 				// position of navigation items.
 				$.ajax({
 					type: "POST",
-					url: "/" + adminURI + "/change-item-position",
+					url: "/" + adminPath + "/change-item-position",
 					dataType: "json",
 					data: {"activeItemID": activeItemID, "changePositionAction": changePositionAction},
 					success: changePositionSuccess,

@@ -62,7 +62,7 @@ function ding_navigation_item_form($form, &$form_state, $ding_navigation_item) {
   $breadcrumb[] = l(t('Structure'), 'admin/structure');
   // Pass the position of the item that is being edited to the admin page, to
   // show the correct item in the navigation box.
-  $breadcrumb[] = l(t('Navigation box admin'), DING_NAV_BOX_ADMIN_URI . '/' . $ding_navigation_item->position);
+  $breadcrumb[] = l(t('Navigation box admin'), DING_NAV_BOX_ADMIN_PATH . '/' . $ding_navigation_item->position);
   drupal_set_breadcrumb($breadcrumb);
   return $form;
 }
@@ -85,7 +85,7 @@ function ding_navigation_item_form_submit($form, &$form_state) {
   field_attach_submit('ding_navigation_item', $ding_navigation_item, $form, $form_state);
   // Save and go back.
   ding_navigation_item_save($ding_navigation_item);
-  $form_state['redirect'] = DING_NAV_BOX_ADMIN_URI . '/' . $ding_navigation_item->position;
+  $form_state['redirect'] = DING_NAV_BOX_ADMIN_PATH . '/' . $ding_navigation_item->position;
 }
 
 /**
@@ -93,7 +93,7 @@ function ding_navigation_item_form_submit($form, &$form_state) {
  */
 function ding_navigation_item_form_cancel($form, &$form_state) {
   $ding_navigation_item = $form_state['ding_navigation_item'];
-  $form_state['redirect'] = DING_NAV_BOX_ADMIN_URI . '/'. $ding_navigation_item->position; 
+  $form_state['redirect'] = DING_NAV_BOX_ADMIN_PATH . '/'. $ding_navigation_item->position; 
 }
 
 /**
@@ -121,7 +121,7 @@ function ding_navigation_box_page_manage($form, &$form_state, $active_item_posit
   $form['ding_navigation_box_admin']['edit_link'] = array(
     '#theme' => 'link',
     '#text' => 'Edit ' . $active_item->title,
-    '#path' => DING_NAV_BOX_ADMIN_URI . '/edit/' . $active_item->dniid,
+    '#path' => DING_NAV_BOX_ADMIN_PATH . '/edit/' . $active_item->dniid,
     '#options' => array(
       'attributes' => array(
         'class' => 'button', 
@@ -210,7 +210,7 @@ function ding_navigation_box_change_position_callback() {
     // the client.
     drupal_json_output('success');  
   }
-  
+
   // If there was no navigation items returned from the enity query, the 
   // requested position change was not possible. Communicate this to the client
   // by sending an error string.
