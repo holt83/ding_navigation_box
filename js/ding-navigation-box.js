@@ -19,7 +19,6 @@
       	$(this).bind("click touchstart", function(e) {
           e.preventDefault();
           activateNavigationItem(this, itemPosition);
-          return false;
       	});
       });
 

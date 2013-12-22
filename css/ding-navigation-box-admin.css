@@ -17,7 +17,6 @@
 #ding-navigation-box-admin a#edit-item-link,
 #ding-navigation-box-admin a.move-link {
 	display: inline-block;
-	text-transform: uppercase;
 }
 
 #ding-navigation-box-admin a.move-link {
@@ -39,4 +38,10 @@
 
 #change-position-info.error {
 	color: red;
+}
+
+input.form-submit {
+	display: inline-block;
+	width: 7em;
+	margin-top: 0.65em;
 }
