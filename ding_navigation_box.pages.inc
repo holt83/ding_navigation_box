@@ -142,6 +142,8 @@ function ding_navigation_box_page_manage($form, &$form_state, $active_item_posit
     '#markup' => 'Move down',
   );
   $form['ding_navigation_box_admin']['change_position_info'] = array(
+  	'#prefix' => "<span id='change-position-info'>",
+  	'#suffix' => '</span>',
   );
 
   // Setup render array for the navigation box.

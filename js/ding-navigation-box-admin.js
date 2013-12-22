@@ -2,6 +2,7 @@
 	Drupal.behaviors.dingNavigationBoxAdmin = {
 		attach: function(context, settings) {
 			var adminPath = settings.dingNavigationBoxAdmin.adminPath
+
 			// Attach event handler to each activation area, that updates the edit
 			// edit link when a new naviation item is activated.
 			$(".ding-navigation-box .activation-area", context).each(function(index) {
@@ -13,30 +14,42 @@
 					return false;
 				})
 			});
+
 			// Attach event handlers to change position of navigation items.
 			$("a.move-link").click(function(e) {
+				// Disable move links while performing ajax request.
+				$(this).addClass("disabled");
+
+				e.preventDefault();
+
+				// Display message in info element.
+				$("#change-position-info").text("Changing position...");
+
 				var activeActivationArea = $(".ding-navigation-box .activation-area.active-item");
 				var activeItemID = activeActivationArea.data("dniid");
 				var changePositionAction = "up";
 				if ($(this).attr("id") === "move-down-link") {
 					changePositionAction = "down";
 				}
+				
+				// Validate the position change (check if out of bounds).
 				if (changePositionAction  == "up") {
 					var prevAcivationArea = activeActivationArea.prev();
-					// IF the item is top position we cant move up.
 					if (prevAcivationArea.length == 0) {
+						$(this).removeClass("disabled");
+						$("#change-position-info").text("The item can't move further up.");
 						return false;
-					}
-					prevAcivationArea.before(activeActivationArea);
+					}					
 				}
-				else {
+				else if (changePositionAction == "down") {
 					var nextActivationArea = activeActivationArea.next();
-					// If the item is bottom position we cant move down.
 					if (nextActivationArea.length == 0) {
+						$(this).removeClass("disabled");
+						$("#change-position-info").text("The item can't move further down.");
 						return false;
-					}	
-					nextActivationArea.after(activeActivationArea);
+					}					
 				}
+
 				// Make the ajax call to the callback function responsible for changing
 				// position of navigation items.
 				$.ajax({
@@ -47,19 +60,33 @@
 					success: changePositionSuccess,
 					error: changePositionError
 				});
-				return false;
+
+
+				function changePositionSuccess(data) {
+					if (data === "success") {
+						// If Drupal returned "success" the item positions was succesfully
+						// changed, and below we reflect that change in the admin ui.
+						if (changePositionAction  == "up") {
+							prevAcivationArea.before(activeActivationArea);
+							$("#move-up-link").removeClass("disabled");
+						}
+						else if (changePositionAction == "down") { //added for clarity.
+							nextActivationArea.after(activeActivationArea);
+							$("#move-down-link").removeClass("disabled");
+						}			
+						$("#change-position-info").text("Position changed succesfully.");	
+					}
+					else {
+						$("#change-position-info").text("There was a problem changing positions.");		
+					}
+				}
+
+				function changePositionError(data) {
+					$("#change-position-info").text("There was a problem changing positions. Error message: " + data);
+				}
+
 			});
-			function changePositionSuccess(data) {
-				if (data === "success") {
-					alert("Position was changed successfully.");	
-				}
-				else {
-					alert("There was a problem changing the position.");		
-				}
-			}
-			function changePositionError(data) {
-				// TODO: Notify user about error in ajax call.
-			}
+
 		}
 	}
 })(jQuery);

@@ -23,3 +23,8 @@
 #ding-navigation-box-admin a.move-link {
 	width: 7em;
 }
+
+#ding-navigation-box-admin a.move-link.disabled {
+	pointer-events: none;
+	cursor: default;
+}

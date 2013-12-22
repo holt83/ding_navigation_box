@@ -12,17 +12,24 @@
         var startActivationArea = $(".ding-navigation-box .activation-areas > a:nth-of-type(" + startItemPosition + ")");
         activateNavigationItem(startActivationArea, startItemPosition);
       });
+
       // Iterate over each activation area and attach event-handlers.
       $(".ding-navigation-box .activation-area", context).each(function(index) {
       	var itemPosition = index + 1;  
       	$(this).bind("click touchstart", function(e) {
+          e.preventDefault();
           activateNavigationItem(this, itemPosition);
           return false;
       	});
       });
+
+      // Attach an eventhandler to the acitvation area hider which is shown in
+      // compact mode on small screens.
       $(".ding-navigation-box .activation-areas-pull", context).bind("click touchstart", function(e) {
         $(".ding-navigation-box .activation-areas").slideToggle();
       });
+
+      // The jQuery slideToggle() method 
       $(window).resize(function() {
         var activationAreas = $(".ding-navigation-box .activation-areas");
         // Calculate the relative window width (rem).
