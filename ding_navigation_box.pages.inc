@@ -108,12 +108,12 @@ function ding_navigation_box_page_manage($form, &$form_state, $start_item_id = N
 		$start_navigation_item = ding_navigation_item_load($start_item_id);
   }
 	// If there wasn't an id for a start navigation item supplied from the url,
-	// check settings for a start navigation item.
+	// check settings.
   else if ($start_item_id = variable_get('ding_nav_box_start_navigation_item', FALSE)) {
   	$start_navigation_item = ding_navigation_item_load($start_item_id);   	      
   }
 
-  // Setup the edit link to point to the active navigation item.
+  // Setup the edit link to point to the start navigation item.
   $form['ding_navigation_box_admin']['edit_link'] = array(
     '#theme' => 'link',
     '#text' => 'Edit ' . $start_navigation_item->title,
@@ -163,13 +163,31 @@ function ding_navigation_box_page_manage($form, &$form_state, $start_item_id = N
   $form['start_navigation_item']['change_start_navigation_item'] = array(
   	'#type' => 'select',
   	'#description' => t('Select the item that starts as active, when the 
-  		navigation box is rendered.'),  	
+  		navigation box is rendered'),  	
   	'#options' => $options,
   	// If no item is set default to the first item fetched earlier.
   	'#default_value' => variable_get('ding_nav_box_start_navigation_item', $start_navigation_item->dniid),
   );
 
-  // Save settings
+  // Setup dias show settings.
+  $form['dias_show'] = array(
+  	'#type' => 'fieldset',
+  	'#title' => t('Navigation item dias show'),
+  );
+  $form['dias_show']['dias_show_enable'] = array(
+  	'#type' => 'checkbox',
+  	'#description' => t('Change various settings for the navigation item dias show'),
+  	'#title' => t('Enable dias show'),
+  	'#default_value' => variable_get('ding_nav_box_dias_show_enabled', FALSE),
+  );
+  $form['dias_show']['dias_show_set_interval'] = array(
+  	'#type' => 'textfield',
+  	'#title' => t('Dias show interval'),
+  	'#description' => t('Adjust the time interval in milliseconds between navigation items'),
+  	'#default_value' => variable_get('ding_nav_box_dias_show_interval', 10000),
+  	'#size' => 18,
+  );
+
   $form['save_settings'] = array(
   	'#weight' => 100,
   );
@@ -184,12 +202,13 @@ function ding_navigation_box_page_manage($form, &$form_state, $start_item_id = N
   	'#value' => t('Cancel'),
   	'#submit' => array('ding_navigation_box_page_manage_cancel'),
   );
+
   $form['#validate'][] = 'ding_navigation_box_page_manage_validate';
 
-  // Javascript and CSS.
   $settings = array('startItem' => $start_navigation_item);
   $form['#attached']['js'] = _ding_navigation_box_get_javascript(TRUE, $settings);
   $form['#attached']['css'] = _ding_navigation_box_get_css(TRUE);
+
   return $form;
 }
 
@@ -203,16 +222,17 @@ function ding_navigation_box_change_position_callback() {
 		return t('Error. Missing data...');
 	}
 
+	// Get the json data from the POST request.
+	$active_item_id = $_POST['activeItemID'];
+	$change_position_action = $_POST['changePositionAction'];
+
   // Get the navigation item to change position on.
-  $active_item_id = $_POST['activeItemID'];
   $active_item = ding_navigation_item_load($active_item_id);
   $active_item_position = $active_item->position;
 
   // Get the other navigation item affected by the change in position.
   $query = new EntityFieldQuery();
   $query->entityCondition('entity_type', 'ding_navigation_item');
-  // Get the change position action ('up' or 'down').
-  $change_position_action = $_POST['changePositionAction'];
   // If the action is up the item should switch places with the item before.
   if ($change_position_action == 'up') {
     $query->propertyCondition('position', $active_item_position - 1);
@@ -265,8 +285,20 @@ function ding_navigation_box_change_position_callback() {
  * Submit callback for the ding_navigation_box_page_manage form.
  */
 function ding_navigation_box_page_manage_submit($form, &$form_state) {
-	$start_item_id = $form_state['values']['change_start_navigation_item'];
-	variable_set('ding_nav_box_start_navigation_item', $start_item_id);
+	$new_start_item_id = $form_state['values']['change_start_navigation_item'];
+	$old_start_item_id = variable_get('ding_nav_box_start_navigation_item', FALSE);
+	// Change the setting if there was no start item in settings or if the new
+	// value is different than the existing one.
+	if (!$old_start_item_id || $old_start_item_id != $new_start_item_id) {
+		$new_start_item = ding_navigation_item_load($new_start_item_id);
+		variable_set('ding_nav_box_start_navigation_item', $new_start_item_id);		
+		drupal_set_message(t("<em>@start_item</em> was saved as the new start navigation item", 
+			array(
+				'@start_item' => $new_start_item->title
+			)), 
+		  'status'
+		);
+	}
 	$form_state['redirect'] = 'admin/structure/ding-navigation-box';
 }
 
