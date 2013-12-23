@@ -434,16 +434,9 @@ function ding_navigation_item_get_items_render_array($admin = false) {
  * @param $value
  *   - The value to match against
  * @param $sort
- *   - Inidicates whether the items should be sorted
- * @param $operator
-<<<<<<< HEAD
- *   - The operator to use when matching against the value
-=======
- *   - The operator to use when matching against the value. Defaults to '='
- * @return $navigation_items
- *   - An array with navigation item objects keyed by dniid.
->>>>>>> a949375a34b6f0da4d67a79806dc8d698f1d5f3a
+ * The class used for Ding navigation items.
  */
+ *   - Inidicates whether the items should be sorted
 function ding_navigation_item_field_query($field = 'position', $value = '0', $operator = '>', $sort = TRUE) {
   $internal_fields = array('title', 'abbreviation', 'position');
   // Find the name of the function to use on the query.
@@ -468,14 +461,9 @@ function ding_navigation_item_field_query($field = 'position', $value = '0', $op
   return $navigation_items;  
 }
 
-function ding_navigation_box_init() {
-  $navigation_items = ding_navigation_item_field_query();
-  file_put_contents("/home/drupalpro/debug/debug.txt", print_r($navigation_items , TRUE), FILE_APPEND);
-}
 
 /**
- * The class used for Ding navigation items.
- */
+
 class DingNavigationItem extends Entity {
   
   public function __construct($values = array()) {
