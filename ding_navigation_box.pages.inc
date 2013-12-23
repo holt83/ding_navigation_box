@@ -143,11 +143,11 @@ function ding_navigation_box_page_manage($form, &$form_state, $start_item_id = N
   );
 
   // Setup render array for the navigation box.
-  $ding_navigation_items_render = _ding_navigation_box_get_items_as_render_array(TRUE);
+  $navigation_items_render = ding_navigation_item_get_items_render_array(TRUE);
   $form['ding_navigation_box_admin']['ding_navigation_box'] = array(
     '#theme' => 'ding_navigation_box',
-    'activation_areas' => $ding_navigation_items_render['activation_areas'],
-    'content_areas' => $ding_navigation_items_render['content_areas'],
+    'activation_areas' => $navigation_items_render['activation_areas'],
+    'content_areas' => $navigation_items_render['content_areas'],
   );
 
   // Change start navigation item.
@@ -156,9 +156,8 @@ function ding_navigation_box_page_manage($form, &$form_state, $start_item_id = N
   	'#title' => t('Start navigation item'),
   );
   $options = array();
-  foreach ($ding_navigation_items_render['activation_areas'] as $activation_area) {
-  	$item = $activation_area['#item'];
-  	$options[$item->dniid] = $item->title;
+  foreach ($navigation_items_render['navigation_items'] as $navigation_item) {
+  	$options[$navigation_item->dniid] = $navigation_item->title;
   }
   $form['start_navigation_item']['change_start_navigation_item'] = array(
   	'#type' => 'select',

@@ -49,13 +49,15 @@ function ding_navigation_box_block_info() {
 function ding_navigation_box_block_view($delta) {
   $block = array();
   $block['subject'] = t('Ding navigation box');
-  // Fetch ding-navigation-item node entities from the database.
-  $items = _ding_navigation_box_get_items_as_render_array();
+
+  // Prepare a render array for the navigation box.
+  $navigation_items = ding_navigation_item_get_items_render_array(FALSE);
   $block['content']['ding_navigation_box'] = array(
     '#theme' => 'ding_navigation_box',
-    'activation_areas' => $items['activation_areas'],
-    'content_areas' => $items['content_areas'],
+    'activation_areas' => $navigation_items['activation_areas'],
+    'content_areas' => $navigation_items['content_areas'],
   );
+
   $block['content']['#attached']['js'] = _ding_navigation_box_get_javascript();
   $block['content']['#attached']['css'] = _ding_navigation_box_get_css(); 
   return $block;
@@ -259,12 +261,7 @@ function _ding_navigation_box_get_javascript($admin = false, $settings = array()
           // If it's the admin ui being rendered, pass the admin uri so the 
           // event handler on the client knows how to build the edit uri for
           // the navigation items.
-          'adminPath' => DING_NAV_BOX_ADMIN_PATH,
-          // If it's the admin ui being rendered, allow the caller to specify 
-          // the item that should be active when the navigation box is 
-          // rendererd. If nothing is set, show the first item.
-          'startItemPosition' => isset($settings['startItemPosition']) ? 
-            $settings['startItemPosition'] : $start_navigation_item->position,          
+          'adminPath' => DING_NAV_BOX_ADMIN_PATH,      
         ),
       ),
     );
@@ -335,41 +332,6 @@ function ding_navigation_box_field_extra_fields() {
   return $return;
 }
 
-/**
- * Return an array with the entries for the navigation box setup as 
- * render-arrays.
- */
-function _ding_navigation_box_get_items_as_render_array($admin = false) {
-  $query = new EntityFieldQuery();
-  $query->entityCondition('entity_type', 'ding_navigation_item');
-  $result = $query->execute();
-  // Declare our return array with the navigation items split into activation
-  // areas and content areas.
-  $return = array();
-  $return['activation_areas'] = array();
-  $return['content_areas'] = array();  
-  if (isset($result['ding_navigation_item'])) {
-    $dniids = array_keys($result['ding_navigation_item']);
-    $ding_navigation_items = ding_navigation_item_load_multiple($dniids);
-    foreach ($ding_navigation_items as $ding_navigation_item) {
-      $item_position = $ding_navigation_item->position;
-      $return['activation_areas'][$item_position] = array(
-        '#theme' => 'ding_nav_box_activation_area',
-        '#item' => $ding_navigation_item,
-        '#admin' => $admin,
-      );
-      $return['content_areas'][$item_position] = array(
-        '#theme' => 'ding_nav_box_content_area',
-        '#item' => $ding_navigation_item,
-        '#admin' => $admin,
-      );      
-    }
-  }
-  // Sort the navigation items by item position.
-  ksort($return['activation_areas']);
-  ksort($return['content_areas']);
-  return $return; 
-}
 
 /**
  * Fetch a Ding navigation item from the database. 
@@ -436,6 +398,87 @@ function ding_navigation_item_create($values = array()) {
  */
 function ding_navigation_item_save(DingNavigationItem $ding_navigation_item) {
   return entity_get_controller('ding_navigation_item')->save($ding_navigation_item);
+}
+
+/**
+ * Uses an EntityFieldQuery to load all navigation items from the database,
+ * sorted by position.
+ *
+ * @return $navigation_items
+ *   - An array with navigation item objects, keyed by dniid.
+ *   - Returns FALSE if there was an error fetching the items.
+ */
+function ding_navigation_item_get_items_sorted() {
+  $navigation_items = FALSE;
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'ding_navigation_item')
+        ->propertyOrderBy('position');
+  $result = $query->execute();
+  if (isset($result['ding_navigation_item'])) {
+    $dniids = array_keys($result['ding_navigation_item']);
+    $navigation_items = ding_navigation_item_load_multiple($dniids);
+  }
+  return $navigation_items;
+}
+
+/**
+ * Returns a render array with all the navigation items in the system, ready to
+ * be rendered with the navigation box.
+ * Returns FALSE if the items couldn't be loaded.
+ */
+function ding_navigation_item_get_items_render_array($admin = false) {
+  $return = FALSE;
+  if ($navigation_items = ding_navigation_item_get_items_sorted()) {
+    $return = array();
+    // Store the navigation items, so they can passed along later.
+    $return['navigation_items'] = $navigation_items;
+    // Each item has an activation area and a content area. 
+    $return['activation_areas'] = array();
+    $return['content_areas'] = array();
+    foreach ($navigation_items as $navigation_item) {
+      $base = array('#item' => $navigation_item, '#admin' => $admin);
+      $return['activation_areas'][] = array(
+        '#theme' => 'ding_nav_box_activation_area',
+      ) + $base;
+      $return['content_areas'][] = array(
+        '#theme' => 'ding_nav_box_content_area',
+      ) + $base;
+    }
+  }
+  return $return;
+}
+
+/**
+ * Uses EntityFieldQuery to search database for a navigation item with the
+ * specified values.
+ *
+ * @param $value
+ *   - The value to match against
+ * @param $field
+ *   - The name of the field where the value is stored
+ * @param $operator (oprtional)
+ *   - The operator to use when matching against the value
+ *   Defaults to '='
+ */
+function ding_navigation_item_field_query($field, $value, $operator = '=') {
+  $internal_fields = array('title', 'abbreviation', 'position');
+  // Find the name of the function to use on the query.
+  if (in_array($field, $internal_fields)) {
+    $function_name = 'propertyCondition';
+  }
+  else {
+    $function_name = 'fieldCondition';
+  }
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'ding_navigation_item')
+        ->$function_name($field, $value, $operator);
+  $result = $query->execute();
+  $navigation_items = FALSE;
+  if (isset($result['ding_navigation_item'])) {
+    $dniids = array_keys($result['ding_navigation_item']);
+    $navigation_items = ding_navigation_item_load_multiple($dniids);
+  }
+  return $navigation_items;  
 }
 
 /**
