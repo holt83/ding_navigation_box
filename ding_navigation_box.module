@@ -49,15 +49,7 @@ function ding_navigation_box_block_info() {
 function ding_navigation_box_block_view($delta) {
   $block = array();
   $block['subject'] = t('Ding navigation box');
-
-  // Prepare a render array for the navigation box.
-  $navigation_items = ding_navigation_item_get_items_render_array(FALSE);
-  $block['content']['ding_navigation_box'] = array(
-    '#theme' => 'ding_navigation_box',
-    'activation_areas' => $navigation_items['activation_areas'],
-    'content_areas' => $navigation_items['content_areas'],
-  );
-
+  $block['content'] = ding_navigation_box_get_render_array();
   $block['content']['#attached']['js'] = _ding_navigation_box_get_javascript();
   $block['content']['#attached']['css'] = _ding_navigation_box_get_css(); 
   return $block;
@@ -224,14 +216,11 @@ function _ding_navigation_box_get_css($admin = false) {
  *     is currently being edited.
  */
 function _ding_navigation_box_get_javascript($admin = false, $settings = array()) {
-  $js = array();
-  $js_base = array(
-    'group' => JS_DEFAULT,
-  );
   $js[] = array(
+    'group' => JS_DEFAULT,
     'type' => 'file',
     'data' => DING_NAV_BOX_PATH . '/js/ding-navigation-box.js',
-  ) + $js_base;
+  );
 
   if(isset($settings['startItem'])) {
     $start_navigation_item = $settings['startItem'];
@@ -242,20 +231,23 @@ function _ding_navigation_box_get_javascript($admin = false, $settings = array()
   }
 
   $js[] = array(
+    'group' => JS_DEFAULT,
     'type' => 'setting',
     'data' => array(
       'dingNavigationBox' => array(
         'startItemPosition' => $start_navigation_item->position,
       ),
     ),    
-  ) + $js_base;
+  );
   // When the admin ui is being rendered we need additional javascript.
   if ($admin) {
     $js[] = array(
+      'group' => JS_DEFAULT,
       'type' => 'file',
       'data' => DING_NAV_BOX_PATH . '/js/ding-navigation-box-admin.js',
     );
     $js[] = array(
+      'group' => JS_DEFAULT,
       'type' => 'setting',
       'data' => array(
         'dingNavigationBoxAdmin' => array(
@@ -270,6 +262,27 @@ function _ding_navigation_box_get_javascript($admin = false, $settings = array()
   return $js;
 }
 
+function ding_navigation_box_get_render_array($admin = FALSE) {
+  $activation_areas = array();
+  $content_areas = array();
+  if ($navigation_items = ding_navigation_item_field_query()) {
+    foreach ($navigation_items as $navigation_item) {
+      $base = array('#item' => $navigation_item, '#admin' => $admin);
+      $activation_areas[] = array(
+        '#theme' => 'ding_nav_box_activation_area',
+      ) + $base;
+      $content_areas[] = array(
+        '#theme' => 'ding_nav_box_content_area',
+      ) + $base;
+    }
+  }
+  $ding_navigation_box_array['ding_navigation_box'] = array(
+    '#theme' => 'ding_navigation_box',
+    'activation_areas' => $activation_areas,
+    'content_areas' => $content_areas,
+  );
+  return $ding_navigation_box_array;
+}
 /* ========================================================================== 
    Ding navigation item
    ========================================================================== */
@@ -402,34 +415,13 @@ function ding_navigation_item_save(DingNavigationItem $ding_navigation_item) {
 }
 
 /**
- * Uses an EntityFieldQuery to load all navigation items from the database,
- * sorted by position.
- *
- * @return $navigation_items
- *   - An array with navigation item objects, keyed by dniid.
- *   - Returns FALSE if there was an error fetching the items.
- */
-function ding_navigation_item_get_items_sorted() {
-  $navigation_items = FALSE;
-  $query = new EntityFieldQuery();
-  $query->entityCondition('entity_type', 'ding_navigation_item')
-        ->propertyOrderBy('position', 'ASC');
-  $result = $query->execute();
-  if (isset($result['ding_navigation_item'])) {
-    $dniids = array_keys($result['ding_navigation_item']);
-    $navigation_items = ding_navigation_item_load_multiple($dniids);
-  }
-  return $navigation_items;
-}
-
-/**
  * Returns a render array with all the navigation items in the system, ready to
  * be rendered with the navigation box.
  * Returns FALSE if the items couldn't be loaded.
  */
 function ding_navigation_item_get_items_render_array($admin = false) {
   $return = FALSE;
-  if ($navigation_items = ding_navigation_item_get_items_sorted()) {
+  if ($navigation_items = ding_navigation_item_field_query()) {
     $return = array();
     // Store the navigation items, so they can passed along later.
     $return['navigation_items'] = $navigation_items;
@@ -453,17 +445,18 @@ function ding_navigation_item_get_items_render_array($admin = false) {
  * Uses EntityFieldQuery to search database for a navigation item with the
  * specified values.
  * All parameters are optional. If no parameters is passed the function will
- * return the navigation item that currently have position 1.
+ * return all the navigation items sorted by position.
  *
- * @param $value
- *   - The value to match against
  * @param $field
  *   - The name of the field where the value is stored
+ * @param $value
+ *   - The value to match against
+ * @param $sort
+ *   - Inidicates whether the items should be sorted
  * @param $operator
  *   - The operator to use when matching against the value
- *   Defaults to '='
  */
-function ding_navigation_item_field_query($field = 'position', $value = '1', $operator = '=') {
+function ding_navigation_item_field_query($field = 'position', $value = '0', $operator = '>', $sort = TRUE) {
   $internal_fields = array('title', 'abbreviation', 'position');
   // Find the name of the function to use on the query.
   if (in_array($field, $internal_fields)) {
@@ -475,6 +468,9 @@ function ding_navigation_item_field_query($field = 'position', $value = '1', $op
   $query = new EntityFieldQuery();
   $query->entityCondition('entity_type', 'ding_navigation_item')
         ->$function_name($field, $value, $operator);
+  if ($sort) {
+    $query->propertyOrderBy('position', 'ASC');
+  }
   $result = $query->execute();
   $navigation_items = FALSE;
   if (isset($result['ding_navigation_item'])) {
