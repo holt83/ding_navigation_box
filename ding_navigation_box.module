@@ -114,10 +114,9 @@ function ding_navigation_box_permission() {
 
 /**
  * Implements hook_form_alter().
- *
- * Hide unwanted settings from the user in the Field API display form.
  */
 function ding_navigation_box_form_alter(&$form, $form_state, $form_id) {
+  // Hide unwanted form elements from the Field API display ui.
   if ($form_id === 'field_ui_display_overview_form') {
     if ($form['#action'] === '/' . DING_NAV_BOX_ADMIN_PATH .  '/display') {
       // Modify the regions of the form.
@@ -135,16 +134,18 @@ function ding_navigation_box_form_alter(&$form, $form_state, $form_id) {
       );
       $form['fields']['#regions'] = $regions;
       
-      // Hide the stuff that doesn't apply to navigation items.
-      $form['fields']['title']['format']['type']['#attributes']['style'] = 'display: none;';
-      $form['fields']['abbreviation']['format']['type']['#attributes']['style'] = 'display: none;';
+      // TODO: Figure out what this does
       $form['modes']['#attributes']['style'] = 'display: none;';
-      $form['fields']['field_ding_nav_box_header_text']['label']['#attributes']['style'] = 'display: none;';
-      $form['fields']['field_ding_nav_box_links']['label']['#attributes']['style'] = 'display: none;';
 
-      // TODO: Remove the option to drag form-elements.
-      foreach ($form['fields'] as $field_name => $field) {
-
+      // Hide unwanted formatters and labels
+      $internal_fields = array('title', 'abbreviation');
+      $field_api_fields = array('field_ding_nav_box_header_text', 
+        'field_ding_nav_box_links');
+      foreach ($internal_fields as $field) {
+        $form['fields'][$field]['format']['type']['#attributes']['style'] = 'display: none;';
+      }
+      foreach ($field_api_fields as $field) {
+        $form['fields'][$field]['label']['#attributes']['style'] = 'display: none;';        
       }
     }
   }
@@ -412,7 +413,7 @@ function ding_navigation_item_get_items_sorted() {
   $navigation_items = FALSE;
   $query = new EntityFieldQuery();
   $query->entityCondition('entity_type', 'ding_navigation_item')
-        ->propertyOrderBy('position');
+        ->propertyOrderBy('position', 'ASC');
   $result = $query->execute();
   if (isset($result['ding_navigation_item'])) {
     $dniids = array_keys($result['ding_navigation_item']);
@@ -448,19 +449,26 @@ function ding_navigation_item_get_items_render_array($admin = false) {
   return $return;
 }
 
+function ding_navigation_box_init() {
+  $navigation_items = ding_navigation_item_field_query();
+  file_put_contents("/home/drupalpro/debug/debug.txt", print_r($navigation_items , TRUE), FILE_APPEND);
+}
+
 /**
  * Uses EntityFieldQuery to search database for a navigation item with the
  * specified values.
+ * All parameters are optional. If no parameters is passed the function will
+ * return the navigation item that currently have position 1.
  *
  * @param $value
  *   - The value to match against
  * @param $field
  *   - The name of the field where the value is stored
- * @param $operator (oprtional)
+ * @param $operator
  *   - The operator to use when matching against the value
  *   Defaults to '='
  */
-function ding_navigation_item_field_query($field, $value, $operator = '=') {
+function ding_navigation_item_field_query($field = 'position', $value = '1', $operator = '=') {
   $internal_fields = array('title', 'abbreviation', 'position');
   // Find the name of the function to use on the query.
   if (in_array($field, $internal_fields)) {
