@@ -112,10 +112,6 @@ function ding_navigation_box_page_manage($form, &$form_state, $start_item_id = N
   else if ($start_item_id = variable_get('ding_nav_box_start_navigation_item', FALSE)) {
   	$start_navigation_item = ding_navigation_item_load($start_item_id);   	      
   }
-  // As a last resort, show the item that currently has position 1.
-  else {
-    $start_navigation_item = array_shift(array_values(ding_navigation_item_field_query()));
-  }  
 
   // Setup the edit link to point to the start navigation item.
   $form['ding_navigation_box_admin']['edit_link'] = array(

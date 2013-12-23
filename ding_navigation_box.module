@@ -208,12 +208,8 @@ function _ding_navigation_box_get_javascript($admin = false, $settings = array()
     $start_navigation_item = $settings['startItem'];
   }
   // Else use the start navigation item stored in the database.
-  else if ($start_navigation_id = variable_get('ding_nav_box_start_navigation_item', FALSE)) {
-    $start_navigation_item = ding_navigation_item_load($start_navigation_id);
-  }
-  // As a last resort, show the item that currently has position 1.
-  else {
-    $start_navigation_item = array_shift(array_values(ding_navigation_item_field_query()));
+  else if ($start_item_id = variable_get('ding_nav_box_start_navigation_item', FALSE)) {
+    $start_navigation_item = ding_navigation_item_load($start_item_id);
   }
 
   $js[] = array(
