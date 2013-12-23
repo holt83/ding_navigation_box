@@ -27,6 +27,9 @@ function ding_navigation_box_block_info() {
 function ding_navigation_box_block_view($delta) {
   $block = array();
   $block['subject'] = t('Ding navigation box');
+  // Prepare the render array for the navigation box.
+  //$navigation_items = ding_navigation_item_get_items();
+
   $block['content'] = ding_navigation_box_get_render_array();
   $block['content']['#attached']['js'] = _ding_navigation_box_get_javascript();
   $block['content']['#attached']['css'] = _ding_navigation_box_get_css(); 
@@ -88,23 +91,10 @@ function ding_navigation_box_permission() {
 function ding_navigation_box_form_alter(&$form, $form_state, $form_id) {
   // Hide unwanted form elements from the Field API display ui.
   if ($form_id === 'field_ui_display_overview_form') {
-    if ($form['#action'] === '/' . DING_NAV_BOX_ADMIN_PATH .  '/display') {
-      // Modify the regions of the form.
-      /*$regions['hidden'] = $form['fields']['#regions']['hidden'] = array(
-        'title' => t('Internal fields from the entity db table'),
-        'message' => t('This is the fields that a navigation item is born with.
-          They have no formatters, but the Ding navigation box module takes
-          care of displaying them in the box.')
-      );
-      $regions['visible'] = $form['fields']['#regions']['visible'] = array(
-        'title' => t('Default fields from the Field API'),
-        'message' => t('This the default fields that a Ding navigation item is
-          born with. They are not internal fields, but are added by the Fields
-          API.'),
-      );
-      $form['fields']['#regions'] = $regions;*/
-      
+    if ($form['#action'] === '/' . DING_NAV_BOX_ADMIN_PATH .  '/display') {      
       $form['modes']['#attributes']['style'] = 'display: none;';
+
+      //TODO: Inspect form array to see how to remove regions.
 
       // Hide formatters on internal fields and labels on Field API fields.
       $internal_fields = array('title', 'abbreviation');
@@ -244,7 +234,7 @@ function _ding_navigation_box_get_javascript($admin = false, $settings = array()
 function ding_navigation_box_get_render_array($admin = FALSE) {
   $activation_areas = array();
   $content_areas = array();
-  if ($navigation_items = ding_navigation_item_field_query()) {
+  if ($navigation_items = ding_navigation_item_get_items()) {
     foreach ($navigation_items as $navigation_item) {
       $base = array('#item' => $navigation_item, '#admin' => $admin);
       $activation_areas[] = array(
