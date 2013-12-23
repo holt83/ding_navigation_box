@@ -449,11 +449,6 @@ function ding_navigation_item_get_items_render_array($admin = false) {
   return $return;
 }
 
-function ding_navigation_box_init() {
-  $navigation_items = ding_navigation_item_field_query();
-  file_put_contents("/home/drupalpro/debug/debug.txt", print_r($navigation_items , TRUE), FILE_APPEND);
-}
-
 /**
  * Uses EntityFieldQuery to search database for a navigation item with the
  * specified values.
