@@ -265,6 +265,7 @@ function ding_navigation_box_get_render_array($admin = FALSE) {
   );
   return $ding_navigation_box_array;
 }
+
 /* ========================================================================== 
    Ding navigation item
    ========================================================================== */
@@ -434,9 +435,10 @@ function ding_navigation_item_get_items_render_array($admin = false) {
  * @param $value
  *   - The value to match against
  * @param $sort
- * The class used for Ding navigation items.
+ *   - Indicates whether the navigation items should be sorted
+ * @param $operator
+ *   - The operator to use when matchin against a value
  */
- *   - Inidicates whether the items should be sorted
 function ding_navigation_item_field_query($field = 'position', $value = '0', $operator = '>', $sort = TRUE) {
   $internal_fields = array('title', 'abbreviation', 'position');
   // Find the name of the function to use on the query.
@@ -461,9 +463,9 @@ function ding_navigation_item_field_query($field = 'position', $value = '0', $op
   return $navigation_items;  
 }
 
-
 /**
-
+ * The class used for Ding navigation items.
+ */
 class DingNavigationItem extends Entity {
   
   public function __construct($values = array()) {
