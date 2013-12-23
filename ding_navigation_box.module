@@ -2,8 +2,8 @@
 
 /**
  * @file
- * 
- * This module provides a smart naviagtion box as a block or ctools plugin.
+ *
+ * Module file for Ding navigation box moduler.
  */
 
 // Constants
@@ -23,8 +23,6 @@ function ding_navigation_box_block_info() {
 
 /**
  * Implements hook_block_view().
- * 
- * Ignoring $delta since we only have 1 block.
  */
 function ding_navigation_box_block_view($delta) {
   $block = array();
@@ -92,7 +90,7 @@ function ding_navigation_box_form_alter(&$form, $form_state, $form_id) {
   if ($form_id === 'field_ui_display_overview_form') {
     if ($form['#action'] === '/' . DING_NAV_BOX_ADMIN_PATH .  '/display') {
       // Modify the regions of the form.
-      $regions['hidden'] = $form['fields']['#regions']['hidden'] = array(
+      /*$regions['hidden'] = $form['fields']['#regions']['hidden'] = array(
         'title' => t('Internal fields from the entity db table'),
         'message' => t('This is the fields that a navigation item is born with.
           They have no formatters, but the Ding navigation box module takes
@@ -104,12 +102,11 @@ function ding_navigation_box_form_alter(&$form, $form_state, $form_id) {
           born with. They are not internal fields, but are added by the Fields
           API.'),
       );
-      $form['fields']['#regions'] = $regions;
+      $form['fields']['#regions'] = $regions;*/
       
-      // TODO: Figure out what this does
       $form['modes']['#attributes']['style'] = 'display: none;';
 
-      // Hide unwanted formatters and labels
+      // Hide formatters on internal fields and labels on Field API fields.
       $internal_fields = array('title', 'abbreviation');
       $field_api_fields = array('field_ding_nav_box_header_text', 
         'field_ding_nav_box_links');

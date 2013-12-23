@@ -272,14 +272,11 @@ function ding_navigation_box_change_position_callback() {
     ding_navigation_item_save($active_item);
     $other_item->position = $temp;
     ding_navigation_item_save($other_item);
-    // The item position was chanhed successfully, and we communicate that to 
-    // the client.
+    // Item positions changed successfully. Send confirm message to the browser.
     drupal_json_output('success');  
   }
 
-  // If there was no navigation items returned from the enity query, the 
-  // requested position change was not possible. Communicate this to the client
-  // by sending an error string.
+  // If there was no navigation items returned send error message to browser.
   else {
     drupal_json_output('error');   
   }
