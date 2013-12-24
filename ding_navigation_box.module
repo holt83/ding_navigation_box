@@ -11,6 +11,17 @@ define('DING_NAV_BOX_PATH', drupal_get_path('module', 'ding_navigation_box'));
 define('DING_NAV_BOX_ADMIN_PATH', 'admin/structure/ding-navigation-box');
 
 /**
+ * Implements hook_enable()
+ *
+ * Ensure that a start item is set when the module is enabled. The navigation
+ * item with the first position (position = 1) is used as default.
+ */
+function ding_navigation_box_enable() {
+  $first_navigation_item = ding_navigation_item_field_query();
+  variable_set('ding_nav_box_start_navigation_item', $first_navigation_item);
+}
+
+/**
  * Implements hook_block_info().
  */
 function ding_navigation_box_block_info() {
@@ -28,11 +39,12 @@ function ding_navigation_box_block_view($delta) {
   $block = array();
   $block['subject'] = t('Ding navigation box');
   // Prepare the render array for the navigation box.
-  //$navigation_items = ding_navigation_item_get_items();
-
-  $block['content'] = ding_navigation_box_get_render_array();
-  $block['content']['#attached']['js'] = _ding_navigation_box_get_javascript();
-  $block['content']['#attached']['css'] = _ding_navigation_box_get_css(); 
+  $navigation_items = ding_navigation_item_get_items();
+  $block['content'] = array(
+    '#theme' => 'ding_navigation_box',
+    '#items' => $navigation_items,
+    '#admin' => FALSE,
+  );
   return $block;
 }
 
@@ -116,57 +128,36 @@ function ding_navigation_box_form_alter(&$form, $form_state, $form_id) {
  * Declares the theme hooks that renders the Ding navigation box.
  */
 function ding_navigation_box_theme() {
-  $base = array(
-    'path' => DING_NAV_BOX_PATH . '/theme',
-    'file' => 'theme.inc'
-  );
   return array(
     'ding_navigation_box' => array(
-      'render element' => 'element',
+      'variables' => array(
+        'items' => NULL,
+        'admin' => NULL,
+        'start_item' => NULL,
+      ),
       'template' => 'ding-navigation-box',
-    ) + $base,
+      'path' => DING_NAV_BOX_PATH . '/theme',
+      'file' => 'theme.inc'      
+    ) ,
     'ding_nav_box_activation_area' => array(
       'variables' => array(
         'item' => NULL,
-        // Indicates whether the navigation box is being rendered in the 
-        // admin interface.
         'admin' => FALSE,      
       ),
-      'template' => 'ding-nav-box-activation-area', 
-    ) + $base,
+      'template' => 'ding-nav-box-activation-area',
+      'path' => DING_NAV_BOX_PATH . '/theme',
+      'file' => 'theme.inc' 
+    ) ,
     'ding_nav_box_content_area' => array(
       'variables' => array(
         'item' => NULL,
         'admin' => FALSE,      
       ),
-      'template' => 'ding-nav-box-content-area',  
-    ) + $base,  
+      'template' => 'ding-nav-box-content-area',
+      'path' => DING_NAV_BOX_PATH . '/theme',
+      'file' => 'theme.inc'  
+    ) ,  
   );
-}
-
-/**
- * Returns an array with all the css for the navigation box that can be used
- * on the attach property in a render array.
- * 
- * @param  boolean $admin (Optional)
- *   If true admin CSS will be included.
- */
-function _ding_navigation_box_get_css($admin = false) {
-  $css = array();
-  $css_base = array(
-    'type' => 'file',
-    'group' => CSS_DEFAULT,  
-  );
-  $css[] = array(
-    'data' => DING_NAV_BOX_PATH . '/css/ding-navigation-box.css',  
-  ) + $css_base;
-  // When the admin ui is being rendered we need additional CSS.
-  if ($admin) {
-    $css[] = array(
-      'data' => DING_NAV_BOX_PATH . '/css/ding-navigation-box-admin.css',
-    ) + $css_base;
-  }
-  return $css;
 }
 
 /**
@@ -247,8 +238,8 @@ function ding_navigation_box_get_render_array($admin = FALSE) {
   }
   $ding_navigation_box_array['ding_navigation_box'] = array(
     '#theme' => 'ding_navigation_box',
-    'activation_areas' => $activation_areas,
-    'content_areas' => $content_areas,
+    '#activation_areas' => $activation_areas,
+    '#content_areas' => $content_areas,
   );
   return $ding_navigation_box_array;
 }
@@ -271,10 +262,7 @@ function ding_navigation_box_entity_info() {
       'id' => 'dniid',
     ),
     'static cache' => TRUE,
-    // The Ding navigation item is a single bundle entity. This means that the
-    // bundles array, as defined below, could be omitted. We choose to include 
-    // it here anyway to take advantage of the FIELD API's 'Manage Fields' and 
-    // 'Manage Display' admin pages.
+    // Include the bundle array to get the field and display admin pages.
     'bundles' => array(
       'ding_navigation_item' => array(
         'label' => t('Ding navigation item'), 

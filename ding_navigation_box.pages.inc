@@ -146,8 +146,8 @@ function ding_navigation_box_page_manage($form, &$form_state, $start_item_id = N
   $navigation_items_render = ding_navigation_item_get_items_render_array(TRUE);
   $form['ding_navigation_box_admin']['ding_navigation_box'] = array(
     '#theme' => 'ding_navigation_box',
-    'activation_areas' => $navigation_items_render['activation_areas'],
-    'content_areas' => $navigation_items_render['content_areas'],
+    '#activation_areas' => $navigation_items_render['activation_areas'],
+    '#content_areas' => $navigation_items_render['content_areas'],
   );
 
   // Change start navigation item.

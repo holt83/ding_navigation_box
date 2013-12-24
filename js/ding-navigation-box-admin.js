@@ -1,7 +1,7 @@
 (function($) {
 	Drupal.behaviors.dingNavigationBoxAdmin = {
 		attach: function(context, settings) {
-			var adminPath = settings.dingNavigationBoxAdmin.adminPath
+			var adminPath = settings.dingNavigationBox.adminPath
 
 			// Attach event handler to each activation area, that updates the edit
 			// edit link when a new naviation item is activated.

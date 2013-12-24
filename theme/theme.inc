@@ -10,14 +10,48 @@
  * Module template preprocess funtion for the navigation box.
  */
 function template_preprocess_ding_navigation_box(&$variables) {
-  $element = $variables['element'];
-  if (empty($element['activation_areas']) || empty($element['content_areas'])) {
-    $variables['activation_areas'] = $variables['content_areas'] = FALSE;
+  // Prepare the render arrays for the navgation items and expose them.
+  $navigation_items = $variables['items'];  
+  $activation_areas = array();
+  $content_areas = array();
+  $admin = isset($variables['admin']) ? $variables['admin'] : FALSE;
+  foreach ($navigation_items as $navigation_item) {
+    $common = array('#item' => $navigation_item, '#admin' => $admin);
+    $activation_areas[] = array(
+      '#theme' => 'ding_nav_box_activation_area',
+    ) + $common;
+    $content_areas[] = array(
+      '#theme' => 'ding_nav_box_content_area',
+    ) + $common;
+  }
+  $variables['activation_areas'] = $activation_areas;
+  $variables['content_areas'] = $content_areas;
+
+
+  $css_options = array('group' => CSS_DEFAULT, 'type' => 'file');
+  $js_options = array('group' => JS_DEFAULT, 'type' => 'file');
+  drupal_add_css(DING_NAV_BOX_PATH . '/css/ding-navigation-box.css', $css_options);
+  drupal_add_js(DING_NAV_BOX_PATH . '/js/ding-navigation-box.js', $js_options);  
+  if ($admin) {
+    drupal_add_css(DING_NAV_BOX_PATH . '/css/ding-navigation-box-admin.css', $css_options);
+    drupal_add_js(DING_NAV_BOX_PATH . '/js/ding-navigation-box-admin.js', $js_options);
+  }
+  if (isset($variables['start_item'])) {
+    $start_item = $variables['start_item'];
+  }
+  else if ($start_item_id = variable_get('ding_nav_box_start_navigation_item', FALSE)) {
+    $start_item = ding_navigation_item_load($start_item_id);
   }
   else {
-    $variables['activation_areas'] = $element['activation_areas'];
-    $variables['content_areas'] = $element['content_areas'];
+    $start_item = ding_navigation_item_field_query();
   }
+  $js_settings = array(
+    'dingNavigationBox' => array(
+      'startItemPosition' => $start_item->position,
+      'adminPath' => $admin ? DING_NAV_BOX_ADMIN_PATH : '/',
+    ),
+  );
+  drupal_add_js($js_settings, 'setting');  
 }
 
 /**
