@@ -47,36 +47,31 @@
 					url: "/" + adminPath + "/set/item-position",
 					dataType: "json",
 					data: {"activeItemID": activeItemID, "changePositionAction": changePositionAction},
-					success: changePositionSuccess,
-					timeout: 10000,
+					success: function(data) {
+						// Enable move buttons again.
+						$("a.move-link").removeClass("disabled");
+						// If success, update the position on the client.
+						if (data === "success") {						
+							if (changePositionAction  == "up") {
+								otherActivationArea.before(activeActivationArea);
+							}
+							else { 
+								otherActivationArea.after(activeActivationArea);
+							}
+							message = Drupal.t("Position changed succesfully");
+							$("#change-position-info").addClass("success");
+						}
+						// If error, notify the user.
+						else if (data === "error") {
+							message = Drupal.t("There was a problem changing positions");
+							$("#change-position-info").addClass("error");
+						}
+
+						$("#change-position-info").text(message);
+					}
 				});
-
-
-				function changePositionSuccess(data) {
-					// Enable move buttons again.
-					$("a.move-link").removeClass("disabled");
-					// If success, update the position on the client.
-					if (data === "success") {						
-						if (changePositionAction  == "up") {
-							otherActivationArea.before(activeActivationArea);
-						}
-						else { 
-							otherActivationArea.after(activeActivationArea);
-						}
-						message = Drupal.t("Position changed succesfully");
-						$("#change-position-info").addClass("success");
-					}
-					// If error, notify the user.
-					else {
-						message = Drupal.t("There was a problem changing positions");
-						$("#change-position-info").addClass("error");
-					}
-
-					$("#change-position-info").text(message);
-				}
-
 			});
-
 		}
 	}
+
 })(jQuery);

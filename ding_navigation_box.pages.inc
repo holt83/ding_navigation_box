@@ -103,7 +103,6 @@ function ding_navigation_box_page_manage($form, &$form_state, $start_item_id = N
   $form['ding_navigation_box_admin']['#prefix'] = '<div id=\'ding-navigation-box-admin\'>';
   $form['ding_navigation_box_admin']['#suffix'] = '</div>';
 
-  // To setup the form correctly we need to know which item is the start item.
   // If there was a start item id supplied from the url, the item with that ID
   // is currently being edited and should be the active one. 
   if (isset($start_item_id)) {
@@ -159,8 +158,8 @@ function ding_navigation_box_page_manage($form, &$form_state, $start_item_id = N
   	'#title' => t('Start navigation item'),
   );
   $options = array();
-  foreach ($navigation_items as $navigation_item) {
-  	$options[$navigation_item->dniid] = $navigation_item->title;
+  foreach ($navigation_items as $dniid => $navigation_item) {
+  	$options[$dniid] = $navigation_item->title;
   }
   $form['start_navigation_item']['change_start_navigation_item'] = array(
   	'#type' => 'select',
@@ -218,10 +217,8 @@ function ding_navigation_box_page_manage($form, &$form_state, $start_item_id = N
  * Ajax callback function to change position of navigation items.
  */
 function ding_navigation_box_change_position_callback() {
-	// If the required json data isn't supplied ignore the request and send an
-	// error message.
 	if (!isset($_POST['activeItemID']) || !isset($_POST['changePositionAction'])) {
-		// TODO: Do something better here..
+		// TODO: Make proper error page.
 		return t('Error. Missing data...');
 	}
 
@@ -231,51 +228,29 @@ function ding_navigation_box_change_position_callback() {
 
   // Get the navigation item to change position on.
   $active_item = ding_navigation_item_load($active_item_id);
-  $active_item_position = $active_item->position;
 
-  // Get the other navigation item affected by the change in position.
-  $query = new EntityFieldQuery();
-  $query->entityCondition('entity_type', 'ding_navigation_item');
-  // If the action is up the item should switch places with the item before.
-  if ($change_position_action == 'up') {
-    $query->propertyCondition('position', $active_item_position - 1);
+  // Get the other item affected by the position change.
+  $direction = -1;
+  if ($change_position_action == 'down') {
+  	$direction = 1;
   }
-  // If the action is down it should switch places with the item after.
-  else if ($change_position_action == 'down') {
-    $query->propertyCondition('position', $active_item_position + 1);
-  }
-  $result = $query->execute();
+  $other_item = ding_navigation_item_get_item_position($active_item->position + $direction);
 
-  if (isset($result['ding_navigation_item'])) {
-    // Get the first element of the result array.
-    $dniid = array_shift(array_values($result['ding_navigation_item']));
-    $other_item = ding_navigation_item_load(array($dniid->dniid));
-
-    // Switch the positions.
-    if ($change_position_action == "up") {
-      $active_item->position--;
-      $other_item->position++;
-    }
-    else if ($change_position_action == "down") {
-      $active_item->position++;
-      $other_item->position--;
-    }        
-
-    // Save the new position of the other item in a temporary variable. This is
-    // to avoid unique key violation in the database.
+  if (isset($other_item)) {
+  	// Switch the positions.
+  	$active_item->position = $active_item->position + $direction;
+  	$other_item->position = $other_item->position - $direction;
     // TODO: Remove unique key constraint on position field in the database or 
     // make a transaction instead to avoid having to do this.
     $temp = $other_item->position;
-    $other_item->position = 0; // Use 0 since this will never be used
+    $other_item->position = 0;
     ding_navigation_item_save($other_item);
     ding_navigation_item_save($active_item);
     $other_item->position = $temp;
     ding_navigation_item_save($other_item);
-    // Item positions changed successfully. Send confirm message to the browser.
+    // Item positions changed successfully.
     drupal_json_output('success');  
   }
-
-  // If there was no navigation items returned send error message to browser.
   else {
     drupal_json_output('error');   
   }
