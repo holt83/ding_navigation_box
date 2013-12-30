@@ -230,7 +230,7 @@ function ding_navigation_box_change_position_callback() {
   $active_item = ding_navigation_item_load($active_item_id);
 
   // Get the other item affected by the position change.
-  $direction = -1;
+  $direction = -1;	
   if ($change_position_action == 'down') {
   	$direction = 1;
   }

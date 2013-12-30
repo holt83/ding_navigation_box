@@ -44,7 +44,7 @@
 				// position of navigation items.
 				$.ajax({
 					type: "POST",
-					url: "/" + adminPath + "/set/item-position",
+					url: "/" + adminPath + "/change-item-position",
 					dataType: "json",
 					data: {"activeItemID": activeItemID, "changePositionAction": changePositionAction},
 					success: function(data) {

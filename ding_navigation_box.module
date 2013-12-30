@@ -59,7 +59,7 @@ function ding_navigation_box_menu() {
     'title' => 'Manage box',
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );  
-  $items[DING_NAV_BOX_ADMIN_PATH . '/set/item-position'] = array(
+  $items[DING_NAV_BOX_ADMIN_PATH . '/change-item-position'] = array(
     'title' => 'Change item position',
     'description' => t('Ajax callback for moving a navigation item up or down.'),
     'page callback' => 'ding_navigation_box_change_position_callback',
