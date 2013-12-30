@@ -16,7 +16,7 @@ function template_preprocess_ding_navigation_box(&$variables) {
   $navigation_items = $variables['items'];  
   $activation_areas = array();
   $content_areas = array();
-  $admin = isset($variables['admin']) ? $variables['admin'] : FALSE;
+  $admin = $variables['admin'];
   foreach ($navigation_items as $navigation_item) {
     $common = array('#item' => $navigation_item, '#admin' => $admin);
     // Each item has an activation area and a cotnent area.

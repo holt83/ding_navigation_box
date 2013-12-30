@@ -44,6 +44,15 @@ function ding_navigation_box_block_view($delta) {
 }
 
 /**
+ * Implements hook_ctools_plugin_directory().
+ */
+function ding_navigation_box_ctools_plugin_directory($owner, $plugin_type) {
+  if ($owner == 'ctools' || $owner == 'panels') {
+    return "plugins/$plugin_type";
+  }
+}
+
+/**
  * Implements hook_menu(). 
  */
 function ding_navigation_box_menu() {
