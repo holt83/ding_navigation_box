@@ -10,16 +10,6 @@
 define('DING_NAV_BOX_PATH', drupal_get_path('module', 'ding_navigation_box'));
 define('DING_NAV_BOX_ADMIN_PATH', 'admin/structure/ding-navigation-box');
 
-/**
- * Implements hook_enable()
- *
- * Ensure that a start item is set when the module is enabled. The navigation
- * item with the first position (position = 1) is used as default.
- */
-function ding_navigation_box_enable() {
-  $first_navigation_item = ding_navigation_item_field_query();
-  variable_set('ding_nav_box_start_navigation_item', $first_navigation_item);
-}
 
 /**
  * Implements hook_block_info().
@@ -40,10 +30,12 @@ function ding_navigation_box_block_view($delta) {
   $block['subject'] = t('Ding navigation box');
   // Prepare the render array for the navigation box.
   $navigation_items = ding_navigation_item_get_items();
+  $start_item = ding_navigation_item_get_start_item();
   $block['content'] = array(
     '#theme' => 'ding_navigation_box',
     '#items' => $navigation_items,
     '#admin' => FALSE,
+    '#start_item_position' => $start_item->position,
   );
   return $block;
 }
@@ -131,9 +123,9 @@ function ding_navigation_box_theme() {
   return array(
     'ding_navigation_box' => array(
       'variables' => array(
-        'items' => NULL,
-        'admin' => NULL,
-        'start_item' => NULL,
+        'items' => array(),
+        'admin' => FALSE,
+        'start_item_position' => 1,
       ),
       'template' => 'ding-navigation-box',
       'path' => DING_NAV_BOX_PATH . '/theme',
@@ -158,90 +150,6 @@ function ding_navigation_box_theme() {
       'file' => 'theme.inc'  
     ) ,  
   );
-}
-
-/**
- * Returns an array with the javascript for the navigation box. This array can
- * be used on the attached property in a render array.
- * 
- * @param  $admin (Optional)
- *   If true admin JS will be included.
- * @param  $settings (Optional)
- *   Override Javascript settings by supplying them in the $settings array.
- *   - If the key 'startItem' is set with a navigation item object, that item
- *     will be used as start item instead of the one from settings. This is 
- *     usefull on the admin page, where the active item should be the one that
- *     is currently being edited.
- */
-function _ding_navigation_box_get_javascript($admin = false, $settings = array()) {
-  $js[] = array(
-    'group' => JS_DEFAULT,
-    'type' => 'file',
-    'data' => DING_NAV_BOX_PATH . '/js/ding-navigation-box.js',
-  );
-
-  // If a start navigation item was specified in the settings array, use that
-  // to override the database setting.
-  if(isset($settings['startItem'])) {
-    $start_navigation_item = $settings['startItem'];
-  }
-  // Else use the start navigation item stored in the database.
-  else if ($start_item_id = variable_get('ding_nav_box_start_navigation_item', FALSE)) {
-    $start_navigation_item = ding_navigation_item_load($start_item_id);
-  }
-
-  $js[] = array(
-    'group' => JS_DEFAULT,
-    'type' => 'setting',
-    'data' => array(
-      'dingNavigationBox' => array(
-        'startItemPosition' => $start_navigation_item->position,
-      ),
-    ),    
-  );
-  // When the admin ui is being rendered we need additional javascript.
-  if ($admin) {
-    $js[] = array(
-      'group' => JS_DEFAULT,
-      'type' => 'file',
-      'data' => DING_NAV_BOX_PATH . '/js/ding-navigation-box-admin.js',
-    );
-    $js[] = array(
-      'group' => JS_DEFAULT,
-      'type' => 'setting',
-      'data' => array(
-        'dingNavigationBoxAdmin' => array(
-          // If it's the admin ui being rendered, pass the admin uri so the 
-          // event handler on the client knows how to build the edit uri for
-          // the navigation items.
-          'adminPath' => DING_NAV_BOX_ADMIN_PATH,      
-        ),
-      ),
-    );
-  }
-  return $js;
-}
-
-function ding_navigation_box_get_render_array($admin = FALSE) {
-  $activation_areas = array();
-  $content_areas = array();
-  if ($navigation_items = ding_navigation_item_get_items()) {
-    foreach ($navigation_items as $navigation_item) {
-      $base = array('#item' => $navigation_item, '#admin' => $admin);
-      $activation_areas[] = array(
-        '#theme' => 'ding_nav_box_activation_area',
-      ) + $base;
-      $content_areas[] = array(
-        '#theme' => 'ding_nav_box_content_area',
-      ) + $base;
-    }
-  }
-  $ding_navigation_box_array['ding_navigation_box'] = array(
-    '#theme' => 'ding_navigation_box',
-    '#activation_areas' => $activation_areas,
-    '#content_areas' => $content_areas,
-  );
-  return $ding_navigation_box_array;
 }
 
 /* ========================================================================== 
@@ -373,36 +281,9 @@ function ding_navigation_item_save(DingNavigationItem $ding_navigation_item) {
 }
 
 /**
- * Returns a render array with all the navigation items in the system, ready to
- * be rendered with the navigation box.
- * Returns FALSE if the items couldn't be loaded.
- */
-function ding_navigation_item_get_items_render_array($admin = false) {
-  $return = FALSE;
-  if ($navigation_items = ding_navigation_item_get_items()) {
-    $return = array();
-    // Store the navigation items, so they can passed along later.
-    $return['navigation_items'] = $navigation_items;
-    // Each item has an activation area and a content area. 
-    $return['activation_areas'] = array();
-    $return['content_areas'] = array();
-    foreach ($navigation_items as $navigation_item) {
-      $base = array('#item' => $navigation_item, '#admin' => $admin);
-      $return['activation_areas'][] = array(
-        '#theme' => 'ding_nav_box_activation_area',
-      ) + $base;
-      $return['content_areas'][] = array(
-        '#theme' => 'ding_nav_box_content_area',
-      ) + $base;
-    }
-  }
-  return $return;
-}
-
-/**
- * - Uses EntityFieldQuery to retrieve all navigation items from the database
+ * Uses EntityFieldQuery to retrieve all navigation items from the database
  * sorted by their current position value. Using this function will ensure
- * that the items will be displayed in the correct order.
+ * that the items will be displayed in the correct order in the navigation box.
  *
  * @return $navigation_items
  *   - An array of navigation item objects keyed by id.
@@ -412,51 +293,62 @@ function ding_navigation_item_get_items() {
   $query->entityCondition('entity_type', 'ding_navigation_item')
         ->propertyOrderBy('position', 'ASC');
   $result = $query->execute();
+
   $navigation_items = array();
   if (isset($result['ding_navigation_item'])) {
     $dniids = array_keys($result['ding_navigation_item']);
     $navigation_items = ding_navigation_item_load_multiple($dniids);
   }
+
   return $navigation_items;
 }
 
 /**
- * - Uses EntityFieldQuery to search the database for a navigation item with the
- * specified values. All parameters are optional. If no parameters is passed the 
- * function willreturn the navigation item with the first posistion in the 
+ * Returns the navigation item currently set as the start item in the 
+ * database. The start item is the navigation that starts out as active when
+ * the navigation box is diplayed.
+ * If nothing is set, the navigation item with position = 1 is used as default.
+ *
+ * @return $navigation_item
+ *   - An object representing the start navigation item.
+ */
+function ding_navigation_item_get_start_item() {
+  // Save the start item so it only gets loaded once.
+  $start_item = &drupal_static(__FUNCTION__);
+
+  if (!isset($start_item)) {
+    if ($start_item_id = variable_get('ding_navigation_box_start_item_id', FALSE)) {
+      $start_item = ding_navigation_item_load($start_item_id);  
+    }
+    else {
+      $start_item = ding_navigation_item_get_first_item();
+      variable_set('ding_navigation_box_start_item_id', $start_item->dniid);
+    }
+  }
+
+  return $start_item;
+}
+
+/**
+ * Returns the navigation item that is currently the first item in the 
  * navigation box (position = 1).
  *
- * @param $field
- *   - The name of the field where the value is stored
- * @param $value
- *   - The value to match against
- * @param $sort
- *   - Indicates whether the navigation items should be sorted
- * @param $operator
- *   - The operator to use when matchin against a value
+ * @return $navigation_item
+ *   - An object representing the first navigation item.
  */
-function ding_navigation_item_field_query($field = 'position', $value = '1', $operator = '=', $sort = TRUE) {
-  $internal_fields = array('title', 'abbreviation', 'position');
-  // Find the name of the function to use on the query.
-  if (in_array($field, $internal_fields)) {
-    $function_name = 'propertyCondition';
-  }
-  else {
-    $function_name = 'fieldCondition';
-  }
+function ding_navigation_item_get_first_item() {
   $query = new EntityFieldQuery();
   $query->entityCondition('entity_type', 'ding_navigation_item')
-        ->$function_name($field, $value, $operator);
-  if ($sort) {
-    $query->propertyOrderBy('position', 'ASC');
-  }
+        ->propertyCondition('position', '1');
   $result = $query->execute();
-  $navigation_items = FALSE;
+
+  $navigation_item = NULL;
   if (isset($result['ding_navigation_item'])) {
-    $dniids = array_keys($result['ding_navigation_item']);
-    $navigation_items = ding_navigation_item_load_multiple($dniids);
+    $dniid = array_shift(array_keys($result['ding_navigation_item']));
+    $navigation_item = ding_navigation_item_load($dniid);
   }
-  return $navigation_items;  
+  
+  return $navigation_item;  
 }
 
 /**
