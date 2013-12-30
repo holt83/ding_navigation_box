@@ -18,7 +18,7 @@
 				e.preventDefault();
 
 				// Display message to user telling that the ajax request is being sent.
-				var message = Drupal.t("Changing position") + "..."; 
+				var message = Drupal.t("Changing position..."); 
 				$("#change-position-info").removeClass("success").removeClass("error").text(message);
 
 				var activeActivationArea = $(".ding-navigation-box .activation-area.active-item");
@@ -51,7 +51,7 @@
 					timeout: 10000,
 				});
 
-				
+
 				function changePositionSuccess(data) {
 					// Enable move buttons again.
 					$("a.move-link").removeClass("disabled");
