@@ -14,7 +14,7 @@ $plugin = array(
 	'render callback' => 'ding_navigation_box_render',
 	'defaults' => array(), // Default empty context
 	'edit form' => 'ding_navigation_box_plugin_form',
-	'category' => t('Ding!'),
+	'category' => array(t('Ding!')),
 );
 
 /**
