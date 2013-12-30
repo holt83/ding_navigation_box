@@ -3,7 +3,10 @@
 /**
  * @file
  *
- * Module file for Ding navigation box moduler.
+ * Module file for Ding navigation box module.
+ *
+ * Contains general hooks and the implementation of the 'Ding navigation item'
+ * entity, which is used to model content in the navigation box.
  */
 
 // Constants
@@ -152,9 +155,9 @@ function ding_navigation_box_theme() {
   );
 }
 
-/* ========================================================================== 
-   Ding navigation item
-   ========================================================================== */
+/* ========================================================================== */
+/* Ding navigation item entity                                                */           
+/* ========================================================================== */
 
 /**
  * Implements hook_entity_info().
