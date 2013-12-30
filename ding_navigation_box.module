@@ -29,6 +29,7 @@ function ding_navigation_box_block_info() {
  * Implements hook_block_view().
  */
 function ding_navigation_box_block_view($delta) {
+  // Since the module only defines one block, we can ignore $delta.
   $block = array();
   $block['subject'] = t('Ding navigation box');
   // Prepare the render array for the navigation box.
