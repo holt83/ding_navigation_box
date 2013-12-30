@@ -38,7 +38,6 @@ function ding_navigation_box_block_view($delta) {
   $block['content'] = array(
     '#theme' => 'ding_navigation_box',
     '#items' => $navigation_items,
-    '#admin' => FALSE,
     '#start_item_position' => $start_item->position,
   );
   return $block;

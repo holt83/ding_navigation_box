@@ -8,11 +8,12 @@
  * The navigation box consist of navigation items. Each item consist of an 
  * activation area and a content area.
  * The activation area of a navigation item activate its corresponding content
- * area. The content area of a navigation item is, by default, setup to show the 
- * content of the item, but the activation area can also be used to show content 
- * if the template file is overriden in a theme.
+ * area. The content area of a navigation item shows the content of the item by
+ * default, but the activation area could just as well be used to show content 
+ * since the item is exposed to both templates.
  * 
  * Available variables:
+ * - $items: The navigation items.
  * - $activation_areas: The navigation areas of the navigation items.
  * - $content_areas: The content areas of the navigation items.
  * - $classes: String of classes that can be used to style contextually with 
@@ -25,14 +26,12 @@
 
 ?>
 
-<?php if($activation_areas && $content_areas): ?> 
-  <div class="<?php print $classes ?> clearfix" <?php print $attributes ?>>
-  	<div class="activation-areas-pull"></div>
-    <div class="activation-areas clearfix">
-      <?php print render($activation_areas); ?>
-    </div>
-    <div class="content-areas">
-     <?php print render($content_areas); ?>
-    </div>
+<div class="<?php print $classes ?> clearfix" <?php print $attributes ?>>
+	<div class="activation-areas-pull"></div>
+  <div class="activation-areas clearfix">
+    <?php print render($activation_areas); ?>
   </div>
-<?php endif; ?>
+  <div class="content-areas">
+   <?php print render($content_areas); ?>
+  </div>
+</div>

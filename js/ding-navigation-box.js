@@ -7,7 +7,6 @@
       // Use the jQuery once method to ensure the navigation box only gets
       // initialised once.
       $(".ding-navigation-box").once("ding-navigation-box-attach", function() {
-        // Get the start navigation item passed from Drupal.
         var startItemPosition = settings.dingNavigationBox.startItemPosition;
         var startActivationArea = $(".ding-navigation-box .activation-areas > a:nth-of-type(" + startItemPosition + ")");
         activateNavigationItem(startActivationArea, startItemPosition);
@@ -28,7 +27,8 @@
         $(".ding-navigation-box .activation-areas").slideToggle();
       });
 
-      // The jQuery slideToggle() method 
+      // The jQuery slideToggle() method applies inline styling when hiding.
+      // This style need to be removed if window size changes.
       $(window).resize(function() {
         var activationAreas = $(".ding-navigation-box .activation-areas");
         // Calculate the relative window width (rem).
@@ -37,7 +37,6 @@
         fontSize = fontSize.substring(0, fontSize.length - 2); // removes 'px'
         windowWidth /= fontSize;
         if (windowWidth > 26.25 && activationAreas.is(":hidden")) {
-          // Remove the inline styling applied by the slideToggle method.
           activationAreas.removeAttr("style");
         } 
       });
