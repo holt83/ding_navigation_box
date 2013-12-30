@@ -117,7 +117,7 @@ function ding_navigation_box_form_alter(&$form, $form_state, $form_id) {
 /**
  * Implements hook_theme().
  * 
- * Declares the theme hooks that renders the Ding navigation box.
+ * Declares the theme hooks that renders the navigation box.
  */
 function ding_navigation_box_theme() {
   return array(
@@ -214,7 +214,7 @@ function ding_navigation_box_field_extra_fields() {
 
 
 /**
- * Fetch a Ding navigation item from the database. 
+ * Fetch a navigation item from the database. 
  *
  * @param $dniid
  *   Integer specifying the ding navigation item id.
@@ -230,7 +230,7 @@ function ding_navigation_item_load($dniid = NULL, $reset = FALSE) {
 }
 
 /**
- * Fetch mulitple Ding naviation items from the database
+ * Fetch mulitple navigation items from the database
  * 
  * @param $dniids
  *   An array of Ding navigation item ids. 
@@ -246,15 +246,15 @@ function ding_navigation_item_load_multiple($dniids = array(), $conditions = arr
 }
 
 /**
- * Delete a Ding navigation item from the database.
+ * Delete a navigation item from the database.
  */
-function ding_navigation_item_delete(DingNavigationItem $ding_navigation_item) {
-  $dniids = array($ding_navigation_item->dniid);
+function ding_navigation_item_delete(DingNavigationItem $navigation_item) {
+  $dniids = array($navigation_item->dniid);
   ding_navigation_item_delete_multiple($dniids);
 }
 
 /**
- * Delete multiple Ding naviation items.
+ * Delete multiple navigation items from the database.
  * 
  * @param $dniids
  *   An array of Ding navigation item IDs to match against.
@@ -264,20 +264,20 @@ function ding_navigation_item_delete_multiple($dniids = array()) {
 }
 
 /**
- * Create and return a Ding navigation item.
+ * Create and return a navigation item object.
  */
 function ding_navigation_item_create($values = array()) {
   return entity_get_controller('ding_navigation_item')->create($values);
 }
 
 /**
- * Saves a Ding navigation item to the database.
+ * Saves a navigation item entity to the database.
  * 
  * @param $ding_navigation_item
  *   The Ding navigation item to be saved.
  */
-function ding_navigation_item_save(DingNavigationItem $ding_navigation_item) {
-  return entity_get_controller('ding_navigation_item')->save($ding_navigation_item);
+function ding_navigation_item_save(DingNavigationItem $navigation_item) {
+  return entity_get_controller('ding_navigation_item')->save($navigation_item);
 }
 
 /**
@@ -352,7 +352,7 @@ function ding_navigation_item_get_first_item() {
 }
 
 /**
- * The class used for Ding navigation items.
+ * The class used for navigation items.
  */
 class DingNavigationItem extends Entity {
   
@@ -361,25 +361,24 @@ class DingNavigationItem extends Entity {
   }
   
   /**
-   * Specifies the default label, which is picked up by label() by default.
+   * Use the navigation item title as default label for a navigation item.
    */
   protected function defaultLabel() {
     return $this->title;
   }
 
   /**
-   * Specifies the default uri, which is picked up by uri() by default.
-   * Since the ding navigation items are not meant to be viewed like nodes on
-   * their own page, just link to the edit form here.
+   * Link to the edit page for the item, since navigation items isn't meant
+   * to be displayed in their own page like normal entities.
    */
   protected function defaultUri() {
-    return array('path' => 'admin/structure/ding-navigation-box/edit/' . $this->dniid);
+    return array('path' => DING_NAV_BOX_ADMIN_PATH . '/edit/' . $this->dniid);
   }  
   
 }
 
 /**
- * The controller class used for Ding navigation items.
+ * The controller class used for navigation items.
  */
 class DingNavigationItemController extends EntityAPIController {
   
@@ -388,7 +387,7 @@ class DingNavigationItemController extends EntityAPIController {
   }
   
   /**
-   * Create a Ding navigation item
+   * Create a navigation item object.
    * 
    * First setup the values that are specific to the navigation item schema,
    * then go through the parent imlplementation.
