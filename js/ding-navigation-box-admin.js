@@ -31,7 +31,7 @@
 
 				// Out of bounds - cancel AJAX request.
 				if (otherActivationArea.length == 0) {
-					message = Drupal.t("That item can't move further");
+					message = Drupal.t("That item can't move further " + changePositionAction);
 					$("#change-position-info").addClass("error").text(message);
 					return false;					
 				}

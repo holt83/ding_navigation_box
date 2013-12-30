@@ -10,6 +10,8 @@
         var startItemPosition = settings.dingNavigationBox.startItemPosition;
         var startActivationArea = $(".ding-navigation-box .activation-areas > a:nth-of-type(" + startItemPosition + ")");
         activateNavigationItem(startActivationArea, startItemPosition);
+        // Slideshow
+        //startSlideshow(10000);
       });
 
       // Iterate over each activation area and attach event-handlers.
@@ -19,6 +21,11 @@
           e.preventDefault();
           activateNavigationItem(this, itemPosition);
       	});
+        $(this).hover(function() {
+          $(this).addClass("hover-item");
+        }, function() {
+          $(this).removeClass("hover-item");
+        });
       });
 
       // Attach an eventhandler to the acitvation area hider which is shown in
@@ -46,13 +53,25 @@
   function activateNavigationItem(activationArea, itemPosition) {
     // Deactivate any active items.
     $(".ding-navigation-box .content-area").hide();
-    $(".ding-navigation-box .activation-area").removeClass("active-item");
+    $(".ding-navigation-box .activation-area").removeClass("active-item").removeClass("hover-item");
     $(".ding-navigation-box .activation-area .activation-arrow").hide();
     // Activate the speified navigation item.
     $(".ding-navigation-box .content-areas > div:nth-of-type(" + itemPosition + ")").show();
     $(activationArea).addClass("active-item");
     $(activationArea).find(".activation-arrow").show();
     $(".ding-navigation-box .activation-areas-pull").html($(activationArea).find(".full").text());
+  }
+
+  function startSlideshow(interval) {
+    setTimeout(function() {
+      var activeActivationArea = $(".ding-navigation-box .activation-area.active-item");
+      var nextActivationArea = activeActivationArea.next();
+      if (nextActivationArea.length == 0) {
+        nextActivationArea = $(".ding-navigation-box .activation-areas a:first-of-type");
+      }
+      nextActivationArea.click();
+      setTimeout(arguments.callee, interval);
+    }, interval);    
   } 
   
 })(jQuery);

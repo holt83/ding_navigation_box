@@ -88,13 +88,11 @@
   border-bottom: 1.25em solid transparent; /* 20px / 16px = 1.25em */  
 }
 
-.ding-navigation-box .activation-area:hover,
-.ding-navigation-box .activation-area:focus {
+.ding-navigation-box .activation-area.hover-item {
   background-color: powderblue;
 }
 
-.ding-navigation-box .activation-area:hover span,
-.ding-navigation-box .activation-area:focus span {
+.ding-navigation-box .activation-area.hover-item span {
   color: black;
 }
 
