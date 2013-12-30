@@ -11,7 +11,7 @@
         var startActivationArea = $(".ding-navigation-box .activation-areas > a:nth-of-type(" + startItemPosition + ")");
         activateNavigationItem(startActivationArea, startItemPosition);
         // Slideshow
-        //startSlideshow(10000);
+        startSlideshow(10000);
       });
 
       // Iterate over each activation area and attach event-handlers.
