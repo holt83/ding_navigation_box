@@ -1,43 +1,104 @@
 (function($) {
-	
-  var activeItemNumber = 0;	
-  
+
+  var dingNavigationBox;
+
   Drupal.behaviors.dingNavigationBox = {     
+    // Main attach function for the ding navigation box module.
     attach: function(context, settings) {
-      // Use the jQuery once method to ensure the navigation box only gets
-      // initialised once.
-      $(".ding-navigation-box").once("ding-navigation-box-attach", function() {
-        var startItemPosition = settings.dingNavigationBox.startItemPosition;
-        var startActivationArea = $(".ding-navigation-box .activation-areas > a:nth-of-type(" + startItemPosition + ")");
-        activateNavigationItem(startActivationArea, startItemPosition);
-        // Slideshow
-        startSlideshow(10000);
+      // Only process the navigation box once.
+      $(".ding-navigation-box", context).once("ding-navigation-box-attach", function() {        
+        Drupal.behaviors.dingNavigationBox.init();
+        // Iterate over each activation area and attach event-handlers.
+        $(".ding-navigation-box .activation-area").each(function(index) {
+          var position = index + 1;  
+          $(this).bind("click touchstart", function(e) {
+            e.preventDefault();
+            dingNavigationBox.deactivateActiveNavigationItem();
+            dingNavigationBox.activateNavigationItem($(this), position);
+          });
+          $(this).hover(
+            function() { $(this).addClass("hover-item"); }, 
+            function() { $(this).removeClass("hover-item"); } 
+          );
+        });      
       });
+    },
 
-      // Iterate over each activation area and attach event-handlers.
-      $(".ding-navigation-box .activation-area", context).each(function(index) {
-      	var itemPosition = index + 1;  
-      	$(this).bind("click touchstart", function(e) {
-          e.preventDefault();
-          activateNavigationItem(this, itemPosition);
-      	});
-        $(this).hover(function() {
-          $(this).addClass("hover-item");
-        }, function() {
-          $(this).removeClass("hover-item");
-        });
+    init: function() {
+      $(".ding-navigation-box .content-area").hide();
+      $(".ding-navigation-box .activation-arrow").hide();
+      dingNavigationBox = Drupal.behaviors.dingNavigationBox;
+      var startItemPosition = Drupal.settings.dingNavigationBox.startItemPosition;
+      var startActivationArea = $(".ding-navigation-box .activation-areas a:nth-of-type(" + startItemPosition + ")");
+      dingNavigationBox.activateNavigationItem(startActivationArea, startItemPosition);
+      dingNavigationBox.setupActivationAreasHider();
+      //dingNavigationBox.startSlideshow(5000);
+    },
+
+    activateNavigationItem: function(activationArea, position) {
+      var contentArea = dingNavigationBox.getContentArea(position);
+      activationArea.addClass("active-item");
+      contentArea.addClass("active-item");
+      activationArea.find(".activation-arrow").show();
+      contentArea.show();
+      $(".ding-navigation-box .activation-areas-pull").html(activationArea.find(".full").text());      
+    },
+
+    deactivateActiveNavigationItem: function() {
+      var contentAreaPosition = dingNavigationBox.getActiveContentAreaPosition();
+      var activationAreaPosition = dingNavigationBox.getActiveActivationAreaPosition();
+      if (contentAreaPosition && activationAreaPosition) {
+        var activationArea = dingNavigationBox.getActivationArea(activationAreaPosition);
+        var contentArea = dingNavigationBox.getContentArea(contentAreaPosition);
+        activationArea.removeClass("active-item").removeClass("hover-item");
+        contentArea.removeClass("active-item");
+        activationArea.find(".activation-arrow").hide();
+        contentArea.hide();
+      }
+    },
+
+    startSlideshow: function(interval) {
+      setTimeout(function() {
+        var nextItemPosition = dingNavigationBox.getActiveActivationAreaPosition();
+        nextItemPosition++;
+        if (nextItemPosition > 5) {
+          nextItemPosition = 1;
+        }
+        var nextActivationArea
+        dingNavigationBox.deactivateActiveNavigationItem();
+        dingNavigationBox.activateNavigationItem()
+        setTimeout(arguments.callee, interval);
+      }, interval);       
+    },
+
+    // Helper functions
+    getActivationArea: function(position) {
+      return $(".ding-navigation-box .activation-areas a:nth-of-type(" + position + ")");
+    },
+    getContentArea: function(position) {
+      return $(".ding-navigation-box .content-areas > div:nth-of-type(" + position + ")");
+    },
+    getActiveContentAreaPosition: function() {
+      var activeContentArea = $(".ding-navigation-box .content-area.active-item");
+      if (activeContentArea.length == 1) {
+        return $(".ding-navigation-box .content-area").index(activeContentArea) + 1;
+      }
+      return false;
+    },
+    getActiveActivationAreaPosition: function() {
+      var activeActivationArea = $(".ding-navigation-box .activation-area.active-item");
+      if (activeActivationArea.length == 1) {
+        return $(".ding-navigation-box .activation-area").index(activeActivationArea) + 1;
+      }
+      return false;
+    },    
+    setupActivationAreasHider: function() {
+      var activationAreas = $(".ding-navigation-box .activation-areas");
+      $(".ding-navigation-box .activation-areas-pull").bind("click touchstart", function(e) {
+        e.preventDefault();
+        activationAreas.slideToggle();
       });
-
-      // Attach an eventhandler to the acitvation area hider which is shown in
-      // compact mode on small screens.
-      $(".ding-navigation-box .activation-areas-pull", context).bind("click touchstart", function(e) {
-        $(".ding-navigation-box .activation-areas").slideToggle();
-      });
-
-      // The jQuery slideToggle() method applies inline styling when hiding.
-      // This style need to be removed if window size changes.
       $(window).resize(function() {
-        var activationAreas = $(".ding-navigation-box .activation-areas");
         // Calculate the relative window width (rem).
         var windowWidth = $(window).width();
         var fontSize = $(".ding-navigation-box").css("font-size");
@@ -45,34 +106,10 @@
         windowWidth /= fontSize;
         if (windowWidth > 26.25 && activationAreas.is(":hidden")) {
           activationAreas.removeAttr("style");
-        } 
-      });
-    }  
+        }         
+      });  
+    }
   };
-
-  function activateNavigationItem(activationArea, itemPosition) {
-    // Deactivate any active items.
-    $(".ding-navigation-box .content-area").hide();
-    $(".ding-navigation-box .activation-area").removeClass("active-item").removeClass("hover-item");
-    $(".ding-navigation-box .activation-area .activation-arrow").hide();
-    // Activate the speified navigation item.
-    $(".ding-navigation-box .content-areas > div:nth-of-type(" + itemPosition + ")").show();
-    $(activationArea).addClass("active-item");
-    $(activationArea).find(".activation-arrow").show();
-    $(".ding-navigation-box .activation-areas-pull").html($(activationArea).find(".full").text());
-  }
-
-  function startSlideshow(interval) {
-    setTimeout(function() {
-      var activeActivationArea = $(".ding-navigation-box .activation-area.active-item");
-      var nextActivationArea = activeActivationArea.next();
-      if (nextActivationArea.length == 0) {
-        nextActivationArea = $(".ding-navigation-box .activation-areas a:first-of-type");
-      }
-      nextActivationArea.click();
-      setTimeout(arguments.callee, interval);
-    }, interval);    
-  } 
   
 })(jQuery);
 

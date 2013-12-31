@@ -211,7 +211,7 @@ function ding_navigation_box_field_extra_fields() {
  * admin page. 
  */
 function ding_navigation_box_menu_local_tasks_alter(&$data, $router_item, $root_path) {
-  if (stristr($root_path, DING_NAV_BOX_ADMIN_PATH)) {
+  if (isset($data['tabs']) && !empty($data['tabs'])) {
     foreach ($data['tabs'][0]['output'] as $delta => $tab) {
       if ($tab['#link']['path'] == DING_NAV_BOX_ADMIN_PATH . '/display') {
         unset($data['tabs'][0]['output'][$delta]);

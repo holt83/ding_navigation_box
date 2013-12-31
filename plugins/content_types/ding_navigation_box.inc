@@ -14,7 +14,7 @@ $plugin = array(
 	'render callback' => 'ding_navigation_box_render',
 	'defaults' => array(), // Default empty context
 	'edit form' => 'ding_navigation_box_plugin_form',
-	'category' => array(t('Ding!')),
+	'category' => t('Ding!'),
 );
 
 /**
@@ -31,6 +31,7 @@ function ding_navigation_box_render($subtype, $conf, $args, $context) {
 		'#items' => $navigation_items,
 		'#start_item_position' => $start_item->position,
 	);
+	
 	return $block;
 }
 
