@@ -27,7 +27,7 @@
 ?>
 
 <div class="<?php print $classes ?> clearfix" <?php print $attributes ?>>
-	<div class="activation-areas-pull"></div>
+	<div class="hider"></div>
   <div class="activation-areas clearfix">
     <?php print render($activation_areas); ?>
   </div>

@@ -41,7 +41,7 @@
   height: 20em;  /* 320px / 16px = 21em */
 }
 
-.ding-navigation-box .activation-areas-pull {
+.ding-navigation-box .hider {
   display: none;
   cursor: pointer;
 }
@@ -298,7 +298,7 @@
     display: none;
   }
 
-  .ding-navigation-box .activation-areas-pull {
+  .ding-navigation-box .hider {
     display: block;
     width: 100%;
     text-align: center;
@@ -310,7 +310,7 @@
     padding-bottom: 0.625em;  /* 10px / 16px = 0.625em */
   }
 
-  .ding-navigation-box .activation-areas-pull:after {
+  .ding-navigation-box .hider:after {
     content: "";
     background: url('../images/nav-icon.png') no-repeat;
     width: 1.875em;  /* 30px / 16px = 1.875em */
