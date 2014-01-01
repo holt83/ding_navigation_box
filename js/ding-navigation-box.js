@@ -4,14 +4,11 @@
 
   /**
    * Basic initialization for the navigation box:
-   * 
-   * - Hide the content areas and activation arrows.
-   * - Get the start item position passed from Drupal, and activate the item on
-   *   that posiition. 
    */
   function initNavigationBox() {
     $(".ding-navigation-box .content-area").hide();
     $(".ding-navigation-box .activation-arrow").hide();
+    // Activate the start item passed from Drupal
     var position = Drupal.settings.dingNavigationBox.startItemPosition;
     activateNavigationItem(getArea('activation', position), getArea('content', position));    
   }
@@ -49,7 +46,7 @@
    * @param type
    *   The type of area to return ('activation' or 'content'). 
    * @param position
-   *   The position of area to return.
+   *   The position of the area to return.
    */
   function getArea(type, position) {
     var areaSelector = (type === "content" ? "div" : "a");
@@ -79,14 +76,12 @@
         // Initialize       
         initNavigationBox();
 
-        // Navigation item slideshow
-        Drupal.behaviors.dingNavigationBox.startSlideshow(3000);
-
         // Setup event-handlers for the activation areas,
         $(".ding-navigation-box .activation-area").each(function(index) {
           var position = index + 1;
           var contentArea = getArea('content', position);
-          $(this).bind("click touchstart", function() {
+          $(this).bind("click touchstart", function(e) {
+            e.preventDefault();
             deactivateActiveNavigationItem();
             activateNavigationItem($(this), contentArea);
           });
@@ -127,7 +122,7 @@
       }, interval);       
     },
 
-    stopSlideShow: function() {
+    stopSlideshow: function() {
       if (slideshowTimer) {
         clearTimeout(slideshowTimer);
       }

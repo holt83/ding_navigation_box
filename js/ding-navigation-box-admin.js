@@ -13,8 +13,24 @@
 				})
 			});
 
-			// Attach event handlers to change position of navigation items.
-			$("a.move-link").click(function(e) {
+			var slideshowDemo = $("#slideshow-demo");
+			var slideshowDemoRunning = false;
+			slideshowDemo.click(function(e) {
+				e.preventDefault();
+				var dingNavigationBox = Drupal.behaviors.dingNavigationBox;
+				if (slideshowDemoRunning) {
+					dingNavigationBox.stopSlideshow();
+					slideshowDemo.text(Drupal.t("Start"));
+				}
+				else {
+					dingNavigationBox.startSlideshow(3000);
+					slideshowDemo.text(Drupal.t("Stop"));
+				}	
+				slideshowDemoRunning = !slideshowDemoRunning;			
+			});
+
+			// Attach event handlers to button that change position of navigation items.
+			$("a.move-item-button").click(function(e) {
 				e.preventDefault();
 
 				// Display message to user telling that the ajax request is being sent.
@@ -24,7 +40,7 @@
 				var activeActivationArea = $(".ding-navigation-box .activation-area.active-item");
 				changePositionAction = "up";
 				otherActivationArea = activeActivationArea.prev();
-				if ($(this).attr("id") === "move-down-link") {
+				if ($(this).attr("id") == "move-item-down") {
 					changePositionAction = "down";
 					otherActivationArea = activeActivationArea.next();					
 				}
@@ -37,7 +53,7 @@
 				}
 
 				// Disable move links while performing AJAX request.
-				$("a.move-link").addClass("disabled");
+				$("a.move-item-button").addClass("disabled");
 				// Get ID of the item to change position on.
 				var activeItemID = activeActivationArea.data("dniid");
 				// Make the ajax call to the callback function responsible for changing
@@ -49,7 +65,7 @@
 					data: {"activeItemID": activeItemID, "changePositionAction": changePositionAction},
 					success: function(data) {
 						// Enable move buttons again.
-						$("a.move-link").removeClass("disabled");
+						$("a.move-item-button").removeClass("disabled");
 						// If success, update the position on the client.
 						if (data === "success") {						
 							if (changePositionAction  == "up") {

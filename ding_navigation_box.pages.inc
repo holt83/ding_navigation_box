@@ -102,8 +102,8 @@ function ding_navigation_item_form_cancel($form, &$form_state) {
  * Menu callback: admin/structure/ding-navigation-box/manage/navigation-box.
  */
 function ding_navigation_box_page_manage($form, &$form_state, $start_item_id = NULL) {
-  $form['ding_navigation_box_admin']['#prefix'] = '<div id=\'ding-navigation-box-admin\'>';
-  $form['ding_navigation_box_admin']['#suffix'] = '</div>';
+  $form['#prefix'] = '<div id=\'ding-navigation-box-admin\'>';
+  $form['#suffix'] = '</div>';
 
   // If there was a start item id supplied from the url, the item with that ID
   // is currently being edited and should be the active one. 
@@ -114,6 +114,74 @@ function ding_navigation_box_page_manage($form, &$form_state, $start_item_id = N
   else {
   	$start_item = ding_navigation_item_get_start_item();
   }
+
+  $navigation_items = ding_navigation_item_get_items();
+
+  // Change start navigation item admin setting.
+  $form['start_navigation_item'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Start navigation item'),
+  );
+  $options = array();
+  foreach ($navigation_items as $dniid => $navigation_item) {
+    $options[$dniid] = $navigation_item->title;
+  }
+  $form['start_navigation_item']['change_start_navigation_item'] = array(
+    '#type' => 'select',
+    '#description' => t('Select the item that should start as active.'),   
+    '#options' => $options,
+    '#default_value' => ding_navigation_item_get_start_item()->title,
+  );
+
+  // Setup slideshow settings.
+  $form['slideshow'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Navigation item slideshow'),
+  );
+  $form['slideshow']['slideshow_enable'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Enable slideshow'),
+    '#default_value' => FALSE,
+  );
+  $form['slideshow']['set_interval'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Slideshow interval'),
+    '#description' => t('Adjust the time interval in milliseconds between navigation item slides.'),
+    '#default_value' => variable_get('ding_navigation_box_slideshow_interval', 10000),
+    '#size' => 18,
+  );
+  $form['slideshow']['demo_title'] = array(
+    '#prefix' => "<label>",
+    '#suffix' => '</label>',
+    '#markup' => t('Slideshow demo'),
+  );    
+  $form['slideshow']['demo'] = array(
+    '#prefix' => "<a id='slideshow-demo' class='slideshow-demo-button button' href='#'>",
+    '#suffix' => '</a>',
+    '#markup' => t('Start'),    
+  );
+  $form['slideshow']['demo_description'] = array(
+    '#prefix' => "<div class='description'>",
+    '#suffix' => '</div>',
+    '#markup' => t('Test the item slideshow settings.'),
+  );    
+
+  // Submit buttons
+  $form['save_settings']['save'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save'),
+    '#weight' => 5,
+    '#submit' => array('ding_navigation_box_page_manage_submit'),
+  );
+  $form['save_settings']['cancel'] = array(
+    '#type' => 'submit',
+    '#value' => t('Cancel'),
+    '#submit' => array('ding_navigation_box_page_manage_cancel'),
+  );
+
+  $form['seperator'] = array(
+    '#markup' => "<hr><br>",
+  );
 
   // Setup the edit link to point to the start item.
   $form['ding_navigation_box_admin']['edit_link'] = array(
@@ -129,13 +197,13 @@ function ding_navigation_box_page_manage($form, &$form_state, $start_item_id = N
   );
 
   // Attach the AJAX enabled 'change item position' button links.
-  $form['ding_navigation_box_admin']['move_up_link'] = array(
-    '#prefix' => "<a id='move-up-link' class='move-link button' href='#'>",
+  $form['ding_navigation_box_admin']['move_item_up'] = array(
+    '#prefix' => "<a id='move-item-up' class='move-item-button button' href='#'>",
     '#suffix' => '</a>',
     '#markup' => 'Move up',
   );
-  $form['ding_navigation_box_admin']['move_down_link'] = array(
-    '#prefix' => "<a id='move-down-link' class='move-link button' href='#'>",
+  $form['ding_navigation_box_admin']['move_item_down'] = array(
+    '#prefix' => "<a id='move-item-down' class='move-item-button button' href='#'>",
     '#suffix' => '</a>',
     '#markup' => 'Move down',
   );
@@ -145,69 +213,12 @@ function ding_navigation_box_page_manage($form, &$form_state, $start_item_id = N
   	'#suffix' => '</span>',
   );
 
-  // Setup render array for the navigation box.
-  $navigation_items = ding_navigation_item_get_items();
+  // Setup render array for the navigation box.  
   $form['ding_navigation_box_admin']['ding_navigation_box'] = array(
   	'#theme' => 'ding_navigation_box',
   	'#items' => $navigation_items,
   	'#admin' => TRUE,
   	'#start_item_position' => $start_item->position,
-  );
-
-  // Change start navigation item admin setting.
-  $form['start_navigation_item'] = array(
-  	'#type' => 'fieldset',
-  	'#title' => t('Start navigation item'),
-  );
-  $options = array();
-  foreach ($navigation_items as $dniid => $navigation_item) {
-  	$options[$dniid] = $navigation_item->title;
-  }
-  $form['start_navigation_item']['change_start_navigation_item'] = array(
-  	'#type' => 'select',
-  	'#description' => t('Select the item that starts as active, when the 
-  		navigation box is rendered'),  	
-  	'#options' => $options,
-  	'#default_value' => variable_get('ding_navigation_box_start_item_id', 1),
-  );
-
-  // Setup slideshow settings.
-  $form['slideshow'] = array(
-  	'#type' => 'fieldset',
-  	'#title' => t('Navigation item slideshow'),    	
-  );
-  $form['slideshow']['slideshow_enable'] = array(
-  	'#type' => 'checkbox',
-  	'#description' => t('Change various settings for the navigation item slideshow'),
-  	'#title' => t('Enable slideshow'),
-  	'#default_value' => FALSE,
-  );
-  $form['slideshow']['slideshow_set_interval'] = array(
-  	'#type' => 'textfield',
-  	'#title' => t('Slideshow interval'),
-  	'#description' => t('Adjust the time interval in milliseconds between navigation item slides.'),
-  	'#default_value' => variable_get('ding_navigation_box_slideshow_interval', 10000),
-  	'#size' => 18,
-  	'#states' => array(
-  		'visible' => array(
-  			':input[name="slideshow_enable"]' => array('checked' => TRUE),
-  		),
-  	),    	
-  );
-
-  $form['save_settings'] = array(
-  	'#weight' => 100,
-  );
-  $form['save_settings']['save'] = array(
-  	'#type' => 'submit',
-  	'#value' => t('Save'),
-  	'#weight' => 5,
-  	'#submit' => array('ding_navigation_box_page_manage_submit'),
-  );
-  $form['save_settings']['cancel'] = array(
-  	'#type' => 'submit',
-  	'#value' => t('Cancel'),
-  	'#submit' => array('ding_navigation_box_page_manage_cancel'),
   );
 
   $form['#validate'][] = 'ding_navigation_box_page_manage_validate';

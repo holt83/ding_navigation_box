@@ -3,7 +3,7 @@
    ========================================================================== */
 
 #ding-navigation-box-admin {
-	margin-bottom: 1.5em;
+	margin-bottom: 20em;
 }
 
 #ding-navigation-box-admin .ding-navigation-box {
@@ -15,15 +15,15 @@
 }
 
 #ding-navigation-box-admin a#edit-item-link,
-#ding-navigation-box-admin a.move-link {
+#ding-navigation-box-admin a.move-item-button {
 	display: inline-block;
 }
 
-#ding-navigation-box-admin a.move-link {
+#ding-navigation-box-admin a.move-item-button {
 	width: 7em;
 }
 
-#ding-navigation-box-admin a.move-link.disabled {
+#ding-navigation-box-admin a.move-item-button.disabled {
 	pointer-events: none;
 	cursor: default;
 }
@@ -40,16 +40,25 @@
 	color: red;
 }
 
-input.form-submit {
+#ding-navigation-box-admin a.slideshow-demo-button {
+	display: inline-block;	
+	width: 5em;
+	margin-top: 0.425em;
+	margin-bottom: 0.3125em;
+	margin-right: 1em;
+	margin-left: -0.4em;
+}
+
+#ding-navigation-box-admin input.form-submit {
 	display: inline-block;
 	width: 7em;
 	margin-top: 0.65em;
 }
 
-#ding-navigation-box-page-manage .fieldset-legend {
+#ding-navigation-box-admin .fieldset-legend {
 	padding-top: 1em;
 }
 
-#ding-navigation-box-page-manage .fieldset-wrapper {
+#ding-navigation-box-admin .fieldset-wrapper {
 	margin-top: 2em;
 }
