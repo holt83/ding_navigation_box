@@ -13,8 +13,7 @@
     $(".ding-navigation-box .content-area").hide();
     $(".ding-navigation-box .activation-arrow").hide();
     var startPosition = Drupal.settings.dingNavigationBox.startItemPosition;
-    activateNavigationItem(getActivationArea(startPosition), 
-      getContentArea(startPosition));    
+    activateNavigationItem(getActivationArea(startPosition), getContentArea(startPosition));    
   }
 
   /**
@@ -71,13 +70,18 @@
 
   // Behaviors
 
+  var slideshowTimer = null;
+
   Drupal.behaviors.dingNavigationBox = {     
 
     attach: function(context, settings) {
       $(".ding-navigation-box", context).once("ding-navigation-box-attach", function() { 
         // Initialize       
         initNavigationBox();
-        
+
+        // Navigation item slideshow
+        Drupal.behaviors.dingNavigationBox.startSlideshow(3000);
+
         // Setup event-handlers for the activation areas,
         $(".ding-navigation-box .activation-area").each(function(index) {
           var position = index + 1;
@@ -108,16 +112,17 @@
       });
     },
 
-    // Define on the behavior object, to make it avialable for the admin JS.
+    // Define on the behavior object to make it avialable for the admin JS.
     startSlideshow: function(interval) {
-      setTimeout(function() {
+      slideshowTimer = setTimeout(function() {
         var activeActivationArea = $(".ding-navigation-box .activation-area.active-item");
-        var itemPosition = $(".ding-navigation-box .activation-areas").index(activeActivationArea);
-        itemPosition++;
-        if (temPosition > 5) {
-          itemPosition = 1;
+        var position = $(".ding-navigation-box .activation-area").index(activeActivationArea) + 1;
+        position++; // Go to next item position
+        if (position > 5) {
+          position = 1;
         }
-        setTimeout(arguments.callee, interval);
+        getActivationArea(position).click();
+        slideshowTimer = setTimeout(arguments.callee, interval);
       }, interval);       
     }
 
