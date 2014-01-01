@@ -12,10 +12,9 @@
   function initNavigationBox() {
     $(".ding-navigation-box .content-area").hide();
     $(".ding-navigation-box .activation-arrow").hide();
-    var startItemPosition = Drupal.settings.dingNavigationBox.startItemPosition;
-    var startActivationArea = getActivationArea(startItemPosition);
-    var startContentArea = getContentArea(startItemPosition);
-    activateNavigationItem(startActivationArea, startContentArea);    
+    var startPosition = Drupal.settings.dingNavigationBox.startItemPosition;
+    activateNavigationItem(getActivationArea(startPosition), 
+      getContentArea(startPosition));    
   }
 
   /**
@@ -27,10 +26,8 @@
    *   jQuery object containing the content area of the item.
    */
   function activateNavigationItem(activationArea, contentArea) {
-    activationArea.addClass("active-item");
-    contentArea.addClass("active-item");
-    activationArea.find(".activation-arrow").show();
-    contentArea.show();
+    activationArea.addClass("active-item").find(".activation-arrow").show();
+    contentArea.addClass("active-item").show();
     // Display title of active item on the activation areas hider.
     $(".ding-navigation-box .hider").html(activationArea.find(".full").text());    
   }
@@ -42,10 +39,9 @@
   function deactivateActiveNavigationItem() {
     var activeActivationArea = $(".ding-navigation-box .activation-area.active-item");
     var activeContentArea = $(".ding-navigation-box .content-area.active-item");
-    activeActivationArea.removeClass("active-item").removeClass("hover-item");
-    activeContentArea.removeClass("active-item");
-    activeActivationArea.find(".activation-arrow").hide();
-    activeContentArea.hide();    
+    activeActivationArea.removeClass("active-item").removeClass("hover-item")
+                        .find(".activation-arrow").hide();
+    activeContentArea.removeClass("active-item").hide();    
   }
 
   /**
@@ -81,6 +77,7 @@
       $(".ding-navigation-box", context).once("ding-navigation-box-attach", function() { 
         // Initialize       
         initNavigationBox();
+        
         // Setup event-handlers for the activation areas,
         $(".ding-navigation-box .activation-area").each(function(index) {
           var position = index + 1;
@@ -94,8 +91,9 @@
             function() { $(this).removeClass("hover-item"); } 
           );                   
         });
-        // Setup event-handler on item hider (displayed on small screens)
+
         var activationAreas = $(".ding-navigation-box .activation-areas");
+        // Setup event-handler on item hider (displayed on small screens)        
         $(".ding-navigation-box .hider").bind("click touchstart", function() {
           activationAreas.slideToggle();
         });
