@@ -12,8 +12,8 @@
   function initNavigationBox() {
     $(".ding-navigation-box .content-area").hide();
     $(".ding-navigation-box .activation-arrow").hide();
-    var startPosition = Drupal.settings.dingNavigationBox.startItemPosition;
-    activateNavigationItem(getActivationArea(startPosition), getContentArea(startPosition));    
+    var position = Drupal.settings.dingNavigationBox.startItemPosition;
+    activateNavigationItem(getArea('activation', position), getArea('content', position));    
   }
 
   /**
@@ -44,18 +44,18 @@
   }
 
   /**
-   * Returns the activation area with the specified position.
+   * Returns the specified area.
+   *
+   * @param type
+   *   The type of area to return ('activation' or 'content'). 
+   * @param position
+   *   The position of area to return.
    */
-  function getActivationArea(position) {
-    return $(".ding-navigation-box .activation-areas > a:nth-of-type(" + position + ")");
-  }
-
-  /**
-   * Returns the content area with the specified position.
-   */
-  function getContentArea(position) {
-    return $(".ding-navigation-box .content-areas > div:nth-of-type(" + position + ")");
-  }
+  function getArea(type, position) {
+    var areaSelector = (type === "content" ? "div" : "a");
+    areaSelector += ":nth-of-type(" + position + ")";
+    return $(".ding-navigation-box ." + type + "-areas > " + areaSelector);
+  }  
 
   /**
    * Calculates and returns the current width of the browser window in em's.
@@ -70,7 +70,7 @@
 
   // Behaviors
 
-  var slideshowTimer = null;
+  var slideshowTimer = false;
 
   Drupal.behaviors.dingNavigationBox = {     
 
@@ -85,7 +85,7 @@
         // Setup event-handlers for the activation areas,
         $(".ding-navigation-box .activation-area").each(function(index) {
           var position = index + 1;
-          var contentArea = getContentArea(position);
+          var contentArea = getArea('content', position);
           $(this).bind("click touchstart", function() {
             deactivateActiveNavigationItem();
             activateNavigationItem($(this), contentArea);
@@ -121,9 +121,17 @@
         if (position > 5) {
           position = 1;
         }
-        getActivationArea(position).click();
+        // Reuse the code on the 'click' event-handler
+        getArea('activation', position).click();
         slideshowTimer = setTimeout(arguments.callee, interval);
       }, interval);       
+    },
+
+    stopSlideShow: function() {
+      if (slideshowTimer) {
+        clearTimeout(slideshowTimer);
+      }
+      slideshowTimer = false;
     }
 
   };
