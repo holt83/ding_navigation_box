@@ -55,10 +55,8 @@
 	margin-top: 0.65em;
 }
 
-#ding-navigation-box-admin .fieldset-legend {
-	padding-top: 1em;
+#ding-navigation-box-admin .fieldset-legend a,
+#ding-navigation-box-admin .fieldset-wrapper a {
+	color: black;
 }
 
-#ding-navigation-box-admin .fieldset-wrapper {
-	margin-top: 2em;
-}

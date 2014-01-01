@@ -121,6 +121,8 @@ function ding_navigation_box_page_manage($form, &$form_state, $start_item_id = N
   $form['start_navigation_item'] = array(
     '#type' => 'fieldset',
     '#title' => t('Start navigation item'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,    
   );
   $options = array();
   foreach ($navigation_items as $dniid => $navigation_item) {
@@ -137,6 +139,8 @@ function ding_navigation_box_page_manage($form, &$form_state, $start_item_id = N
   $form['slideshow'] = array(
     '#type' => 'fieldset',
     '#title' => t('Navigation item slideshow'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
   );
   $form['slideshow']['slideshow_enable'] = array(
     '#type' => 'checkbox',
