@@ -9,16 +9,16 @@
 /**
  * Form builder: Form for editing a Ding navigation item.
  */
-function ding_navigation_item_form($form, &$form_state, $ding_navigation_item) {
-  if (!isset($form_state['ding_navigation_item'])) {
-    $form_state['ding_navigation_item'] = $ding_navigation_item;
+function ding_navigation_item_form($form, &$form_state, $navigation_item) {
+  if (!isset($form_state['navigation_item'])) {
+    $form_state['navigation_item'] = $navigation_item;
   }
-  $ding_navigation_item = $form_state['ding_navigation_item'];
+  $navigation_item = $form_state['navigation_item'];
 
   $form['title'] = array(
     '#type' => 'textfield',
     '#title' => t('Title'),
-    '#default_value' => $ding_navigation_item->title,
+    '#default_value' => $navigation_item->title,
     '#description' => t('The full title of the navigation item.'),
     '#weight' => -15,
     '#required' => TRUE,
@@ -28,7 +28,7 @@ function ding_navigation_item_form($form, &$form_state, $ding_navigation_item) {
   $form['abbreviation'] = array(
     '#type' => 'textfield',
     '#title' => t('Title abbreviation'),
-    '#default_value' => $ding_navigation_item->abbreviation,
+    '#default_value' => $navigation_item->abbreviation,
     '#description' => t('An abbreviation of the full title to display on small screens.'),
     '#weight' => -14,
     '#required' => TRUE,
@@ -53,7 +53,7 @@ function ding_navigation_item_form($form, &$form_state, $ding_navigation_item) {
   $form['#validate'][] = 'ding_navigation_item_form_validate'; 
 
   // Let the Field API attach fields assigned to the ding navigation item entity
-  field_attach_form('ding_navigation_item', $ding_navigation_item, $form, $form_state);
+  field_attach_form('ding_navigation_item', $navigation_item, $form, $form_state);
   
   // Continue the breadcrumb trail from the previous admin pages.
   $breadcrumb = array();
@@ -62,38 +62,40 @@ function ding_navigation_item_form($form, &$form_state, $ding_navigation_item) {
   $breadcrumb[] = l(t('Structure'), 'admin/structure');
   // Pass the position of the item that is being edited to the admin page, to
   // show the correct item in the navigation box.
-  $breadcrumb[] = l(t('Navigation box admin'), DING_NAV_BOX_ADMIN_PATH . '/' . $ding_navigation_item->dniid);
+  $breadcrumb[] = l(t('Navigation box admin'), DING_NAV_BOX_ADMIN_PATH . '/' . $navigation_item->dniid);
   drupal_set_breadcrumb($breadcrumb);
   return $form;
 }
 
 function ding_navigation_item_form_validate($form, &$form_state) {
-  $ding_navigation_item = $form_state['ding_navigation_item'];
+  $navigation_item = $form_state['navigation_item'];
   // Let the Field API perform validation on the data submitted by the form.
-  field_attach_form_validate('ding_navigation_item', $ding_navigation_item, $form, $form_state);
+  field_attach_form_validate('ding_navigation_item', $navigation_item, $form, $form_state);
 }
 
 /**
  * Submit handler for the submit button on the ding_navigation_item form.
  */
 function ding_navigation_item_form_submit($form, &$form_state) {
-  $ding_navigation_item = $form_state['ding_navigation_item'];
-  $ding_navigation_item->title = $form_state['values']['title'];
-  $ding_navigation_item->abbreviation = $form_state['values']['abbreviation'];
+  $navigation_item = $form_state['navigation_item'];
+  $navigation_item->title = $form_state['values']['title'];
+  $navigation_item->abbreviation = $form_state['values']['abbreviation'];
   // Let the Field API perform necessary operations on the data submitted by
   // the form
-  field_attach_submit('ding_navigation_item', $ding_navigation_item, $form, $form_state);
+  field_attach_submit('ding_navigation_item', $navigation_item, $form, $form_state);
   // Save and go back.
-  ding_navigation_item_save($ding_navigation_item);
-  $form_state['redirect'] = DING_NAV_BOX_ADMIN_PATH . '/' . $ding_navigation_item->dniid;
+  ding_navigation_item_save($navigation_item);
+  drupal_set_message(t("<em>@navigation_item</em> was saved successfully.", 
+    array('@navigation_item' => $navigation_item->title)), 'status');
+  $form_state['redirect'] = DING_NAV_BOX_ADMIN_PATH . '/' . $navigation_item->dniid;
 }
 
 /**
  * Submit handler for the cancel button on the ding_navigation_item form.
  */
 function ding_navigation_item_form_cancel($form, &$form_state) {
-  $ding_navigation_item = $form_state['ding_navigation_item'];
-  $form_state['redirect'] = DING_NAV_BOX_ADMIN_PATH . '/'. $ding_navigation_item->dniid; 
+  $navigation_item = $form_state['navigation_item'];
+  $form_state['redirect'] = DING_NAV_BOX_ADMIN_PATH . '/'. $navigation_item->dniid; 
 }
 
 /**
@@ -267,11 +269,7 @@ function ding_navigation_box_page_manage_submit($form, &$form_state) {
 		$new_start_item = ding_navigation_item_load($new_start_item_id);
 		variable_set('ding_navigation_box_start_item_id', $new_start_item_id);		
 		drupal_set_message(t("<em>@start_item</em> was saved as the new start navigation item", 
-			array(
-				'@start_item' => $new_start_item->title
-			)), 
-		  'status'
-		);
+			array('@start_item' => $new_start_item->title)), 'status');
 	}
 	$form_state['redirect'] = 'admin/structure/ding-navigation-box';
 }

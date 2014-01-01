@@ -297,7 +297,7 @@ function ding_navigation_item_save(DingNavigationItem $navigation_item) {
  *   - An array of navigation item objects keyed by id.
  */
 function ding_navigation_item_get_items() {
-  // Save the items so we only load them once per request.
+  // Save the items so they only get loaded once per page request.
   $navigation_items = &drupal_static(__FUNCTION__);
 
   if (!isset($navigation_items)) {
@@ -333,9 +333,6 @@ function ding_navigation_item_get_start_item() {
   if (!isset($start_item)) {
     // Look for the ID of the start item in the database.
     if ($start_item_id = variable_get('ding_navigation_box_start_item_id', FALSE)) {
-      if ($start_item_id < 0 || $start_item_id > 5) {
-        $start_item_id = 1;
-      }
       $start_item = ding_navigation_item_load($start_item_id);  
     }
     else {

@@ -10,7 +10,7 @@
         Drupal.behaviors.dingNavigationBox.init();
         // Iterate over each activation area and attach event-handlers.
         $(".ding-navigation-box .activation-area").each(function(index) {
-          var position = index + 1;  
+          var position = index + 1;
           $(this).bind("click touchstart", function(e) {
             e.preventDefault();
             dingNavigationBox.deactivateActiveNavigationItem();
