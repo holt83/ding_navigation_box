@@ -13,6 +13,7 @@
 				})
 			});
 
+			// Slideshow demo
 			var slideshowDemo = $("#slideshow-demo");
 			var slideshowDemoRunning = false;
 			slideshowDemo.click(function(e) {

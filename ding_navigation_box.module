@@ -116,6 +116,8 @@ function ding_navigation_box_theme() {
         'admin' => FALSE,
         // The position of the item that should start out as active.
         'start_item_position' => 1,
+        // The time in ms between items in the slideshow. Disabled by default.
+        'slideshow_interval' => FALSE,
       ),
       'template' => 'ding-navigation-box',
       'path' => DING_NAV_BOX_PATH . '/theme',

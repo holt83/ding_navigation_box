@@ -170,7 +170,7 @@ function ding_navigation_box_page_manage($form, &$form_state, $start_item_id = N
     '#markup' => t('Test the item slideshow settings.'),
   );    
 
-  // Submit buttons
+  // Submit
   $form['save_settings']['save'] = array(
     '#type' => 'submit',
     '#value' => t('Save'),
@@ -182,13 +182,14 @@ function ding_navigation_box_page_manage($form, &$form_state, $start_item_id = N
     '#value' => t('Cancel'),
     '#submit' => array('ding_navigation_box_page_manage_cancel'),
   );
+  $form['#validate'][] = 'ding_navigation_box_page_manage_validate';
 
   $form['seperator'] = array(
     '#markup' => "<hr><br>",
   );
 
   // Setup the edit link to point to the start item.
-  $form['ding_navigation_box_admin']['edit_link'] = array(
+  $form['edit_link'] = array(
     '#theme' => 'link',
     '#text' => 'Edit ' . $start_item->title,
     '#path' => DING_NAV_BOX_ADMIN_PATH . '/edit/' . $start_item->dniid,
@@ -201,31 +202,29 @@ function ding_navigation_box_page_manage($form, &$form_state, $start_item_id = N
   );
 
   // Attach the AJAX enabled 'change item position' button links.
-  $form['ding_navigation_box_admin']['move_item_up'] = array(
+  $form['move_item_up'] = array(
     '#prefix' => "<a id='move-item-up' class='move-item-button button' href='#'>",
     '#suffix' => '</a>',
     '#markup' => 'Move up',
   );
-  $form['ding_navigation_box_admin']['move_item_down'] = array(
+  $form['move_item_down'] = array(
     '#prefix' => "<a id='move-item-down' class='move-item-button button' href='#'>",
     '#suffix' => '</a>',
     '#markup' => 'Move down',
   );
   // AJAX message area.
-  $form['ding_navigation_box_admin']['change_position_info'] = array(
+  $form['change_position_info'] = array(
   	'#prefix' => "<span id='change-position-info'>",
   	'#suffix' => '</span>',
   );
 
   // Setup render array for the navigation box.  
-  $form['ding_navigation_box_admin']['ding_navigation_box'] = array(
+  $form['ding_navigation_box'] = array(
   	'#theme' => 'ding_navigation_box',
   	'#items' => $navigation_items,
   	'#admin' => TRUE,
   	'#start_item_position' => $start_item->position,
   );
-
-  $form['#validate'][] = 'ding_navigation_box_page_manage_validate';
 
   return $form;
 }
@@ -277,6 +276,7 @@ function ding_navigation_box_change_position_callback() {
  * Submit callback for the ding_navigation_box_page_manage form.
  */
 function ding_navigation_box_page_manage_submit($form, &$form_state) {
+  // Start item setting.
 	$new_start_item_id = $form_state['values']['change_start_navigation_item'];
 	$old_start_item_id = variable_get('ding_navigation_box_start_item_id', FALSE);
 	// Change the setting if the new value is different from the existing one.
@@ -286,6 +286,11 @@ function ding_navigation_box_page_manage_submit($form, &$form_state) {
 		drupal_set_message(t("<em>@start_item</em> was saved as the new start navigation item", 
 			array('@start_item' => $new_start_item->title)), 'status');
 	}
+
+  // Slideshow interval setting
+  $interval = $form_state['values']['set_interval'];
+  
+
 	$form_state['redirect'] = 'admin/structure/ding-navigation-box';
 }
 
