@@ -132,7 +132,7 @@ function ding_navigation_box_page_manage($form, &$form_state, $start_item_id = N
     '#type' => 'select',
     '#description' => t('Select the item that should start as active.'),   
     '#options' => $options,
-    '#default_value' => ding_navigation_item_get_start_item()->title,
+    '#default_value' => ding_navigation_item_get_start_item()->dniid,
   );
 
   // Setup slideshow settings.
