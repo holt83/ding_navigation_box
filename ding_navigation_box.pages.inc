@@ -259,12 +259,21 @@ function ding_navigation_box_page_manage_submit($form, &$form_state) {
       array('@start_item' => $new_start_item->title)), 'status');
   }
   // Slideshow settings
-  $slideshow_interval = FALSE;
-  if ($form_state['values']['slideshow_enable']) {
+  $old_value = variable_get('ding_navigation_box_slideshow_interval', FALSE);
+  $new_value = $form_state['values']['slideshow_enable'];
+  if ($new_value) {
     // Store the slideshow interval in seconds.
-    $slideshow_interval = $form_state['values']['set_interval'];
+    $new_value = $form_state['values']['set_interval'];
+    if (!$old_value) {
+      drupal_set_message(t('The slideshow was enabled.'), 'status');
+    }
+    drupal_set_message(t('The slideshow interval was set to @new_value', 
+      array('@new_value' => $new_value)), 'status');    
   }
-  variable_set('ding_navigation_box_slideshow_interval', $slideshow_interval);
+  else if (!$new_value && $old_value) {
+    drupal_set_message(t('The slideshow was disabled.'), 'status');
+  }
+  variable_set('ding_navigation_box_slideshow_interval', $new_value);
   // Redirect needed because there might be a wildcard.
   $form_state['redirect'] = 'admin/structure/ding-navigation-box';
 }
