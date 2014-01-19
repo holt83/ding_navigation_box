@@ -18,9 +18,9 @@
 
 			// Slideshow
 			var slideshowDemo = $("#slideshow-demo");
+			var dingNavigationBox = Drupal.behaviors.dingNavigationBox;
 			slideshowDemo.click(function(e) {
 				e.preventDefault();
-				var dingNavigationBox = Drupal.behaviors.dingNavigationBox;
 				var running = dingNavigationBox.isSlideshowRunning();
 				if (running) dingNavigationBox.stopSlideshow();	
 				else dingNavigationBox.startSlideshow(3000);
@@ -36,7 +36,8 @@
 				  .removeClass("error")
 				  .text(Drupal.t("Changing position..."));
 				// Disable move buttons while performing request.
-				var moveButtons = $(".move-item-button").addClass("disabled");				  
+				var moveButtons = $(".move-item-button").addClass("disabled");	
+				dingNavigationBox.stopSlideshow();
 				// Get the area to change position on.
 				var area = $(".ding-navigation-box .activation-area.active-item");
 				var action = ($(this).attr("id") == "move-item-down" ? "down" : "up");
@@ -59,7 +60,8 @@
 					info
 						.addClass("error")
 						.text(Drupal.t("Can't move further " + action));
-					moveButtons.removeClass("disabled");					
+					moveButtons.removeClass("disabled");
+					dingNavigationBox.startSlideshow(3000);					
 				}
 
 				function success(data) {
@@ -75,7 +77,8 @@
 							.addClass("error")
 							.text(Drupal.t("There was an error changin position"));
 					}
-					moveButtons.removeClass("disabled");					
+					moveButtons.removeClass("disabled");
+					dingNavigationBox.startSlideshow(3000);					
 				}
 			});
 		}

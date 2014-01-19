@@ -111,8 +111,7 @@
         var activeActivationArea = $(".ding-navigation-box .activation-area.active-item");
         var position = $(".ding-navigation-box .activation-area").index(activeActivationArea) + 2;
         var maxPosition = Drupal.settings.dingNavigationBox.itemCount;
-        position = position > maxPosition ? 1 : position;  
-        // Reuse the code on the 'click' event-handler
+        position = position > maxPosition ? 1 : position;
         getArea('activation', position).click();
         slideshowTimer = setTimeout(arguments.callee, interval);
       }, interval);       
