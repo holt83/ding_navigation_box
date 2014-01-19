@@ -142,11 +142,10 @@ function ding_navigation_box_page_manage($form, &$form_state, $start_item_id = N
     '#collapsible' => TRUE,
     '#collapsed' => FALSE,
   );
-  $enable = (bool) variable_get('ding_navigation_box_slideshow_interval', FALSE);
   $form['slideshow']['slideshow_enable'] = array(
     '#type' => 'checkbox',
     '#title' => t('Enable slideshow'),
-    '#default_value' => $enable,
+    '#default_value' => variable_get('ding_navigation_box_slideshow_enable', FALSE),
   );
   $options = array(2 => t('2 seconds')); // For testing.
   for ($i = 1; $i < 12; $i++) { 
@@ -258,22 +257,26 @@ function ding_navigation_box_page_manage_submit($form, &$form_state) {
     drupal_set_message(t("<em>@start_item</em> was saved as the new start navigation item", 
       array('@start_item' => $new_start_item->title)), 'status');
   }
-  // Slideshow settings
-  $old_value = variable_get('ding_navigation_box_slideshow_interval', FALSE);
-  $new_value = $form_state['values']['slideshow_enable'];
-  if ($new_value) {
-    // Store the slideshow interval in seconds.
-    $new_value = $form_state['values']['set_interval'];
-    if (!$old_value) {
-      drupal_set_message(t('The slideshow was enabled.'), 'status');
-    }
-    drupal_set_message(t('The slideshow interval was set to @new_value', 
-      array('@new_value' => $new_value)), 'status');    
-  }
-  else if (!$new_value && $old_value) {
-    drupal_set_message(t('The slideshow was disabled.'), 'status');
-  }
-  variable_set('ding_navigation_box_slideshow_interval', $new_value);
+
+  // Slideshow enabke/disable
+  $enable = $form_state['values']['slideshow_enable'];
+  $old_enable = variable_get('ding_navigation_box_slideshow_enable', FALSE);  
+  if ($enable != $old_enable) {
+    variable_set('ding_navigation_box_slideshow_enable', $enable);
+    drupal_set_message(t('The slideshow was @status', array(
+      '@status' => ($enable ? 'enabled' : 'disabled'))), 'status');
+  }  
+  // Slideshow interval
+  $interval = $form_state['values']['set_interval'];  
+  $old_interval = variable_get('ding_navigation_box_slideshow_interval', 10);
+  if ($interval != $old_interval) {
+    variable_set('ding_navigation_box_slideshow_interval', $interval);
+    $label = $form_state['complete form']['slideshow']['set_interval']
+      ['#options'][$interval];
+    drupal_set_message(t('The slideshow interval was set to @label', array(
+      '@label' => $label)), 'status');          
+  }    
+
   // Redirect needed because there might be a wildcard.
   $form_state['redirect'] = 'admin/structure/ding-navigation-box';
 }
