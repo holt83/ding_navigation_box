@@ -233,42 +233,47 @@ function ding_navigation_box_page_manage($form, &$form_state, $start_item_id = N
  * Ajax callback function to change position of navigation items.
  */
 function ding_navigation_box_change_position_callback() {
-	if (!isset($_POST['activeItemID']) || !isset($_POST['changePositionAction'])) {
-		// TODO: Make proper error page.
-		return t('Error. Missing data...');
+	if (!isset($_POST['itemID']) || !isset($_POST['action'])) {
+		drupal_json_output('error');
 	}
-
 	// Get the json data from the POST request.
-	$active_item_id = $_POST['activeItemID'];
-	$change_position_action = $_POST['changePositionAction'];
+	$item_id = $_POST['itemID'];
+	$action = $_POST['action'];
 
   // Get the navigation item to change position on.
-  $active_item = ding_navigation_item_load($active_item_id);
+  if (!$item = ding_navigation_item_load($item_id)) {
+    drupal_json_output('error');
+  }
 
   // Get the other item affected by the position change.
-  $direction = -1;	
-  if ($change_position_action == 'down') {
-  	$direction = 1;
+  $direction = ($action == 'down' ? 1 : -1);	
+  if (!$other = ding_navigation_item_get_item_position($item->position + $direction)) {
+    drupal_json_output('error');
   }
-  $other_item = ding_navigation_item_get_item_position($active_item->position + $direction);
 
-  if (isset($other_item)) {
-  	// Switch the positions.
-  	$active_item->position = $active_item->position + $direction;
-  	$other_item->position = $other_item->position - $direction;
-    // TODO: Remove unique key constraint on position field in the database or 
-    // make a transaction instead to avoid having to do this.
-    $temp = $other_item->position;
-    $other_item->position = 0;
-    ding_navigation_item_save($other_item);
-    ding_navigation_item_save($active_item);
-    $other_item->position = $temp;
-    ding_navigation_item_save($other_item);
+  // Switch the positions.
+  $item->position = $item->position + $direction;
+  $other->position = $other->position - $direction;
+  // Use a transaction to save the position values to the database, to avoid 
+  // inconsistent state of the ding navigation item table.
+  $transaction = db_transaction();
+  try {
+    // To avoid unique key violation we store the position of the other item
+    // and temporarely save it to database with position 0. 
+    $temp = $other->position;
+    $other->position = 0;
+    ding_navigation_item_save($other);
+    ding_navigation_item_save($item);
+    $other->position = $temp;
+    ding_navigation_item_save($other);
     // Item positions changed successfully.
-    drupal_json_output('success');  
-  }
-  else {
-    drupal_json_output('error');   
+    drupal_json_output('success');                    
+  } 
+  catch (Exception $e) {
+    // There was a problem during the transaction. Rollback and send error to
+    // the browser. 
+    $transaction->rollback();
+    drupal_json_output('error');        
   }
 }
 
