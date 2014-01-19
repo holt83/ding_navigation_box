@@ -238,6 +238,8 @@ function ding_navigation_box_page_manage($form, &$form_state, $start_item_id = N
   	'#items' => $navigation_items,
   	'#admin' => TRUE,
   	'#start_item_position' => $start_item->position,
+    '#slideshow' => FALSE,
+    '#slideshow_interval' => ding_navigation_box_get_slideshow_interval(),
   );
 
   return $form;
@@ -254,7 +256,7 @@ function ding_navigation_box_page_manage_submit($form, &$form_state) {
   if ($old_start_item_id != $new_start_item_id) {
     $new_start_item = ding_navigation_item_load($new_start_item_id);
     variable_set('ding_navigation_box_start_item_id', $new_start_item_id);    
-    drupal_set_message(t("<em>@start_item</em> was saved as the new start navigation item", 
+    drupal_set_message(t("<em>@start_item</em> is the new start navigation item", 
       array('@start_item' => $new_start_item->title)), 'status');
   }
 
@@ -273,7 +275,7 @@ function ding_navigation_box_page_manage_submit($form, &$form_state) {
     variable_set('ding_navigation_box_slideshow_interval', $interval);
     $label = $form_state['complete form']['slideshow']['set_interval']
       ['#options'][$interval];
-    drupal_set_message(t('The slideshow interval was set to @label', array(
+    drupal_set_message(t('The slideshow interval was changed to @label', array(
       '@label' => $label)), 'status');          
   }    
 

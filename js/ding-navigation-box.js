@@ -3,14 +3,19 @@
   // Helper functions
 
   /**
-   * Basic initialization for the navigation box:
+   * Initialization for the navigation box:
    */
   function initNavigationBox() {
     $(".ding-navigation-box .content-area").hide();
     $(".ding-navigation-box .activation-arrow").hide();
     // Activate the start item passed from Drupal
-    var position = Drupal.settings.dingNavigationBox.startItemPosition;
+    var settings = Drupal.settings.dingNavigationBox;
+    var position = settings.startItemPosition;
     activateNavigationItem(getArea('activation', position), getArea('content', position));    
+    // Slideshow
+    if (settings.slideshow) {
+      Drupal.behaviors.dingNavigationBox.startSlideshow(settings.slideshowInterval);
+    }
   }
 
   /**

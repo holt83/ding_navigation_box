@@ -40,6 +40,8 @@ function ding_navigation_box_block_view($delta) {
     '#theme' => 'ding_navigation_box',
     '#items' => $navigation_items,
     '#start_item_position' => $start_item->position,
+    '#slideshow' => variable_get('ding_navigation_box_slideshow_enable', FALSE),
+    '#slideshow_interval' => ding_navigation_box_get_slideshow_interval(),
   );
   return $block;
 }
@@ -117,8 +119,10 @@ function ding_navigation_box_theme() {
         'admin' => FALSE,
         // The position of the item that should start out as active.
         'start_item_position' => 1,
-        // The time in ms between items in the slideshow. Disabled by default.
-        'slideshow_interval' => FALSE,
+        // The slideshow is disabled by default.
+        'slideshow' => FALSE,
+        // The time in ms between items in the slideshow.
+        'slideshow_interval' => 10,
       ),
       'template' => 'ding-navigation-box',
       'path' => DING_NAV_BOX_PATH . '/theme',
@@ -147,8 +151,15 @@ function ding_navigation_box_theme() {
   );
 }
 
+/**
+ * Returns the slideshow interval setting from the database in milliseconds.
+ */
+function ding_navigation_box_get_slideshow_interval() {
+  return (variable_get('ding_navigation_box_slideshow_interval', 10) * 1000);
+}
+
 /* ========================================================================== */
-/* Ding navigation item entity                                                */           
+/* Ding navigation item                                                       */           
 /* ========================================================================== */
 
 /**

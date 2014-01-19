@@ -35,6 +35,8 @@ function template_preprocess_ding_navigation_box(&$variables) {
     'dingNavigationBox' => array(
       'startItemPosition' => $variables['start_item_position'],
       'itemCount' => DING_NAV_BOX_ITEM_COUNT,
+      'slideshow' => $variables['slideshow'],
+      'slideshowInterval' => $variables['slideshow_interval'],
     ),
   );
   drupal_add_css(DING_NAV_BOX_PATH . '/css/ding-navigation-box.css');
