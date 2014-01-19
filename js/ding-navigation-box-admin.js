@@ -18,19 +18,13 @@
 
 			// Slideshow
 			var slideshowDemo = $("#slideshow-demo");
-			var slideshowDemoRunning = false;
 			slideshowDemo.click(function(e) {
 				e.preventDefault();
 				var dingNavigationBox = Drupal.behaviors.dingNavigationBox;
-				if (slideshowDemoRunning) {
-					dingNavigationBox.stopSlideshow();
-					slideshowDemo.text(Drupal.t("Start"));
-				}
-				else {
-					dingNavigationBox.startSlideshow(3000);
-					slideshowDemo.text(Drupal.t("Stop"));
-				}	
-				slideshowDemoRunning = !slideshowDemoRunning;			
+				var running = dingNavigationBox.isSlideshowRunning();
+				if (running) dingNavigationBox.stopSlideshow();	
+				else dingNavigationBox.startSlideshow(3000);
+				slideshowDemo.text(Drupal.t(running ? "Start" : "Stop"));	
 			});
 
 			// Change position.

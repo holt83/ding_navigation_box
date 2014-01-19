@@ -12,6 +12,7 @@
 // Constants
 define('DING_NAV_BOX_PATH', drupal_get_path('module', 'ding_navigation_box'));
 define('DING_NAV_BOX_ADMIN_PATH', 'admin/structure/ding-navigation-box');
+define('DING_NAV_BOX_ITEM_COUNT', 5);
 
 
 /**

@@ -65,10 +65,6 @@
     return windowWidth;    
   }    
 
-  // Behaviors
-
-  var slideshowTimer = false;
-
   Drupal.behaviors.dingNavigationBox = {     
 
     attach: function(context, settings) {
@@ -107,15 +103,15 @@
       });
     },
 
-    // Define on the behavior object to make it avialable for the admin JS.
-    startSlideshow: function(interval) {
+    startSlideshow: function(interval) {      
+      if (slideshowTimer) {
+        this.stopSlideshow();
+      }
       slideshowTimer = setTimeout(function() {
         var activeActivationArea = $(".ding-navigation-box .activation-area.active-item");
-        var position = $(".ding-navigation-box .activation-area").index(activeActivationArea) + 1;
-        position++; // Go to next item position
-        if (position > 5) {
-          position = 1;
-        }
+        var position = $(".ding-navigation-box .activation-area").index(activeActivationArea) + 2;
+        var maxPosition = Drupal.settings.dingNavigationBox.itemCount;
+        position = position > maxPosition ? 1 : position;  
         // Reuse the code on the 'click' event-handler
         getArea('activation', position).click();
         slideshowTimer = setTimeout(arguments.callee, interval);
@@ -127,9 +123,15 @@
         clearTimeout(slideshowTimer);
       }
       slideshowTimer = false;
-    }
+    },
+
+    isSlideshowRunning: function() {
+      return (slideshowTimer ? true : false);
+    } 
 
   };
+
+  var slideshowTimer = false;
   
 })(jQuery);
 

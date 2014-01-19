@@ -31,22 +31,20 @@ function template_preprocess_ding_navigation_box(&$variables) {
   $variables['content_areas'] = $content_areas;
 
   // Add CSS and Javascript needed by the navigation box.
-  $css_options = array('group' => CSS_DEFAULT, 'type' => 'file');
-  $js_options = array('group' => JS_DEFAULT, 'type' => 'file');
   $js_settings = array(
     'dingNavigationBox' => array(
       'startItemPosition' => $variables['start_item_position'],
+      'itemCount' => DING_NAV_BOX_ITEM_COUNT,
     ),
   );
-  drupal_add_css(DING_NAV_BOX_PATH . '/css/ding-navigation-box.css', $css_options);
-  drupal_add_js(DING_NAV_BOX_PATH . '/js/ding-navigation-box.js', $js_options);  
-  drupal_add_js($js_settings, 'setting'); 
+  drupal_add_css(DING_NAV_BOX_PATH . '/css/ding-navigation-box.css');
+  drupal_add_js(DING_NAV_BOX_PATH . '/js/ding-navigation-box.js');   
   if ($admin) {
-    drupal_add_css(DING_NAV_BOX_PATH . '/css/ding-navigation-box-admin.css', $css_options);
-    drupal_add_js(DING_NAV_BOX_PATH . '/js/ding-navigation-box-admin.js', $js_options);
-    $js_settings['dingNavigationBox']['adminPath'] = DING_NAV_BOX_ADMIN_PATH;
-    drupal_add_js($js_settings, 'setting');
+    drupal_add_css(DING_NAV_BOX_PATH . '/css/ding-navigation-box-admin.css');
+    drupal_add_js(DING_NAV_BOX_PATH . '/js/ding-navigation-box-admin.js');
+    $js_settings['dingNavigationBox']['adminPath'] = DING_NAV_BOX_ADMIN_PATH;    
   } 
+  drupal_add_js($js_settings, 'setting');
 }
 
 /**
