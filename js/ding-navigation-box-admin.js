@@ -38,16 +38,22 @@
 				// Disable move buttons while performing request.
 				var moveButtons = $(".move-item-button").addClass("disabled");	
 				dingNavigationBox.stopSlideshow();
-				// Get the area to change position on.
-				var area = $(".ding-navigation-box .activation-area.active-item");
+				// Get the areas of the item to change position on.
+				
+				var activationArea = $(".ding-navigation-box .activation-area.active-item");
+				var contentArea = $(".ding-navigation-box content-area.active-item");
 				var action = ($(this).attr("id") == "move-item-down" ? "down" : "up");
-				var itemID = area.data("dniid");				
+				var itemID = activationArea.data("dniid");				
 				var jsonData = {"itemID": itemID, "action": action};
-				// Get the other area affected by the change.
-				var other = action == "down" ? area.next() : area.prev();
+				// Get the other ativation area affected by the change.
+				var otherActivationArea = (action == "down" ? 
+					activationArea.next() : activationArea.prev());
+				var otherContentArea = (action == "down" ?
+					contentArea.next() : contentArea.prev());
+
 
 				// Only perform request if the position change is valid.
-				if (other.length > 0) {
+				if (otherActivationArea.length > 0) {
 					$.ajax({
 						type: "POST",
 						url: "/" + adminPath + "/change-item-position",
@@ -66,8 +72,12 @@
 
 				function success(data) {
 					if (data === "success") {						
-						if (action  == "up") other.before(area);
-						else other.after(area);
+						if (action  == "up") { 
+							otherActivationArea.before(activationArea); 
+						}
+						else if (action == "down") { 
+							otherActivationArea.after(activationArea); 
+						}
 						info
 							.addClass("success")
 							.text(Drupal.t("Position changed succesfully"));

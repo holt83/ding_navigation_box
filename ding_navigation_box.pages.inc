@@ -122,7 +122,7 @@ function ding_navigation_box_page_manage($form, &$form_state, $start_item_id = N
     '#type' => 'fieldset',
     '#title' => t('Start navigation item'),
     '#collapsible' => TRUE,
-    '#collapsed' => TRUE,    
+    '#collapsed' => FALSE,    
   );
   $options = array();
   foreach ($navigation_items as $dniid => $navigation_item) {
@@ -140,19 +140,34 @@ function ding_navigation_box_page_manage($form, &$form_state, $start_item_id = N
     '#type' => 'fieldset',
     '#title' => t('Navigation item slideshow'),
     '#collapsible' => TRUE,
-    '#collapsed' => TRUE,
+    '#collapsed' => FALSE,
   );
+  $enable = (bool) variable_get('ding_navigation_box_slideshow_interval', FALSE);
   $form['slideshow']['slideshow_enable'] = array(
     '#type' => 'checkbox',
     '#title' => t('Enable slideshow'),
-    '#default_value' => FALSE,
+    '#default_value' => $enable,
   );
+  $options = array(2 => t('2 seconds')); // For testing.
+  for ($i = 1; $i < 12; $i++) { 
+    $seconds = 5 * $i; // 5 seconds -> 55 seconds
+    $options[$seconds] = t('@seconds seconds', array(
+      '@seconds' => $seconds
+    ));
+  }
+  for ($i = 1; $i < 6; $i++) {
+    $seconds = 60 * $i; // 1 minute -> 5 minutes
+    $options[$seconds] = t('@minutes minute' . ($i > 1 ? 's' : ''), array(
+      '@minutes' => ($seconds / 60),
+    ));
+  }
+  $options[60] = t('1 minute');
   $form['slideshow']['set_interval'] = array(
-    '#type' => 'textfield',
+    '#type' => 'select',
     '#title' => t('Slideshow interval'),
-    '#description' => t('Adjust the time interval in milliseconds between navigation item slides.'),
-    '#default_value' => variable_get('ding_navigation_box_slideshow_interval', 10000),
-    '#size' => 18,
+    '#description' => t('Select the time in seconds between items.'),
+    '#default_value' => variable_get('ding_navigation_box_slideshow_interval', 10),
+    '#options' => $options,
   );
   $form['slideshow']['demo_title'] = array(
     '#prefix' => "<label>",
@@ -230,6 +245,45 @@ function ding_navigation_box_page_manage($form, &$form_state, $start_item_id = N
 }
 
 /**
+ * Submit callback for the ding_navigation_box_page_manage form.
+ */
+function ding_navigation_box_page_manage_submit($form, &$form_state) {
+  // Start item setting.
+  $new_start_item_id = $form_state['values']['change_start_navigation_item'];
+  $old_start_item_id = variable_get('ding_navigation_box_start_item_id', FALSE);
+  // Change the setting if the new value is different from the existing one.
+  if ($old_start_item_id != $new_start_item_id) {
+    $new_start_item = ding_navigation_item_load($new_start_item_id);
+    variable_set('ding_navigation_box_start_item_id', $new_start_item_id);    
+    drupal_set_message(t("<em>@start_item</em> was saved as the new start navigation item", 
+      array('@start_item' => $new_start_item->title)), 'status');
+  }
+  // Slideshow settings
+  $slideshow_interval = FALSE;
+  if ($form_state['values']['slideshow_enable']) {
+    // Store the slideshow interval in seconds.
+    $slideshow_interval = $form_state['values']['set_interval'];
+  }
+  variable_set('ding_navigation_box_slideshow_interval', $slideshow_interval);
+  // Redirect needed because there might be a wildcard.
+  $form_state['redirect'] = 'admin/structure/ding-navigation-box';
+}
+
+/**
+ * Cancel callback for the ding_navigation_box_page_manage form.
+ */
+function ding_navigation_box_page_manage_cancel($form, &$form_state) {
+  $form_state['redirect'] = 'admin/structure';
+}
+
+/**
+ * Validation callback for the ding_navigation_box_page_manage form.
+ */
+function ding_navigation_box_page_manage_validate($form, &$form_state) {
+  // Nothing to do here yet.
+}
+
+/**
  * Ajax callback function to change position of navigation items.
  */
 function ding_navigation_box_change_position_callback() {
@@ -275,40 +329,4 @@ function ding_navigation_box_change_position_callback() {
     $transaction->rollback();
     drupal_json_output('error');        
   }
-}
-
-/**
- * Submit callback for the ding_navigation_box_page_manage form.
- */
-function ding_navigation_box_page_manage_submit($form, &$form_state) {
-  // Start item setting.
-	$new_start_item_id = $form_state['values']['change_start_navigation_item'];
-	$old_start_item_id = variable_get('ding_navigation_box_start_item_id', FALSE);
-	// Change the setting if the new value is different from the existing one.
-	if ($old_start_item_id != $new_start_item_id) {
-		$new_start_item = ding_navigation_item_load($new_start_item_id);
-		variable_set('ding_navigation_box_start_item_id', $new_start_item_id);		
-		drupal_set_message(t("<em>@start_item</em> was saved as the new start navigation item", 
-			array('@start_item' => $new_start_item->title)), 'status');
-	}
-
-  // Slideshow interval setting
-  $interval = $form_state['values']['set_interval'];
-  
-
-	$form_state['redirect'] = 'admin/structure/ding-navigation-box';
-}
-
-/**
- * Cancel callback for the ding_navigation_box_page_manage form.
- */
-function ding_navigation_box_page_manage_cancel($form, &$form_state) {
-	$form_state['redirect'] = 'admin/structure';
-}
-
-/**
- * Validation callback for the ding_navigation_box_page_manage form.
- */
-function ding_navigation_box_page_manage_validate($form, &$form_state) {
-	// Nothing to do here yet.
 }
