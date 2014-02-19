@@ -67,7 +67,7 @@
 						.addClass("error")
 						.text(Drupal.t("Can't move further " + action));
 					moveButtons.removeClass("disabled");
-					dingNavigationBox.startSlideshow(3000);					
+					//dingNavigationBox.startSlideshow(3000);					
 				}
 
 				function success(data) {

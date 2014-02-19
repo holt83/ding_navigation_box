@@ -301,22 +301,36 @@ function ding_navigation_box_page_manage_validate($form, &$form_state) {
  * Ajax callback function to change position of navigation items.
  */
 function ding_navigation_box_change_position_callback() {
+  // Test for precense of required parameters.
 	if (!isset($_POST['itemID']) || !isset($_POST['action'])) {
 		drupal_json_output('error');
+    return FALSE;
 	}
-	// Get the json data from the POST request.
-	$item_id = $_POST['itemID'];
+	// Get the json parameters from the POST request.
+	$dniid = $_POST['itemID'];
 	$action = $_POST['action'];
+  // Validate $item_id to be a positíve integer.
+  if ($dniid !== '' && (!is_numeric($dniid) || intval($dniid) != $dniid || $dniid <= 0)) {
+      drupal_json_output('error');
+      return FALSE;
+  }
+  $accepted_actions = array('up', 'down');
+  if (!in_array($action, $accepted_actions)) {
+    drupal_json_output('error');
+    return FALSE;
+  }
 
   // Get the navigation item to change position on.
-  if (!$item = ding_navigation_item_load($item_id)) {
+  if (!$item = ding_navigation_item_load($dniid)) {
     drupal_json_output('error');
+    return FALSE;
   }
 
   // Get the other item affected by the position change.
   $direction = ($action == 'down' ? 1 : -1);	
   if (!$other = ding_navigation_item_get_item_position($item->position + $direction)) {
     drupal_json_output('error');
+    return FALSE;
   }
 
   // Switch the positions.
