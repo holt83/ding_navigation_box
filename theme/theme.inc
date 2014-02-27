@@ -56,8 +56,8 @@ function template_preprocess_ding_nav_box_activation_area(&$variables) {
   $variables['classes_array'][] = 'activation-area';
   // Get the ding navigation item this activation area belongs to.
   $item = $variables['item'];
-  $variables['title'] = $item->title;
-  $variables['abbreviation'] = $item->abbreviation;
+  $variables['title'] = check_plain($item->title);
+  $variables['abbreviation'] = check_plain($item->abbreviation);
   // If the navigation box is being rendered in admin ui, add a custom data
   // attribute with the ding navigation item id.
   if ($variables['admin']) {
@@ -75,7 +75,7 @@ function template_preprocess_ding_nav_box_content_area(&$variables) {
   // Get the ding navigation item this content area belongs to.
   $item = $variables['item'];
   // Expose our internal title field to the template.
-  $variables['title'] = $item->title;
+  $variables['title'] = check_plain($item->title);
 
   // Expose the data from the field_ding_nav_box_header_text field to the template.
   $field_items = field_get_items('ding_navigation_item', $item, 'field_ding_nav_box_header_text');
