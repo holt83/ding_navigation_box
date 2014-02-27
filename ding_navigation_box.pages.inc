@@ -150,15 +150,13 @@ function ding_navigation_box_page_manage($form, &$form_state, $start_item_id = N
   $options = array(2 => t('2 seconds')); // For testing.
   for ($i = 1; $i < 12; $i++) { 
     $seconds = 5 * $i; // 5 seconds -> 55 seconds
-    $options[$seconds] = t('@seconds seconds', array(
-      '@seconds' => $seconds
+    $options[$seconds] = t('!seconds seconds', array(
+      '!seconds' => $seconds
     ));
   }
   for ($i = 1; $i < 6; $i++) {
     $seconds = 60 * $i; // 1 minute -> 5 minutes
-    $options[$seconds] = t('@minutes minute' . ($i > 1 ? 's' : ''), array(
-      '@minutes' => ($seconds / 60),
-    ));
+    $options[$seconds] = format_plural($i, '1 minute', '@count minutes');
   }
   $options[60] = t('1 minute');
   $form['slideshow']['set_interval'] = array(
