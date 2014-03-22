@@ -99,7 +99,7 @@ function ding_navigation_box_permission() {
     'administer ding navigation box' => array(
       'title' => t('Administer Ding navigation box'),
       'description' => t('Allows users to configure the Ding navigation box.'),
-      'restrict access' => TRUE,
+      'restrict access' => TRUE,  
     ),
   );
 }

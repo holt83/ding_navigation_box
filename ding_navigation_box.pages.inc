@@ -147,12 +147,10 @@ function ding_navigation_box_page_manage($form, &$form_state, $start_item_id = N
     '#title' => t('Enable slideshow'),
     '#default_value' => variable_get('ding_navigation_box_slideshow_enable', FALSE),
   );
-  $options = array(2 => t('2 seconds')); // For testing.
-  for ($i = 1; $i < 12; $i++) { 
-    $seconds = 5 * $i; // 5 seconds -> 55 seconds
-    $options[$seconds] = t('!seconds seconds', array(
-      '!seconds' => $seconds
-    ));
+  $options = array();
+  for ($i = 0; $i < 12; $i++) { 
+    $seconds = $i ? 5 * $i : 1; // 1 second -> 55 seconds
+    $options[$seconds] = format_plural($seconds, '1 second', '@count seconds');
   }
   for ($i = 1; $i < 6; $i++) {
     $seconds = 60 * $i; // 1 minute -> 5 minutes
