@@ -1,2 +1,2 @@
-ding_navigation_box
+Ding navigation box
 ===================
